@@ -4,7 +4,9 @@
 
 The plugin provides a minimalistic comment system. Comments can be sent through a form on the page or as a [Webmention](https://indieweb.org/webmention). Incoming webmentions are stored in a queue and processed asynchronously. All incoming comments and webmentions are stored in an inbox, pending admin approval. Approved comments are stored in the page's content file as a YAML structure and can be edited from within the Panel.
 
-NB. The plugin only covers incoming webmentions (notifications from other websites who link to a page). Sending webmentions to URLs linked in content requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions).
+For details about the approach and philosophy of this plugin, visit https://sebastiangreger.net/2019/05/sendmention-commention-webmentions-for-kirby-3
+
+*NB. The plugin only covers incoming webmentions (notifications from other websites who link to a page). Sending webmentions to URLs linked in content requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions).*
 
 ## Installation
 
