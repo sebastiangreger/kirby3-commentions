@@ -1,0 +1,12 @@
+# OS files
+.DS_Store
+
+# npm modules
+/node_modules
+
+# Composer files
+/vendor
+
+# Dev notes
+devnotes.txt
+debug.txt

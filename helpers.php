@@ -1,0 +1,34 @@
+<?php
+
+use sgkirby\Commentions\Commentions;
+
+function commentions( $page, $kirby, $pages ) {
+
+	// process form submission
+    if ( get('submit') )
+		$feedback = Commentions::queueComment( $page, $kirby, $pages );
+
+	if ( get('thx') )
+		$feedback = Commentions::successMessage();
+
+	// output the markup
+	if ( isset( $feedback ) )
+		snippet( 'commentions-feedback', $feedback );
+
+	if ( !get('thx') )
+		snippet( 'commentions-form');
+
+	snippet( 'commentions-list' );
+	
+}
+
+function webmentionEndpoint() {
+
+	$endpoint = site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' );
+	
+	return '
+		<link rel="webmention" href="' . $endpoint . '" />
+		<link rel="http://webmention.org/" href="' . $endpoint . '" />
+	';
+
+}

@@ -1,0 +1,37 @@
+label: Comments
+type: structure
+sortable: false
+sortBy: timestamp
+fields:
+  approved:
+    label: Status
+    type: toggle
+    text:
+      - pending
+      - approved
+  type:
+    type: select
+    label: Type
+    options:
+      comment: Comment
+      webmention: Webmention
+      reply: Reply
+      repost: Repost
+      rsvp: RSVP
+  timestamp:
+    label: Date
+    type: date
+    time: true
+  name:
+    label: Name
+    type: text
+  message:
+    label: Comment
+    type: textarea
+columns:
+  name:
+    width: 1/4
+  message:
+    width: 1/2
+  timestamp:
+    width: 1/4

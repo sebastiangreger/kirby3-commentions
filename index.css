@@ -1,0 +1,6 @@
+/* overriding the component's default styles to accommodate commentions */
+.k-section-name-commentions { font-size:.75rem; line-height:1.25rem; }
+	.k-section-name-commentions .k-list-item { align-items:start; }
+		.k-section-name-commentions .k-list-item-content { align-items:start; }
+			.k-section-name-commentions .k-list-item-text { white-space:normal; }
+				.k-section-name-commentions .k-list-item-text small { opacity:0; }
