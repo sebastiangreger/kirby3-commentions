@@ -151,6 +151,13 @@ class Commentions {
 	
     public static function queueComment( $page, $kirby, $pages ) {
 
+		// honeypot: if field has been filed, it is very likely a robot
+		// TODO: verify accessibility (HTML/CSS) of this solution
+        if( empty( get('website') ) === false ) {
+            go( $page->url() );
+            exit;
+        }
+
         $data = array(
             'name' => get('name'),
             'email' => get('email'),

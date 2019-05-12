@@ -2,9 +2,10 @@
 	<style>
 		.commentions-form { margin-top:4em; }
 			.commentions-form form > div { margin:2em 0; }
-			.commentions-form label, .commentions-form input, .commentions-form textarea { display:block; width:100%; }
-			.commentions-form input, .commentions-form textarea { background:white; border:2px solid black; padding:.5em; font-size:100%; }
-			.commentions-form input[type="submit"] { background:black; color:white; }
+			.commentions-form-honeypot { position:absolute; left:-9999px; }
+				.commentions-form label, .commentions-form input, .commentions-form textarea { display:block; width:100%; }
+				.commentions-form input, .commentions-form textarea { background:white; border:2px solid black; padding:.5em; font-size:100%; }
+				.commentions-form input[type="submit"] { background:black; color:white; }
 	</style>
 
 	<div class="commentions-form">
@@ -26,6 +27,11 @@
 				<input type="email" id="email" name="email">
 			</div>
 			<?php endif; ?>
+
+			<div class="commentions-form-honeypot">
+				<label for="website">Please leave this field empty!</label>
+				<input type="url" id="website" name="website">
+			</div>
 
 			<?php if ( in_array( 'url', $fields ) ) : ?>
 			<div class="commentions-form-website">
