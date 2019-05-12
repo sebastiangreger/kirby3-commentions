@@ -40,6 +40,12 @@ To show comments on pages and display a form to leave new comments, add the foll
 comments( $page, $kirby, $pages );
 ```
 
+By default, only an optional name field and a textarea for the comment is shown. To modify, add the desired field names to this array in `site/config/config.php`:
+
+```
+'sgkirby.commentions.formfields' => ['name','email','url'],
+```
+
 In order to receive webmentions, you have to announce your webmention endpoint in the HTML head. The easiest way is by adding the following helper in your `header.php` or similar (depending on your template setup):
 
 ```

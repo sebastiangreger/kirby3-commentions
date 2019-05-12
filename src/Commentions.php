@@ -153,6 +153,8 @@ class Commentions {
 
         $data = array(
             'name' => get('name'),
+            'email' => get('email'),
+            'url' => get('realwebsite'),
             'message' => get('message'),
             'timestamp' => time(),
             'target' => $page->id(),

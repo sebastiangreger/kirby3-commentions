@@ -16,7 +16,9 @@ function commentions( $page, $kirby, $pages ) {
 		snippet( 'commentions-feedback', $feedback );
 
 	if ( !get('thx') )
-		snippet( 'commentions-form');
+		snippet( 'commentions-form', [
+			'fields' => (array) option( 'sgkirby.commentions.formfields', ['name'] ),
+		]);
 
 	snippet( 'commentions-list' );
 	
