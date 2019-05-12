@@ -37,10 +37,10 @@ fields:
 To show comments on pages and display a form to leave new comments, add the following helpers to the according templates in `site/templates`:
 
 ```
-comments( $page, $kirby, $pages );
+commentions( $page, $kirby, $pages );
 ```
 
-By default, only an optional name field and a textarea for the comment is shown. To modify, add the desired field names to this array in `site/config/config.php`:
+By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove only the undesired field names:
 
 ```
 'sgkirby.commentions.formfields' => ['name','email','url'],
@@ -93,7 +93,6 @@ To change the URL of the webmention endpoint (default is `https://domain.tld/web
 - [ ] Extend HTML markup of form elements, to allow for easy theming
 - [ ] Create separate helper for UI feedback, to integrate further up in the reloaded page
 - [ ] Enhance presentation of comments in the frontend
-- [ ] Implement spam protection
 - [ ] Improve design of comment inbox by customizing Panel component
 - [ ] Use [Kirby Queue]() plugin for queue processing instead of own queue and cronjob
 - [ ] Add additional field options to comments (e.g. e-mail, website) and make configurable
