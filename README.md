@@ -37,7 +37,7 @@ fields:
 To show comments on pages and display a form to leave new comments, add the following helpers to the according templates in `site/templates`:
 
 ```
-commentions( $page, $kirby, $pages );
+commentions();
 ```
 
 By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove only the undesired field names:

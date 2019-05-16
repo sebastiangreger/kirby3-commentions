@@ -2,11 +2,11 @@
 
 use sgkirby\Commentions\Commentions;
 
-function commentions( $page, $kirby, $pages ) {
+function commentions() {
 
 	// process form submission
     if ( get('submit') )
-		$feedback = Commentions::queueComment( $page, $kirby, $pages );
+		$feedback = Commentions::queueComment();
 
 	if ( get('thx') )
 		$feedback = Commentions::successMessage();
