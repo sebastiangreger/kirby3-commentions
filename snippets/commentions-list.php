@@ -1,9 +1,4 @@
 
-	<style>
-		.commentions-list { margin-top:4em; }
-			.commentions-list > div { margin-top:2em; }
-	</style>
-
 	<div class="commentions-list">
 		
 		<?php if ( $page->comments()->toStructure()->count() > 0 ) : ?>

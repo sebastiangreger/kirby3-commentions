@@ -18,6 +18,8 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 NB. This plugin does not work without the following steps.
 
+### Prepare your blueprints
+
 To approve/delete incoming comments and webmentions, place the comment inbox in your panel by adding the following to a suitable blueprint; e.g. to `site/blueprints/site.yml` (the headline is optional):
 
 ```yaml
@@ -34,6 +36,8 @@ fields:
   comments: fields/commentions
 ```
 
+### Add the UIs to your templates
+
 To show comments on pages and display a form to leave new comments, add the following helpers to the according templates in `site/templates`:
 
 ```
@@ -46,11 +50,19 @@ By default, only an optional name field and a textarea for the comment are shown
 'sgkirby.commentions.formfields' => ['name','email','url'],
 ```
 
+If you would like to use the basic CSS styles (minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML head area (e.g. in `snippets/header.php` in the Starterkit):
+
+```
+commentionsCss();
+```
+
 In order to receive webmentions, you have to announce your webmention endpoint in the HTML head. The easiest way is by adding the following helper in your `header.php` or similar (depending on your template setup):
 
 ```
 webmentionEndpoint();
 ```
+
+### Set up a cronjob to process the inbox queue
 
 Incoming webmentions are placed in a queue for asynchronous processing. In order to receive these webmentions into your comments inbox, this queue needs to be processed regularly:
 

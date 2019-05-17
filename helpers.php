@@ -34,3 +34,9 @@ function webmentionEndpoint() {
 	';
 
 }
+
+function commentionsCss() {
+
+	return css( 'media/plugins/sgkirby/commentions/styles.css' );
+
+}
