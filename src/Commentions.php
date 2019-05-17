@@ -151,7 +151,7 @@ class Commentions {
 	
     public static function queueComment() {
 
-		$page = kirby()->site()->page();
+		$page = page();
 
 		// honeypot: if field has been filed, it is very likely a robot
 		// TODO: verify accessibility (HTML/CSS) of this solution
