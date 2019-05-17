@@ -59,7 +59,7 @@ commentionsCss();
 In order to receive webmentions, you have to announce your webmention endpoint in the HTML head. The easiest way is by adding the following helper in your `header.php` or similar (depending on your template setup):
 
 ```
-webmentionEndpoint();
+commentionsEndpoints();
 ```
 
 ### Set up a cronjob to process the inbox queue

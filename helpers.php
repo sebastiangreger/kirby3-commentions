@@ -24,7 +24,7 @@ function commentions() {
 	
 }
 
-function webmentionEndpoint() {
+function commentionsEndpoints() {
 
 	$endpoint = site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' );
 	
