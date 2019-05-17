@@ -38,10 +38,20 @@ fields:
 
 ### Add the UIs to your templates
 
-To show comments on pages and display a form to leave new comments, add the following helpers to the according templates in `site/templates`:
+To show comments on pages and display a form to leave new comments, there are two options:
+
+1. In order to add everything at once, add the following helper to the according templates in `site/templates` - a shorthand for the three helpers described next:
 
 ```
-commentions();
+commentions();    /* adds user feedback, comment form and comment list */
+```
+
+2. Alternatively, you can add the form feedback (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list:
+
+```
+commentionsFeedback();    /* adds user feedback (error/success message) */
+commentionsForm();        /* adds comment form */
+commentionsList();        /* adds list of comments */
 ```
 
 By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove only the undesired field names:
@@ -99,17 +109,18 @@ To change the URL of the webmention endpoint (default is `https://domain.tld/web
 - [x] Published comments/webmentions can be managed in the Panel view for each page
 - [x] Comments and the comments form can be included in a page template using a helper function
 - [x] A helper adds the (configurable) URL of the webmention endpoint in the HTML head
+- [x] UI feedback, form and comment list can be integrate flexibly across templates
+- [x] Configurable meta fields (name, e-mail, website); default is name only
 
 ### Roadmap/Ideas
 
 - [ ] Extend HTML markup of form elements, to allow for easy theming
-- [ ] Create separate helper for UI feedback, to integrate further up in the reloaded page
 - [ ] Enhance presentation of comments in the frontend
 - [ ] Improve design of comment inbox by customizing Panel component
-- [ ] Use [Kirby Queue]() plugin for queue processing instead of own queue and cronjob
-- [ ] Add additional field options to comments (e.g. e-mail, website) and make configurable
+- [ ] Use [Kirby Queue](https://github.com/bvdputte/kirby-queue) plugin for queue processing instead of own queue and cronjob
+- [ ] Additional configuration options (e.g. required/optional) for form meta fields
 - [ ] Display different types of webmentions accordingly (reply, bookmark, RSVP...)
-- [ ] Investigate alternative means of storing comments (e.g. a Sqlite database)
+- [ ] Investigate alternative means of storing comments (e.g. a Sqlite database or subpages)
 
 ## Requirements
 

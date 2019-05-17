@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Helpers commentionsFeedback(), commentionsForm() and commentionsList()
+
+### Changed
+- Helper commentions() is now a default shorthand for the three helpers commentionsFeedback(), commentionsForm() and commentionsList()
+
 ## [0.1.2]
 
 ### Changed

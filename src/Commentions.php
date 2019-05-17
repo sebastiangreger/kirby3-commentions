@@ -2,20 +2,18 @@
 
 namespace sgkirby\Commentions;
 
-use Kirby\Cms\Page;
-use Kirby\Cms\Pages;
 use Kirby\Data\Data;
 use Kirby\Data\Yaml;
-use Kirby\Http\Header;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Tpl;
 use Kirby\Toolkit\V;
 use Exception;
 
 class Commentions {
+
+	public static $feedback = null;
 
     public static function approve( $filename ) {
 		
@@ -122,7 +120,7 @@ class Commentions {
 			[
 				'pattern' => 'commentions-processqueue-' . option( 'sgkirby.commentions.secret', '' ),
 				'action'  => function () {
-	
+
 					// a secret has to be set in config, otherwise this endpoint does not work
 					if ( strlen( option( 'sgkirby.commentions.secret', '' ) ) < 10 )
 						return new Response( '<p>Unauthorised request.</p>', 'text/html', 403 );
@@ -139,19 +137,10 @@ class Commentions {
 		];
 
 	}
-
-    public static function successMessage() {
-		
-		if ( option( 'sgkirby.commentions.autoapprovecomments', 'false' ) != 'true' )
-			return [ 'success' => 'Thank you! Please be patient, your comment has has to be approved by the editor.' ];
-		else
-			return [ 'success' => 'Thank you for your comment!' ];
-		
-	}
 	
-    public static function queueComment() {
+    public static function queueComment( $path ) {
 
-		$page = page();
+		$page = page( $path );
 
 		// honeypot: if field has been filed, it is very likely a robot
 		// TODO: verify accessibility (HTML/CSS) of this solution
@@ -182,6 +171,7 @@ class Commentions {
         // some of the data is invalid
         if ( $invalid = invalid( $data, $rules, $messages ) ) {
 
+			Commentions::$feedback = $invalid;
 			return [
 				'alert' => $invalid,
 			];

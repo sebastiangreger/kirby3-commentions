@@ -4,24 +4,34 @@ use sgkirby\Commentions\Commentions;
 
 function commentions() {
 
-	// process form submission
-    if ( get('submit') )
-		$feedback = Commentions::queueComment();
+	commentionsFeedback();
+	commentionsForm();
+	commentionsList();
 
-	if ( get('thx') )
-		$feedback = Commentions::successMessage();
+}
 
-	// output the markup
-	if ( isset( $feedback ) )
-		snippet( 'commentions-feedback', $feedback );
+function commentionsFeedback() {
 
-	if ( !get('thx') )
+	if ( isset( Commentions::$feedback ) ) :
+		snippet( 'commentions-feedback', Commentions::$feedback );
+	endif;
+
+}
+
+function commentionsForm() {
+
+	if ( !get('thx') ) :
 		snippet( 'commentions-form', [
 			'fields' => (array) option( 'sgkirby.commentions.formfields', ['name'] ),
 		]);
+	endif;
+
+}
+
+function commentionsList() {
 
 	snippet( 'commentions-list' );
-	
+
 }
 
 function commentionsEndpoints() {
