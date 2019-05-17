@@ -92,10 +92,31 @@ Every time this URL is called, the backlog of incoming webmentions is processed;
 
 The plugin can be configured with optional settings in your `site/config/config.php`.
 
+### Webmention endpoint
+
 To change the URL of the webmention endpoint (default is `https://domain.tld/webmention-endpoint`), add the following setting and change the string as desired:
 
 ```php
 'sgkirby.commentions.endpoint' => 'webmention-endpoint',
+```
+
+### Spam protection
+
+The plugin provides several means to block comment spam; all active by default, these can be deactivated by using the following setting with undesired methods removed from the array:
+
+```php
+'sgkirby.commentions.spamprotection' => [
+    'honeypot',    /* filter comments where a hidden field contains data */
+    'timemin',     /* filter comments submitted too fast */
+    'timemax',     /* filter comments submitted after very long time */
+],
+```
+
+When timeout protections are active, comments are rejected if submitted too soon or too long after the form has been created (disabled when using Kirby's built-in page cache); the defaults can be adjusted as follows:
+
+```php
+'sgkirby.commentions.spamtimemin' => 5    ,    /* seconds after which a submission is valid; default 5s */
+'sgkirby.commentions.spamtimemax' => 86400,    /* seconds after which a submission is no longer valid; default 24h */
 ```
 
 ## Features

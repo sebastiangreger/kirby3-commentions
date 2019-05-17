@@ -142,12 +142,30 @@ class Commentions {
 
 		$page = page( $path );
 
+		$spamfilters = option( 'sgkirby.commentions.spamprotection', [ 'honeypot', 'timemin', 'timemax' ] );
+
 		// honeypot: if field has been filed, it is very likely a robot
-		// TODO: verify accessibility (HTML/CSS) of this solution
-        if( empty( get('website') ) === false ) {
+        if ( in_array( 'honeypot', $spamfilters ) && empty( get('website') ) === false ) {
             go( $page->url() );
             exit;
         }
+
+		// time measuring spam filter only active if no cache active and values are not impossible
+		if ( (int) get('commentions') > 0 && (int) option( 'sgkirby.commentions.spamtimemin', 5 ) < (int) option( 'sgkirby.commentions.spamtimemax', 86400 ) ) :
+
+			// spam timeout min: if less than n seconds between form creation and submission, it is most likely a bot
+			if ( in_array( 'timemin', $spamfilters ) && (int) get('commentions') > ( time() - (int) option( 'sgkirby.commentions.spamtimemin', 5 ) ) ) {
+				go( $page->url() );
+				exit;
+			}
+
+			// spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
+			if ( in_array( 'timemax', $spamfilters ) && (int) get('commentions') < ( time() - (int) option( 'sgkirby.commentions.spamtimemax', 86400 ) ) ) {
+				go( $page->url() );
+				exit;
+			}
+
+		endif;
 
         $data = array(
             'name' => get('name'),

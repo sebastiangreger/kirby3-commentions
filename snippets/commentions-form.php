@@ -36,6 +36,9 @@
 				<textarea id="message" name="message" rows="8" required></textarea>
 			</div>
 
+			<?php /* "commentions" value enables identifying commentions submissions in route:before hook + creation timestamp is used for spam protection */ ?>
+			<input type="hidden" name="commentions" value="<?php e ( !$page->isCacheable(), time(), 0 ) ?>">
+
 			<input type="submit" name="submit" value="Submit">
 
 		</form>

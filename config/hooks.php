@@ -18,7 +18,7 @@ return [
 		}
 
 		// process form submission
-		if ( get('submit') )
+		if ( get('commentions') && get('submit') )
 			Commentions::queueComment( $path );
 
 	}
