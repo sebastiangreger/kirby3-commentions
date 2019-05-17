@@ -141,6 +141,7 @@ When timeout protections are active, comments are rejected if submitted too soon
 - [ ] Use [Kirby Queue](https://github.com/bvdputte/kirby-queue) plugin for queue processing instead of own queue and cronjob
 - [ ] Additional configuration options (e.g. required/optional) for form meta fields
 - [ ] Display different types of webmentions accordingly (reply, bookmark, RSVP...)
+- [ ] Check whether the editor lock function in Kirby 3.2 will enable auto-approving comments without conflict
 - [ ] Investigate alternative means of storing comments (e.g. a Sqlite database or subpages)
 
 ## Requirements
