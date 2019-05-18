@@ -130,7 +130,7 @@ class Commentions {
 						return new Response( '<p>Error: No token configured in config file.</p>', 'text/html', 500 );
 					if ( strlen( $secret ) < 10 )
 						return new Response( '<p>Error: Token set in config is too short.</p>', 'text/html', 500 );
-					if ( preg_match( "/[&%#]/i", $secret ) )
+					if ( preg_match( "/[&%#+]/i", $secret ) )
 						return new Response( '<p>Error: Token set in config contains invalid characters.</p>', 'text/html', 500 );
 					if ( get('token') != $secret )
 						return new Response( '<p>Error: Incorrect token in URL attribute.</p>', 'text/html', 403 );

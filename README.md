@@ -76,7 +76,7 @@ commentionsEndpoints();
 
 Incoming webmentions are placed in a queue for asynchronous processing. In order to receive these webmentions into your comments inbox, this queue needs to be processed regularly:
 
-First, set a secret key with at least 10 characters in your `site/config/config.php` (the key may NOT include any of the following: &$+,/:;=?@"?<>[]{}|\^~"%# nor a space sign):
+First, set a secret key with at least 10 characters in your `site/config/config.php` (the key may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
 
 ```php
 'sgkirby.commentions.secret' => '<YOUR-SECRET>',
