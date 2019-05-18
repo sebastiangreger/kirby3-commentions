@@ -18,7 +18,7 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 NB. This plugin does not work without the following steps.
 
-### Prepare your blueprints
+### 1. Prepare your blueprints
 
 To approve/delete incoming comments and webmentions, place the comment inbox in your panel by adding the following to a suitable blueprint; e.g. to `site/blueprints/site.yml` (the headline is optional):
 
@@ -36,7 +36,7 @@ fields:
   comments: fields/commentions
 ```
 
-### Add the UIs to your templates
+### 2. Add the UIs to your templates
 
 To show comments on pages and display a form to leave new comments, there are two options:
 
@@ -72,19 +72,19 @@ In order to receive webmentions, you have to announce your webmention endpoint i
 commentionsEndpoints();
 ```
 
-### Set up a cronjob to process the inbox queue
+### 3. Set up a cronjob to process the inbox queue
 
 Incoming webmentions are placed in a queue for asynchronous processing. In order to receive these webmentions into your comments inbox, this queue needs to be processed regularly:
 
-First, set a secret key with at least 10 characters in your `site/config/config.php`:
+First, set a secret key with at least 10 characters in your `site/config/config.php` (the key may NOT include any of the following: &$+,/:;=?@"?<>[]{}|\^~"%# nor a space sign):
 
 ```php
 'sgkirby.commentions.secret' => '<YOUR-SECRET>',
 ```
 
-Second, set up a cronjob to call the following URL at regular intervals:
+Second, set up a cronjob to call the following URL at regular intervals (when testing this URL in a browser first, it responds with either "Success" or a descriptive error message):
 
-`https://domain.tld/commentions-processqueue-<YOUR-SECRET>`
+`https://<SITE-URL>/commentions-processqueue?token=<YOUR-SECRET>`
 
 Every time this URL is called, the backlog of incoming webmentions is processed; valid webmentions are moved to the comment inbox, while invalid ones are silently deleted.
 

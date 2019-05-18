@@ -118,16 +118,26 @@ class Commentions {
 				}
 			],
 			[
-				'pattern' => 'commentions-processqueue-' . option( 'sgkirby.commentions.secret', '' ),
+				'pattern' => 'commentions-processqueue',
 				'action'  => function () {
 
-					// a secret has to be set in config, otherwise this endpoint does not work
-					if ( strlen( option( 'sgkirby.commentions.secret', '' ) ) < 10 )
-						return new Response( '<p>Unauthorised request.</p>', 'text/html', 403 );
+					$secret = option( 'sgkirby.commentions.secret', '' );
+
+					// validation with actionable error messages
+					if ( !get('token') )
+						return new Response( '<p>Error: Token attribute missing from URL or empty.</p>', 'text/html', 403 );
+					if ( $secret == '' )
+						return new Response( '<p>Error: No token configured in config file.</p>', 'text/html', 500 );
+					if ( strlen( $secret ) < 10 )
+						return new Response( '<p>Error: Token set in config is too short.</p>', 'text/html', 500 );
+					if ( preg_match( "/[&%#]/i", $secret ) )
+						return new Response( '<p>Error: Token set in config contains invalid characters.</p>', 'text/html', 500 );
+					if ( get('token') != $secret )
+						return new Response( '<p>Error: Incorrect token in URL attribute.</p>', 'text/html', 403 );
 
 					try {
 						\sgkirby\Commentions\Commentions::processQueue();
-						return new Response( '<p>Processed.</p>', 'text/html', 200 );
+						return new Response( '<p>Success.</p>', 'text/html', 200 );
 					} catch(Exception $e) {
 						return new Response( '<p>Error: ' . $e->getMessage() . '</p>', 'text/html', 400 );
 					}

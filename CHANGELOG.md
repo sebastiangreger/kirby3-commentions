@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Token in cronjob URL moved to attribute
+
 ## [0.1.3]
 
 ### Added
