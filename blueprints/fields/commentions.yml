@@ -9,15 +9,6 @@ fields:
     text:
       - pending
       - approved
-  type:
-    type: select
-    label: Type
-    options:
-      comment: Comment
-      webmention: Webmention
-      reply: Reply
-      repost: Repost
-      rsvp: RSVP
   timestamp:
     label: Date
     type: date

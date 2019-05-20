@@ -36,6 +36,8 @@
 							switch ( $comment->type() ) {
 								case 'webmention':
 								case 'mention':
+								case 'trackback':
+								case 'pingback':
 									echo 'mentioned this at <a href="' . $comment->source() . '">' . $domain . '</a>';
 									break;
 								case 'like':
