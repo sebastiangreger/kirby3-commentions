@@ -43,4 +43,20 @@
 
 		</form>
 
+		<form action="<?= site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' ) ?>" method="post">
+
+			<h3>Replied on your own website? Send a webmention!</h3>
+
+			<div class="commentions-form-source">
+				<label for="source">URL of the response on your site (make sure it has a hyperlink to this page)</label>
+				<input type="url" id="source" name="source" pattern=".*http.*" required>
+			</div>
+
+			<input type="hidden" name="target" value="<?= $page->url() ?>">
+			<input type="hidden" name="manualmention" value="true">
+
+			<input type="submit" name="submit" value="Send webmention">
+
+		</form>
+
 	</div>

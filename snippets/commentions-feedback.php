@@ -11,4 +11,8 @@
 			<p class="success"><?= $success ?></p>
 		<?php endif ?>
 
+		<?php if ( get('thx') == 'accepted' ) : ?>
+			<p class="success"><?= $accepted ?></p>
+		<?php endif ?>
+
 	</div>

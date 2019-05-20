@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4]
+
+### Added
+- Manual webmention form below comment form
+
 ### Changed
 - Token in cronjob URL moved to attribute
+- Styling of comment listing improved (in content and style)
 
 ## [0.1.3]
 

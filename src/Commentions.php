@@ -89,7 +89,10 @@ class Commentions {
 						// for POST requests, queue the incoming webmention
 						try {
 							Endpoint::queueWebmention();
-							return new Response( '<p>Accepted.</p>', 'text/html', 202 );
+							if ( get('manualmention') )
+								go( get('target') . "?thx=accepted" );
+							else
+								return new Response( '<p>Accepted.</p>', 'text/html', 202 );
 						} catch(Exception $e) {
 							return new Response( '<p>Error: ' . $e->getMessage() . '</p>', 'text/html', 400 );
 						}
