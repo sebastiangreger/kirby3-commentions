@@ -52,6 +52,18 @@
 .commentions-list {
 	margin-top:4em;
 }
-.commentions-list > div {
+.commentions-list > ul {
+	padding:0;
+	list-style:none;
+}
+.commentions-list > ul > li {
 	margin-top:2em;
+}
+.commentions-list h4 {
+	font-weight:normal;
+	margin-bottom:0;
+}
+p.commentions-list-date {
+	font-size:80%;
+	margin-top:0;
 }
