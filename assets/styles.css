@@ -52,12 +52,22 @@
 .commentions-list {
 	margin-top:4em;
 }
+.commentions-list h3 {
+	margin-bottom:2em;
+}
 .commentions-list > ul {
 	padding:0;
 	list-style:none;
 }
 .commentions-list > ul > li {
-	margin-top:2em;
+	margin-bottom:2em;
+}
+.commentions-list > ul.commentions-list-reactions {
+	display:flex;
+	flex-wrap: wrap;
+}
+.commentions-list > ul.commentions-list-reactions > li {
+	flex-basis:200px;
 }
 .commentions-list h4 {
 	font-weight:normal;

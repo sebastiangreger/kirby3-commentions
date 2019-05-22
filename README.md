@@ -42,34 +42,34 @@ To show comments on pages and display a form to leave new comments, there are tw
 
 1. In order to add everything at once, add the following helper to the according templates in `site/templates` - a shorthand for the three helpers described next:
 
-```
-commentions();    /* adds user feedback, comment form and comment list */
+```php
+<?= commentions();    /* adds user feedback, comment form and comment list */  ?>
 ```
 
 2. Alternatively, you can add the form feedback (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list:
 
-```
-commentionsFeedback();    /* adds user feedback (error/success message) */
-commentionsForm();        /* adds comment form */
-commentionsList();        /* adds list of comments */
+```php
+<?= commentionsFeedback();    /* adds user feedback (error/success message) */  ?>
+<?= commentionsForm();        /* adds comment form */  ?>
+<?= commentionsList();        /* adds list of comments */  ?>
 ```
 
-By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove only the undesired field names:
+By default, `commentionsList()` presents all comments and mentions in one list. To present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use the following instead (check options below for further control):
 
-```
-'sgkirby.commentions.formfields' => ['name','email','url'],
+```php
+<?= commentionsList('grouped');        /* adds list of comments, with separate reactions */  ?>
 ```
 
 If you would like to use the basic CSS styles (minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML head area (e.g. in `snippets/header.php` in the Starterkit):
 
-```
-commentionsCss();
+```php
+<?= commentionsCss(); ?>
 ```
 
 In order to receive webmentions, you have to announce your webmention endpoint in the HTML head. The easiest way is by adding the following helper in your `header.php` or similar (depending on your template setup):
 
-```
-commentionsEndpoints();
+```php
+<?= commentionsEndpoints(); ?>
 ```
 
 ### 3. Set up a cronjob to process the inbox queue
@@ -100,6 +100,14 @@ To change the URL of the webmention endpoint (default is `https://domain.tld/web
 'sgkirby.commentions.endpoint' => 'webmention-endpoint',
 ```
 
+### Comment form fields
+
+By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove only the undesired field names:
+
+```
+'sgkirby.commentions.formfields' => ['name','email','url'],
+```
+
 ### Spam protection
 
 The plugin provides several means to block comment spam; all active by default, these can be deactivated by using the following setting with undesired methods removed from the array:
@@ -117,6 +125,22 @@ When timeout protections are active, comments are rejected if submitted too soon
 ```php
 'sgkirby.commentions.spamtimemin' => 5    ,    /* seconds after which a submission is valid; default 5s */
 'sgkirby.commentions.spamtimemax' => 86400,    /* seconds after which a submission is no longer valid; default 24h */
+```
+
+### Reactions in "grouped" view
+
+When comments are displayed using `commentionsList('grouped')`, the following settings array controls what reaction types are displayed as separate groups and what title is used - remove any comment types to include them in the main comment list:
+
+```php
+'sgkirby.commentions.grouped', [
+	'like'            => 'Likes',
+	'repost'          => 'Reposts',
+	'bookmark'        => 'Bookmarks',
+	'rsvp:yes'        => 'RSVP: yes',
+	'rsvp:maybe'      => 'RSVP: maybe',
+	'rsvp:interested' => 'RSVP: interested',
+	'rsvp:no'         => 'RSVP: no',
+],
 ```
 
 ## Features
