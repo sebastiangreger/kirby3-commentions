@@ -230,15 +230,35 @@ class Commentions {
 	public static function processQueue() {
 
         $files = kirby()->root() . '/content/.commentions/queue/webmention-*.json';
-        foreach ( glob( $files ) as $queuefile ) {
-            $data = Data::read( $queuefile, 'json' );
-			if ( static::parseRequest( $data['source'], $data['target'] ) ) {
-				F::remove( $queuefile );
-			}
-        }
+        foreach ( glob( $files ) as $queuefile ) :
         
-        // TODO: if autoapprove is true, also publish immediately (incl. comments, not just webmentions); this may cause file conflicts when editing
+            $data = Data::read( $queuefile, 'json' );
 
+			if ( $result = static::parseRequest( $data['source'], $data['target'] ) ) :
+
+				// delete webmention from queue after successful parsing
+				if ( is_bool( $result ) ) :
+				
+					F::remove( $queuefile );
+					return true;
+
+				// rename failed webmention for debug
+				// TODO: delete after some time
+				else :
+							
+					F::rename( $queuefile, str_replace( 'webmention-', 'failed-', F::name( $queuefile ) ) );
+					throw new Exception( $result );
+
+				endif;
+
+			else :
+		
+				throw new Exception( 'Problem processing queue file.' );
+
+			endif;
+
+        endforeach;
+        
 	}
 
 	public static function parseRequest( $source, $target ) {
@@ -283,7 +303,7 @@ class Commentions {
 		// neither microformats nor backlink = no processing possible
 		elseif( ! Str::contains( $sourcecontent, $target ) ) :
 
-			throw new Exception( 'Could not verify link to target.');
+			return 'Could not verify link to target.';
 
 		// case: no microformats, but links back to target URL
 		else :
@@ -323,7 +343,7 @@ class Commentions {
 
 				// if no backlink can be found, just give up
 				if ( !$found )
-					throw new Exception('Could not verify link to target.');
+					return 'Could not verify link to target.';
 
 			endif;
 
