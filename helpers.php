@@ -33,7 +33,12 @@ function commentionsList( string $format = 'list' ) {
 	// retrieve all approved comments for this page
 	$comments = page()->comments()->toStructure()->filterBy('approved','true')->toArray();
 
-	if ( sizeof( $comments ) > 0 ) :
+	if ( $format == 'raw' ) :
+
+		// return an array with all comments for this page
+		return $comments;
+
+	elseif ( sizeof( $comments ) > 0 ) :
 
 		// restructure the data if grouped view
 		if ( $format == 'grouped' ) :

@@ -60,6 +60,12 @@ By default, `commentionsList()` presents all comments and mentions in one list. 
 <?= commentionsList('grouped');        /* adds list of comments, with separate reactions */  ?>
 ```
 
+To fully customize the presentation of the reactions, an array with all approved comments and mentions can be retrieved as follows:
+
+```php
+<?php $comments = commentionsList('raw');        /* returns array of all comments */  ?>
+```
+
 If you would like to use the basic CSS styles (minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML head area (e.g. in `snippets/header.php` in the Starterkit):
 
 ```php
