@@ -251,29 +251,46 @@ class Commentions {
 		require_once( dirname(__DIR__) . DS . 'vendor' . DS . 'IndieWeb/comments.php' );
 		$mf2   = \Mf2\parse( $sourcecontent, $source );
 
-		// no microformats found = no processing possible
-		if(!isset($mf2['items'][0]))
-			throw new Exception('No Microformats h-* found');
+		// process microformat data
+		if( isset( $mf2['items'][0] ) ) :
 
-		// parse the Mf2 array to a comment array
-		$result = \IndieWeb\comments\parse( $mf2['items'][0], $target, 1000, 20 );
+			// parse the Mf2 array to a comment array
+			$result = \IndieWeb\comments\parse( $mf2['items'][0], $target, 1000, 20 );
 
-		// php-comments does not do rel=author
-		if ($result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0]))
-			$result['author']['url'] = $mf2['rels']['author'][0];
+			// php-comments does not do rel=author
+			if ( $result['author']['url'] === false && array_key_exists( 'rels', $mf2 ) && array_key_exists( 'author', $mf2['rels'] ) && array_key_exists( 0, $mf2['rels']['author'] ) && is_string( $mf2['rels']['author'][0] ) )
+				$result['author']['url'] = $mf2['rels']['author'][0];
 
-		// if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
-		// TODO: align with algorithm outlined in https://indieweb.org/authorship
-		foreach ( $mf2['items'] as $mf2item ) {
-			if ( $mf2item['type'][0] == 'h-card' ) {
-				if ( $result['author']['name'] == '' )
-					$result['author']['name'] = $mf2item['properties']['name'][0];
-				if ( $result['author']['photo'] == '' )
-					$result['author']['photo'] = $mf2item['properties']['photo'][0];
-				if ( $result['author']['url'] == '' )
-					$result['author']['url'] = $mf2item['properties']['url'][0];
+			// if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
+			// TODO: align with algorithm outlined in https://indieweb.org/authorship
+			foreach ( $mf2['items'] as $mf2item ) {
+				if ( $mf2item['type'][0] == 'h-card' ) {
+					if ( $result['author']['name'] == ''  && isset( $mf2item['properties']['name'][0] ) )
+						$result['author']['name'] = $mf2item['properties']['name'][0];
+					if ( $result['author']['photo'] == '' && isset( $mf2item['properties']['photo'][0] ) )
+						$result['author']['photo'] = $mf2item['properties']['photo'][0];
+					if ( $result['author']['url'] == ''  && isset( $mf2item['properties']['url'][0] ) )
+						$result['author']['url'] = $mf2item['properties']['url'][0];
+				}
 			}
-		}
+
+			// timestamp the webmention
+			if( !empty( $result['published'] ) )
+				$result['timestamp'] = strtotime($result['published']);
+			else
+				$result['timestamp'] = time();
+
+		// neither microformats nor backlink = no processing possible
+		elseif( ! Str::contains( $sourcecontent, $target ) ) :
+
+			throw new Exception( 'Could not verify link to target.');
+
+		// case: no microformats, but links back to target URL
+		else :
+
+			$result['timestamp'] = time();
+
+		endif;
 
 		// find the Kirby page the target URL refers to
 		$path = Url::path( $target );
@@ -285,37 +302,36 @@ class Commentions {
 		if( !$page->isErrorPage() ) {
 
 			// if there is no link to this site in the source...
-			if( !Str::contains( $sourcecontent, $target ) ) {
+			if( ! Str::contains( $sourcecontent, $target ) ) :
 
 				$found = false;
 
-				// ...maybe they instead linked to a syndicated copy?
-				if ( $page->syndication()->isNotEmpty() ) {
-					foreach ( $page->syndication()->split() as $syndication ) {
-						if ( Str::contains( $sourcecontent, $syndication ) ) {
-							$result = \IndieWeb\comments\parse( $data['items'][0], $syndication );
-							$found = true;
-							break;
+				if ( isset( $mf2['items'][0] ) ) :
+
+					// ...maybe they instead linked to a syndicated copy?
+					if ( $page->syndication()->isNotEmpty() ) {
+						foreach ( $page->syndication()->split() as $syndication ) {
+							if ( Str::contains( $sourcecontent, $syndication ) ) {
+								$result = \IndieWeb\comments\parse( $data['items'][0], $syndication );
+								$found = true;
+								break;
+							}
 						}
 					}
-				}
+
+				endif;
 
 				// if no backlink can be found, just give up
 				if ( !$found )
-					throw new Exception('Probably spam');
+					throw new Exception('Could not verify link to target.');
 
-			}
+			endif;
 
 			// store source and target URL in the result array
 			$result['source'] = $source;
 			$result['target'] = $page->id();
 
-			// timestamp the webmention
-			if( !empty( $result['published'] ) )
-				$result['timestamp'] = strtotime($result['published']);
-			else
-				$result['timestamp'] = time();
-
+			// set comment type
 			$result['type'] = 'webmention';
 
 			// TODO: instead of writing into JSON, write this into the "comments inbox"
