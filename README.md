@@ -135,7 +135,7 @@ When timeout protections are active, comments are rejected if submitted too soon
 
 ### Reactions in "grouped" view
 
-When comments are displayed using `commentionsList('grouped')`, the following settings array controls what reaction types are displayed as separate groups and what title is used - remove any comment types to include them in the main comment list:
+When comments are displayed using `commentionsList('grouped')`, the following settings array controls what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list:
 
 ```php
 'sgkirby.commentions.grouped', [
