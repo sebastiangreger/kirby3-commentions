@@ -50,16 +50,21 @@ class Commentions {
 			unset( $data['target'] );
 
 			// for webmentions, some translations are required
-			$comments[] = [
+			$mentiondata = [
 				'name' => $data['author']['name'],
 				'message' => $data['text'],
 				'timestamp' => $data['timestamp'],
 				'source' => $data['source'],
-				'avatar' => $data['author']['photo'],
 				'website' => $data['author']['url'],
 				'type' => $data['type'],
 				'approved' => 'true',
 			];
+
+			// only create non-essential fields if they contain data
+			if ( isset( $data['author']['photo'] ) && $data['author']['photo'] != null )
+				$mentiondata['avatar'] => $data['author']['photo'],
+
+			$comments[] = $mentiondata;
 		
 		endif;
 
