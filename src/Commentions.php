@@ -62,7 +62,7 @@ class Commentions {
 
 			// only create non-essential fields if they contain data
 			if ( isset( $data['author']['photo'] ) && $data['author']['photo'] != null )
-				$mentiondata['avatar'] => $data['author']['photo'],
+				$mentiondata['avatar'] = $data['author']['photo'];
 
 			$comments[] = $mentiondata;
 		
