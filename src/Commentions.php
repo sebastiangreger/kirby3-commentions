@@ -34,6 +34,7 @@ class Commentions {
 		
 			// the comment array already exists in the required form
 			$data['approved'] = 'true';
+
 			$comments[] = $data;
 		
 		else :
@@ -293,6 +294,10 @@ class Commentions {
 						$result['author']['url'] = $mf2item['properties']['url'][0];
 				}
 			}
+
+			// do not keep author avatar URL unless activated in config option
+			if ( isset( $result['author']['photo'] ) && (bool) option( 'sgkirby.commentions.avatarurls', false ) )
+				unset( $result['author']['photo'] );
 
 			// timestamp the webmention
 			if( !empty( $result['published'] ) )
