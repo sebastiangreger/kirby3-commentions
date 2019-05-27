@@ -35,9 +35,19 @@ class Commentions {
 			// the comment array already exists in the required form
 			$data['approved'] = 'true';
 
+			// remove empty fields
+			foreach ( $data as $key => $value )
+				if ( $value == null ) unset( $data[ $key ] );
+
+			// no need to keep target page info in comment meta
+			unset( $data['target'] );
+
 			$comments[] = $data;
 		
 		else :
+
+			// no need to keep target page info in comment meta
+			unset( $data['target'] );
 
 			// for webmentions, some translations are required
 			$comments[] = [
