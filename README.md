@@ -1,12 +1,12 @@
 # Kirby 3 Commentions
 
-⚠️ This plugin is currently a conceptual exploration at a very early Beta stage; feel free to play around with it for experimentation, but think twice before using in production!
+⚠ _This plugin is currently a conceptual exploration at a very early Beta stage; feel free to play around with it for experimentation, but think twice before using in production!_
 
-The plugin provides a minimalistic comment system. Comments can be sent through a form on the page or as a [Webmention](https://indieweb.org/webmention). Incoming webmentions are stored in a queue and processed asynchronously. All incoming comments and webmentions are stored in an inbox, pending admin approval. Approved comments are stored in the page's content file as a YAML structure and can be edited from within the Panel.
+A minimalistic comment system. Comments can be sent through a form on the page or as a [Webmention](https://indieweb.org/webmention). Incoming webmentions are stored in a queue and processed asynchronously. All incoming comments and webmentions are stored in an inbox, pending admin approval. Approved comments are stored in the page's content file as a YAML structure and can be edited from within the Panel.
 
-For details about the approach and philosophy of this plugin, visit https://sebastiangreger.net/2019/05/sendmention-commention-webmentions-for-kirby-3
+Read more about the [approach and philosophy](https://sebastiangreger.net/2019/05/sendmention-commention-webmentions-for-kirby-3) of this plugin
 
-*NB. The plugin only covers incoming webmentions (notifications from other websites who link to a page). Sending webmentions to URLs linked in content requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions).*
+**NB. The plugin only covers incoming webmentions (notifications from other websites who link to a page). Sending webmentions to URLs linked in content requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions).**
 
 ## Installation
 
@@ -16,7 +16,7 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ## Setup
 
-NB. This plugin does not work without the following steps.
+_NB. This plugin does not work without the following steps._
 
 ### 1. Prepare your blueprints
 
@@ -43,39 +43,39 @@ To show comments on pages and display a form to leave new comments, there are tw
 1. In order to add everything at once, add the following helper to the according templates in `site/templates` - a shorthand for the three helpers described next:
 
 ```php
-<?= commentions();    /* adds user feedback, comment form and comment list */  ?>
+commentions();    /* adds user feedback, comment form and comment list */
 ```
 
 2. Alternatively, you can add the form feedback (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list:
 
 ```php
-<?= commentionsFeedback();    /* adds user feedback (error/success message) */  ?>
-<?= commentionsForm();        /* adds comment form */  ?>
-<?= commentionsList();        /* adds list of comments */  ?>
+commentionsFeedback();    /* adds user feedback (error/success message) */
+commentionsForm();        /* adds comment form */
+commentionsList();        /* adds list of comments */
 ```
 
 By default, `commentionsList()` presents all comments and mentions in one list. To present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use the following instead (check options below for further control):
 
 ```php
-<?= commentionsList('grouped');        /* adds list of comments, with separate reactions */  ?>
+commentionsList('grouped');        /* adds list of comments, with separate reactions */
 ```
 
 To fully customize the presentation of the reactions, an array with all approved comments and mentions can be retrieved as follows:
 
 ```php
-<?php $comments = commentionsList('raw');        /* returns array of all comments */  ?>
+$comments = commentionsList('raw');        /* returns array of all comments */
 ```
 
 If you would like to use the basic CSS styles (minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML head area (e.g. in `snippets/header.php` in the Starterkit):
 
 ```php
-<?= commentionsCss(); ?>
+commentionsCss();
 ```
 
 In order to receive webmentions, you have to announce your webmention endpoint in the HTML head. The easiest way is by adding the following helper in your `header.php` or similar (depending on your template setup):
 
 ```php
-<?= commentionsEndpoints(); ?>
+commentionsEndpoints();
 ```
 
 ### 3. Set up a cronjob to process the inbox queue
@@ -110,8 +110,22 @@ To change the URL of the webmention endpoint (default is `https://domain.tld/web
 
 By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove only the undesired field names:
 
+```php
+'sgkirby.commentions.formfields' => [
+    'name',
+    'email',
+    'url'
+],
 ```
-'sgkirby.commentions.formfields' => ['name','email','url'],
+
+### Privacy settings
+
+The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing such data.
+
+Since the default presentation does not make use of avatar images, these are not stored. To write avatar URLs from webmention metadata to the comment file, change the default `false` value to `true`:
+
+```php
+'sgkirby.commentions.avatarurls' => false,
 ```
 
 ### Spam protection
@@ -171,6 +185,7 @@ When comments are displayed using `commentionsList('grouped')`, the following se
 - [ ] Use [Kirby Queue](https://github.com/bvdputte/kirby-queue) plugin for queue processing instead of own queue and cronjob
 - [ ] Additional configuration options (e.g. required/optional) for form meta fields
 - [ ] Display different types of webmentions accordingly (reply, bookmark, RSVP...)
+- [ ] Make UI texts translatable
 - [ ] Check whether the editor lock function in Kirby 3.2 will enable auto-approving comments without conflict
 - [ ] Investigate alternative means of storing comments (e.g. a Sqlite database or subpages)
 
