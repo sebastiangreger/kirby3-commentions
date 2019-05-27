@@ -207,9 +207,6 @@ class Commentions {
             'message' => 'Please enter a text between 4 and 4096 characters'
         );
 
-		if ( $data['name'] == '' )
-			$data['name'] = 'Anonymous';
-
         // some of the data is invalid
         if ( $invalid = invalid( $data, $rules, $messages ) ) {
 
