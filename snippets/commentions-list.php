@@ -15,7 +15,12 @@
 
 							<li>
 								<a href="<?= $comment['source'] ?>">
-									<?= $comment['name'] ?>
+									<?=
+										(
+											( isset( $comment['name'] ) && $comment['name'] != null )
+											? htmlspecialchars( $comment['name'] )
+											: 'Anonymous'
+										) ?>
 								</a>
 							</li>
 
@@ -41,12 +46,11 @@
 
 						<h4>
 
-							<?php
-							if ( htmlspecialchars( $comment['name'] ) != '' )
-								$name = htmlspecialchars( $comment['name'] );
-							else
-								$name = 'Anonymous';
-							?>
+							<?php $name = (
+								( isset( $comment['name'] ) && $comment['name'] != null )
+								? htmlspecialchars( $comment['name'] )
+								: 'Anonymous'
+							) ?>
 
 							<?php if ( isset( $comment['website'] ) && $comment['website'] != '' ) : ?>
 								<a href="<?= $comment['website'] ?>"><?= $name ?></a>
