@@ -85,7 +85,7 @@
 							<?= date ( 'Y-m-d H:i', strtotime( $comment['timestamp'] ) ) ?>
 						</p>
 
-						<?php if ( $comment['type'] == 'reply' ) : ?>
+						<?php if ( $comment['type'] == 'reply' || $comment['type'] == 'comment' ) : ?>
 						<div class="commentions-list-message">
 							<?= kirbytext( $comment['message'] ) ?>
 						</div>
