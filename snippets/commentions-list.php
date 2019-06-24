@@ -65,7 +65,9 @@
 								case 'mention':
 								case 'trackback':
 								case 'pingback':
-									echo 'mentioned this at <a href="' . $comment['source'] . '">' . $domain . '</a>';
+									echo 'mentioned this';
+									if ( isset( $domain ) )
+										echo' at <a href="' . $comment['source'] . '">' . $domain . '</a>';
 									break;
 								case 'like':
 									echo 'liked this at <a href="' . $comment['source'] . '">' . $domain . '</a>';
