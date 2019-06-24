@@ -60,10 +60,13 @@ function commentionsList( string $format = 'list' ) {
 				if ( isset( $groups[ $comment['type'] ] ) )
 					$reactions[ $groups[ $comment['type'] ] ][] = $comment;
 				else
-					$comments[] = $comment;
+					$commentsonly[] = $comment;
 
 			// sort reactions by order given in $groups array
 			$reactions = array_merge( array_flip( $groups ), $reactions );
+
+			// replace the original comments array with that only containing reactions
+			$comments = $commentsonly;
 
 		endif;
 
