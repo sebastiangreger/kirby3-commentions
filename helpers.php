@@ -43,6 +43,7 @@ function commentionsList( string $format = 'list' ) {
 		// restructure the data if grouped view
 		if ( $format == 'grouped' ) :
 
+
 			// array of all groups to be pulled out from content list, in presentation order
 			$groups = option( 'sgkirby.commentions.grouped', [
 				'like' => 'Likes',
@@ -53,6 +54,8 @@ function commentionsList( string $format = 'list' ) {
 				'rsvp:interested' => 'RSVP: interested',
 				'rsvp:no' => 'RSVP: no',
 			] );
+
+			$commentsonly = [];
 
 			foreach ( $comments as $comment )
 
