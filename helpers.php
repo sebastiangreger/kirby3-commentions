@@ -46,6 +46,7 @@ function commentionsList( string $format = 'list' ) {
 
 			// array of all groups to be pulled out from content list, in presentation order
 			$groups = option( 'sgkirby.commentions.grouped', [
+				'read' => 'Read by',
 				'like' => 'Likes',
 				'repost' => 'Reposts',
 				'bookmark' => 'Bookmarks',

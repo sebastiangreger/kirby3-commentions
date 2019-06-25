@@ -153,6 +153,7 @@ When comments are displayed using `commentionsList('grouped')`, the following se
 
 ```php
 'sgkirby.commentions.grouped', [
+	'read'            => 'Read by',
 	'like'            => 'Likes',
 	'repost'          => 'Reposts',
 	'bookmark'        => 'Bookmarks',
