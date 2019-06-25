@@ -63,7 +63,10 @@ function commentionsList( string $format = 'list' ) {
 					$commentsonly[] = $comment;
 
 			// sort reactions by order given in $groups array
-			$reactions = array_merge( array_flip( $groups ), $reactions );
+			if ( isset( $reactions ) )
+				$reactions = array_merge( array_flip( $groups ), $reactions );
+			else
+				$reactions = [];
 
 			// replace the original comments array with that only containing reactions
 			$comments = $commentsonly;
@@ -73,7 +76,7 @@ function commentionsList( string $format = 'list' ) {
 		// return selected markup
 		snippet( 'commentions-list', [
 			'comments' => $comments,
-			'reactions' => ( isset( $reactions ) ? $reactions : [] ),
+			'reactions' => $reactions,
 		]);
 
 	endif;
