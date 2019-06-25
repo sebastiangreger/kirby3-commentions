@@ -53,7 +53,7 @@
 							) ?>
 
 							<?php if ( isset( $comment['website'] ) && $comment['website'] != '' ) : ?>
-								<a href="<?= $comment['website'] ?>"><?= $name ?></a>
+								<a href="<?= $comment['website'] ?>" rel="noopener"><?= $name ?></a>
 							<?php else : ?>
 								<?= $name ?>
 							<?php endif;
@@ -67,16 +67,16 @@
 								case 'pingback':
 									echo 'mentioned this';
 									if ( isset( $domain ) )
-										echo' at <a href="' . $comment['source'] . '">' . $domain . '</a>';
+										echo' at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'like':
-									echo 'liked this at <a href="' . $comment['source'] . '">' . $domain . '</a>';
+									echo 'liked this at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'bookmark':
-									echo 'bookmarked this at <a href="' . $comment['source'] . '">' . $domain . '</a>';
+									echo 'bookmarked this at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'reply':
-									echo 'replied at <a href="' . $comment['source'] . '">' . $domain . '</a>:';
+									echo 'replied at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>:';
 									break;
 								default:
 									echo ":";
@@ -93,7 +93,7 @@
 
 						<?php if ( $comment['type'] == 'reply' || $comment['type'] == 'comment' ) : ?>
 						<div class="commentions-list-message">
-							<?= kirbytext( $comment['message'] ) ?>
+							<?= strip_tags( kirbytext( $comment['message'] ), '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>' ) ?>
 						</div>
 						<?php endif; ?>
 
