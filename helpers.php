@@ -32,6 +32,7 @@ function commentionsList( string $format = 'list' ) {
 
 	// retrieve all approved comments for this page
 	$comments = page()->comments()->toStructure()->filterBy('approved','true')->toArray();
+	$reactions = [];
 
 	if ( $format == 'raw' ) :
 
@@ -69,8 +70,6 @@ function commentionsList( string $format = 'list' ) {
 			// sort reactions by order given in $groups array
 			if ( isset( $reactions ) )
 				$reactions = array_merge( array_flip( $groups ), $reactions );
-			else
-				$reactions = [];
 
 			// replace the original comments array with that only containing reactions
 			$comments = $commentsonly;
