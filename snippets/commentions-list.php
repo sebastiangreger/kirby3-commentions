@@ -42,7 +42,7 @@
 
 			   <?php foreach ( $comments as $comment ) : ?>
 
-					<li class="commentions-list-type-<?= $comment['type'] ?>">
+					<li class="commentions-list-type-<?= $comment['type'] ?><?php if ( isset( $comment['authenticated'] ) && $comment['authenticated'] == 'true' ) echo ' authenticated' ?>">
 
 						<h4>
 
