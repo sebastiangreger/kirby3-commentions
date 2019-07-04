@@ -5,7 +5,7 @@ namespace sgkirby\Commentions;
 /**
  * Kirby 3 "Commentions" - Comments and Mentions Plugin
  *
- * @version   0.2.2
+ * @version   0.2.3
  * @author    Sebastian Greger <msg@sebastiangreger.net>
  * @copyright Sebastian Greger <msg@sebastiangreger.net>
  * @link      https://github.com/sebastiangreger/kirby3-sendmentions

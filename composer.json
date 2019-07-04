@@ -1,7 +1,7 @@
 {
     "name": "sgkirby/commentions",
     "description": "Receive and display comments and webmentions",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "type": "kirby-plugin",
     "license": "MIT",
     "authors": [
