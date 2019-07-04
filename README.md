@@ -2,11 +2,30 @@
 
 ⚠ _This plugin is currently a conceptual exploration at a very early Beta stage; feel free to play around with it for experimentation, but think twice before using in production!_
 
-A minimalistic comment system. Comments can be sent through a form on the page or as a [Webmention](https://indieweb.org/webmention). Incoming webmentions are stored in a queue and processed asynchronously. All incoming comments and webmentions are stored in an inbox, pending admin approval. Approved comments are stored in the page's content file as a YAML structure and can be edited from within the Panel.
+## Overview
+
+A minimalistic comment system.
+
+* Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention).
+* Incoming webmentions are stored in a queue and processed asynchronously.
+* All incoming comments and webmentions are stored in an inbox, pending admin approval.
+* Approved comments are stored in the page's content file as a YAML structure and can be edited from within the Panel.
 
 Read more about the [approach and philosophy](https://sebastiangreger.net/2019/05/sendmention-commention-webmentions-for-kirby-3) of this plugin
 
 **NB. The plugin only covers incoming webmentions (notifications from other websites who link to a page). Sending webmentions to URLs linked in content requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions).**
+
+### What this plugin is
+
+* First and foremost: a minimalistic comment system, for comments and reactions _purposely_ submitted by users directly or via their websites
+* Secondly: an endpoint for webmentions coming _directly_ from other websites
+* Experimental, _opinionated_ and work-in-progress; expect breaking changes between all 0.x versions
+
+### What this plugin is *NOT*
+
+* Not _compatible_ with existing webmention data from former Kirby 2 plugins
+* Not intended for displaying "facepiles" of reactions _syndicated_ from social media silos (i.e. without explicit intent by the author to submit it as a comment for display on the website)
+* Not a stable, turnkey _solution_ - this is experimental software and may change significantly between versions
 
 ## Installation
 
@@ -183,12 +202,10 @@ When comments are displayed using `commentionsList('grouped')`, the following se
 - [ ] Extend HTML markup of form elements, to allow for easy theming
 - [ ] Enhance presentation of comments in the frontend
 - [ ] Improve design of comment inbox by customizing Panel component
-- [ ] Use [Kirby Queue](https://github.com/bvdputte/kirby-queue) plugin for queue processing instead of own queue and cronjob
+- [ ] Research using [Kirby Queue](https://github.com/bvdputte/kirby-queue) plugin for queue processing instead of own queue and cronjob
 - [ ] Additional configuration options (e.g. required/optional) for form meta fields
-- [ ] Display different types of webmentions accordingly (reply, bookmark, RSVP...)
 - [ ] Make UI texts translatable
-- [ ] Check whether the editor lock function in Kirby 3.2 will enable auto-approving comments without conflict
-- [ ] Investigate alternative means of storing comments (e.g. a Sqlite database or subpages)
+- [ ] Investigate alternative means of storing comments (e.g. a Sqlite database or as [subpages](https://github.com/fabianmichael/kirby-pluginstorage))
 
 ## Requirements
 
