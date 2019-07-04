@@ -369,7 +369,8 @@ class Commentions {
 			$result['target'] = $page->id();
 
 			// set comment type
-			$result['type'] = 'webmention';
+			if ( !isset( $result['type'] ) || $result['type'] == '' || $result['type'] == 'mention' )
+				$result['type'] = 'webmention';
 
 			// TODO: instead of writing into JSON, write this into the "comments inbox"
 			$json = json_encode( $result );
