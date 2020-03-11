@@ -21,7 +21,7 @@ return [
 
 		// process form submission
 		if ( get('commentions') && get('submit') )
-			Commentions::queueComment( $path );
+			Commentions::queueComment( $route->arguments()[0] );
 
 	}
 
