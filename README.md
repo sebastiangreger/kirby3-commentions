@@ -137,6 +137,14 @@ By default, only an optional name field and a textarea for the comment are shown
 ],
 ```
 
+### Hide forms behind button
+
+If desired, the following setting triggers additional markup that can be used to hide the forms by default, allowing for an accessible open/close functionality:
+
+```php
+'sgkirby.commentions.hideforms' => true,
+```
+
 ### Privacy settings
 
 The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing such data.

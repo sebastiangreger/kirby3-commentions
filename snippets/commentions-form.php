@@ -1,9 +1,22 @@
 
 	<div class="commentions-form">
-		
-		<form action="<?= $page->url() ?>" method="post">
 
-			<h3>Leave a comment</h3>
+		<?php if ( option( 'sgkirby.commentions.hideforms' ) ) : ?>
+
+		<h3 class="expander" id="commentions-form-comment">
+			<button aria-expanded="false">
+				<svg aria-hidden="true" focusable="false" width="16px" viewBox="0 0 10 10"><rect class="vert" height="8" width="2" y="1" x="4"/><rect height="2" width="8" y="4" x="1"/></svg>
+				<span>Leave a comment</span>
+			</button>
+		</h3>
+		
+		<?php else : ?>
+
+		<h3 id="commentions-form-comment">Leave a comment</h3>
+
+		<?php endif; ?>
+
+		<form action="<?= $page->url() ?>" method="post" <?php if ( option( 'sgkirby.commentions.hideforms' ) ) echo 'class="expandertarget"'; ?>>
 
 			<?php if ( in_array( 'name', $fields ) ) : ?>
 			<div class="commentions-form-name">
@@ -43,9 +56,22 @@
 
 		</form>
 
-		<form action="<?= site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' ) ?>" method="post">
+		<?php if ( option( 'sgkirby.commentions.expand' ) ) : ?>
 
-			<h3>Replied on your own website? Send a webmention!</h3>
+		<h3 class="expander" id="commentions-form-webmention">
+			<button aria-expanded="false">
+				<svg aria-hidden="true" focusable="false" width="16px" viewBox="0 0 10 10"><rect class="vert" height="8" width="2" y="1" x="4"/><rect height="2" width="8" y="4" x="1"/></svg>
+				<span>Replied on your own website? Send a webmention!</span>
+			</button>
+		</h3>
+
+		<?php else : ?>
+
+		<h3 id="commentions-form-comment">Replied on your own website? Send a webmention!</h3>
+
+		<?php endif; ?>
+
+		<form action="<?= site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' ) ?>" method="post" <?php if ( option( 'sgkirby.commentions.expand' ) ) echo 'class="expandertarget"'; ?>>
 
 			<div class="commentions-form-source">
 				<label for="source">URL of the response on your site (make sure it has a hyperlink to this page)</label>
