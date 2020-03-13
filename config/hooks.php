@@ -4,7 +4,7 @@ namespace sgkirby\Commentions;
 
 return [
 
-	'route:before' => function ( $route, $path, $method ) {
+	'route:after' => function ( $route, $path, $method, $result ) {
 
 		// create the feedback message
 		if ( get('thx') ) {
@@ -21,7 +21,7 @@ return [
 
 		// process form submission
 		if ( get('commentions') && get('submit') )
-			Commentions::queueComment( $path );
+			Commentions::queueComment( $path, $result );
 
 	}
 

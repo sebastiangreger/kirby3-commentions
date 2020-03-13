@@ -71,13 +71,27 @@ class Commentions {
 		// save the updated comment array to the text file
 		$targetpage->update(array(
 			'comments' => yaml::encode($comments),
-		));
+		), $data['language'] );
 
 		// delete the processed inbox file
 		F::remove( $inboxfile );
 		
 		return ['ok'];
 		
+	}
+
+    public static function determineLanguage( $path, $page ) {
+
+		// find the language where the configured URI matches the given URI
+		foreach( kirby()->languages() as $language ) :
+			if ( $page->uri( $language->code() ) == $path )
+				// return (two-letter) language code
+				return $language->code();
+		endforeach;
+
+		// return null if no match (default on single-language sites)
+		return null;
+
 	}
 
     public static function delete( $filename ) {
@@ -167,9 +181,7 @@ class Commentions {
 
 	}
 	
-    public static function queueComment( $path ) {
-
-		$page = page( $path );
+    public static function queueComment( $path, $page ) {
 
 		$spamfilters = option( 'sgkirby.commentions.spamprotection', [ 'honeypot', 'timemin', 'timemax' ] );
 
@@ -203,6 +215,7 @@ class Commentions {
             'message' => get('message'),
             'timestamp' => time(),
             'target' => $page->id(),
+            'language' => static::determineLanguage( $path, $page ),
             'type' => 'comment',
         );
         $rules = array(
@@ -334,7 +347,7 @@ class Commentions {
 		if ( $path == '' )
 			$page = page('home');
 		else
-			$page = page( $path );
+			$page = page( kirby()->call( trim( $target, '/' ) ) );
 
 		if( !$page->isErrorPage() ) {
 
@@ -367,6 +380,7 @@ class Commentions {
 			// store source and target URL in the result array
 			$result['source'] = $source;
 			$result['target'] = $page->id();
+			$result['language'] = static::determineLanguage( $path, $page );
 
 			// set comment type
 			if ( !isset( $result['type'] ) || $result['type'] == '' || $result['type'] == 'mention' )
