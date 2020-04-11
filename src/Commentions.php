@@ -15,63 +15,126 @@ class Commentions {
 
 	public static $feedback = null;
 
+    public static function retrieve( $page ) {
+
+		// read the commentions text file and decode the yaml
+		$commentsfile = $page->root() . '/.commentions.txt';
+		$yaml = Data::read( $commentsfile );
+		$comments = Data::decode( $yaml['comments'], 'yaml' );
+
+		foreach( $comments as $comment ) :
+			if ( $comment['approved'] == 'true' )
+				$output[] = $comment;
+		endforeach;
+
+		return $output;
+
+	}
+
+    public static function add( $page, $data = [] ) {
+
+		// read the commentions text file and decode the yaml
+		$commentsfile = $page->root() . '/.commentions.txt';
+		$yaml = Data::read( $commentsfile );
+		$comments = Data::decode( $yaml['comments'], 'yaml' );
+
+		// attach new data set to array
+		$comments[] = $data;
+
+		// replace the old comments in the yaml data and write it back to the file
+		$yaml['comments'] = Data::encode( $comments, 'yaml' );
+		Data::write( $commentsfile, $yaml );
+
+	}
+
+    public static function update( $page, $commentid, $data = [] ) {
+
+		// read the commentions text file and decode the yaml
+		$commentsfile = $page->root() . '/.commentions.txt';
+		$yaml = Data::read( $commentsfile );
+		$comments = Data::decode( $yaml['comments'], 'yaml' );
+
+		// loop through array of all comments
+		$output = [];
+		foreach( $comments as $comment ) :
+
+			// find the entry with matching ID
+			if ( strtotime( $comment['timestamp'] ) == $commentid ) :
+
+				if ( is_array( $data ) ) :
+					// loop through all new data submitted in array and update accordingly
+					foreach( $data as $key => $value ) :
+						$comment[ $key ] = $value;
+					endforeach;
+				endif;
+
+				// if the data variable is not an array but string 'delete', omit this comment from the output array
+				if ( $data != 'delete' ) :
+					$output[] = $comment;
+				endif;
+
+			else :
+
+				// add the unchanged comment to the output array
+				$output[] = $comment;
+
+			endif;
+
+		endforeach;
+
+		// replace the old comments in the yaml data and write it back to the file
+		$yaml['comments'] = Data::encode( $output, 'yaml' );
+		Data::write( $commentsfile, $yaml );
+
+		return ['ok'];
+
+	}
+
     public static function approve( $filename ) {
 		
 		$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . $filename;
 		$data = Data::read( $inboxfile, 'json' );
-		$targetpage = kirby()->page( $data['target'] );
-		
+		$targetpage = page( $data['target'] );
+
+		// no need to keep target page info in comment meta
+		unset( $data['target'] );
+
 		// translate unix timestamp to format required by Kirby
 		$data['timestamp'] = date( date('Y-m-d H:i'), $data['timestamp'] );
 
-		// load array of existing comments, if any
-		if ( $targetpage->comments() )
-			$comments = $targetpage->comments()->yaml();
-		else
-			$comments = [];
-		
 		if ( $data['type'] == 'comment' ) :
 		
 			// the comment array already exists in the required form
-			$data['approved'] = 'true';
+			$finaldata = $data;
 
 			// remove empty fields
-			foreach ( $data as $key => $value )
-				if ( $value == null ) unset( $data[ $key ] );
+			foreach ( $finaldata as $key => $value ) :
+				if ( $value == null ) :
+					unset( $finaldata[ $key ] );
+				endif;
+			endforeach;
 
-			// no need to keep target page info in comment meta
-			unset( $data['target'] );
-
-			$comments[] = $data;
-		
 		else :
 
-			// no need to keep target page info in comment meta
-			unset( $data['target'] );
-
 			// for webmentions, some translations are required
-			$mentiondata = [
+			$finaldata = [
 				'name' => $data['author']['name'],
 				'message' => $data['text'],
 				'timestamp' => $data['timestamp'],
 				'source' => $data['source'],
 				'website' => $data['author']['url'],
 				'type' => $data['type'],
-				'approved' => 'true',
 			];
 
 			// only create non-essential fields if they contain data
 			if ( isset( $data['author']['photo'] ) && $data['author']['photo'] != null )
-				$mentiondata['avatar'] = $data['author']['photo'];
+				$finaldata['avatar'] = $data['author']['photo'];
 
-			$comments[] = $mentiondata;
-		
 		endif;
 
-		// save the updated comment array to the text file
-		$targetpage->update(array(
-			'comments' => yaml::encode($comments),
-		), $data['language'] );
+		// set status to approved and save
+		$finaldata['approved'] = 'true';
+		Commentions::add( $targetpage, $finaldata );
 
 		// delete the processed inbox file
 		F::remove( $inboxfile );

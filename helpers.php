@@ -31,7 +31,7 @@ function commentionsForm() {
 function commentionsList( string $format = 'list' ) {
 
 	// retrieve all approved comments for this page
-	$comments = page()->comments()->toStructure()->filterBy('approved','true')->toArray();
+	$comments = page()->commentions();
 	$reactions = [];
 
 	if ( $format == 'raw' ) :

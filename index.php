@@ -30,6 +30,7 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'sections' 		=> [
         'commentions' => require __DIR__ . '/sections/commentions.php',
+        'commentions2' => require __DIR__ . '/sections/commentions2.php',
     ],
 
     'routes'   		=> function ( $kirby ) {
@@ -41,5 +42,11 @@ require( __DIR__ . DS . 'helpers.php' );
         'commentions-form' => __DIR__ . '/snippets/commentions-form.php',
         'commentions-feedback' => __DIR__ . '/snippets/commentions-feedback.php',
     ],
+
+    'pageMethods' => [
+        'commentions' => function () {
+            return Commentions::retrieve( page() );
+        }
+    ]
 
 ]);
