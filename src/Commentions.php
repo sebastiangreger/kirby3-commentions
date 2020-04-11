@@ -15,25 +15,33 @@ class Commentions {
 
 	public static $feedback = null;
 
+    public static function file( $page ) {
+
+		// for real pages, commentions are stored in .commentions.txt in the same folder
+		if ( is_dir( $page->root() ) )
+			$filepath = $page->root() . DS . '.commentions.txt';
+
+		// for virtual pages, commentions are stored in .commentions-<slug>.txt in the parent folder
+		else
+			$filepath = $page->parent()->root() . DS . '.commentions-' . $page->slug() . '.txt';
+
+		return $filepath;
+
+	}
+
     public static function read( $page ) {
 
-		// read the commentions text file
-		$commentsfile = $page->root() . '/.commentions.txt';
-
-		// decode the yaml
-		$yaml = Data::read( $commentsfile );
+		// read the commentions text file and decode the yaml
+		$yaml = Data::read( Commentions::file( $page ) );
 		return Data::decode( $yaml['comments'], 'yaml' );
 
 	}
 
     public static function write( $page, $comments ) {
 
-		// encode the yaml
+		// encode the yaml and write the updated comments to the text file
 		$yaml['comments'] = Data::encode( $comments, 'yaml' );
-
-		// write the updated comments to the text file
-		$commentsfile = $page->root() . '/.commentions.txt';
-		Data::write( $commentsfile, $yaml );
+		Data::write( Commentions::file( $page ), $yaml );
 
 	}
 
