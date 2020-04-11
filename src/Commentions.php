@@ -15,14 +15,31 @@ class Commentions {
 
 	public static $feedback = null;
 
+    public static function read( $page ) {
+
+		// read the commentions text file
+		$commentsfile = $page->root() . '/.commentions.txt';
+
+		// decode the yaml
+		$yaml = Data::read( $commentsfile );
+		return Data::decode( $yaml['comments'], 'yaml' );
+
+	}
+
+    public static function write( $page, $comments ) {
+
+		// encode the yaml
+		$yaml['comments'] = Data::encode( $comments, 'yaml' );
+
+		// write the updated comments to the text file
+		$commentsfile = $page->root() . '/.commentions.txt';
+		Data::write( $commentsfile, $yaml );
+
+	}
+
     public static function retrieve( $page ) {
 
-		// read the commentions text file and decode the yaml
-		$commentsfile = $page->root() . '/.commentions.txt';
-		$yaml = Data::read( $commentsfile );
-		$comments = Data::decode( $yaml['comments'], 'yaml' );
-
-		foreach( $comments as $comment ) :
+		foreach( Commentions::read( $page ) as $comment ) :
 			if ( $comment['approved'] == 'true' )
 				$output[] = $comment;
 		endforeach;
@@ -33,30 +50,19 @@ class Commentions {
 
     public static function add( $page, $data = [] ) {
 
-		// read the commentions text file and decode the yaml
-		$commentsfile = $page->root() . '/.commentions.txt';
-		$yaml = Data::read( $commentsfile );
-		$comments = Data::decode( $yaml['comments'], 'yaml' );
-
-		// attach new data set to array
+		// attach new data set to array of existing comments
+		$comments = Commentions::read( $page );
 		$comments[] = $data;
 
 		// replace the old comments in the yaml data and write it back to the file
-		$yaml['comments'] = Data::encode( $comments, 'yaml' );
-		Data::write( $commentsfile, $yaml );
+		Commentions::write( $page, $comments );
 
 	}
 
     public static function update( $page, $commentid, $data = [] ) {
 
-		// read the commentions text file and decode the yaml
-		$commentsfile = $page->root() . '/.commentions.txt';
-		$yaml = Data::read( $commentsfile );
-		$comments = Data::decode( $yaml['comments'], 'yaml' );
-
 		// loop through array of all comments
-		$output = [];
-		foreach( $comments as $comment ) :
+		foreach( Commentions::read( $page ) as $comment ) :
 
 			// find the entry with matching ID
 			if ( strtotime( $comment['timestamp'] ) == $commentid ) :
@@ -83,8 +89,7 @@ class Commentions {
 		endforeach;
 
 		// replace the old comments in the yaml data and write it back to the file
-		$yaml['comments'] = Data::encode( $output, 'yaml' );
-		Data::write( $commentsfile, $yaml );
+		Commentions::write( $page, $output );
 
 		return ['ok'];
 
