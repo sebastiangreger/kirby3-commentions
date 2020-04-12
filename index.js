@@ -8,7 +8,8 @@ panel.plugin('sgkirby/commentions', {
 
 				return {
 					headline: null,
-					commentions: null
+					commentions: null,
+					empty: null
 				}
 
 			},
@@ -18,6 +19,7 @@ panel.plugin('sgkirby/commentions', {
 				this.load().then(response => {
 					this.headline 		= response.headline;
 					this.commentions    = response.commentions;
+					this.empty    		= response.empty;
 				});
 			},
 
@@ -33,16 +35,21 @@ panel.plugin('sgkirby/commentions', {
 					<k-list>
 						<k-list-item
 							v-for="(value, key) in commentions"
-							:icon="{
-								type: 'chat',
-								back: 'white',
-							}"
+							v-bind:icon="value[3]"
+							v-bind:class="value[2]"
 							v-bind:options="value[1]"
-							v-bind:info="key"
 							v-bind:text="value[0]"
 							@action="action"
 						/>
 					</k-list>
+					<k-empty
+						v-if="commentions === null || commentions.length == 0"
+						layout="list"
+						icon="chat"
+						@click="refresh"
+					>
+						{{ empty }}
+					</k-empty>
 				</section>
 
 			`,
@@ -61,6 +68,9 @@ panel.plugin('sgkirby/commentions', {
 
 					// call the api for the desired action
 					switch(action) {
+						case 'open':
+							window.open( pageid, "_blank" )
+							break;
 						// for deletion, display a verification popup
 						case 'delete':
 							if (confirm("Really delete? This can not be undone!") == true) {
