@@ -8,19 +8,39 @@ use Kirby\Toolkit\F;
 return [
 
 	'props' => [
-	
-		'headline' => function ( $message = "Pending comments" ) {
-			return $message;
-		}
-		
+
+		'headline' => function ( $headline = "Comments and Webmentions" ) {
+			return $headline;
+		},
+
+		'show' => function ( $show = "page" ) {
+			if ( ! in_array( $show, [ 'page', 'pending', 'all' ] ) )
+				$show = 'page';
+			return $show;
+		},
+
 	],
-	
+
 	'computed' => [
-	
+
 		'commentions' => function () {
 
-			$array = [];
-			foreach( site()->index()->commentions('pending') as $data ) :
+			// retrieve the show property
+			switch ( $this->show() ) {
+				case 'all':
+					$comments = site()->index()->commentions('all');
+					break;
+				case 'pending':
+					$comments = site()->index()->commentions('pending');
+					break;
+				default:
+					$page = $this->model();
+					$comments = $page->commentions('all');
+					break;
+			}
+
+			// transpose all comments into an array
+			foreach ( $comments as $data ) {
 
 				$text = htmlspecialchars( $data['message'] );
 				$name = htmlspecialchars( $data['name'] );
@@ -28,9 +48,8 @@ return [
 
 				$commentid = strtotime( $data['timestamp'] );
 
-				$content =
-					$name
-					. ', ' . date( 'Y-m-d H:i', strtotime($data['timestamp']) )
+				$content = $name
+					. ', ' . date( $data['timestamp'] )
 					. ' (' . $meta
 					. '): ' . $text;
 
@@ -43,12 +62,13 @@ return [
 
 				$return[ $commentid ] = [ $content, $options ];
 
-			endforeach;
-			
+			}
+
+			// return the array to the vue component
 			return $return;
-			
+
 		}
-		
+
 	],
 
 ];

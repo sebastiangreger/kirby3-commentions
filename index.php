@@ -32,7 +32,6 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'sections' 		=> [
         'commentions' => require __DIR__ . '/sections/commentions.php',
-        'commentions2' => require __DIR__ . '/sections/commentions2.php',
     ],
 
     'routes'   		=> function ( $kirby ) {
@@ -47,12 +46,12 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'pageMethods' => [
         'commentions' => function ( $status = 'approved' ) {
-            return Commentions::retrieve( page(), $status );
+            return Commentions::retrieve( $this, $status );
         }
     ],
 
     'pagesMethods' => [
-        'commentions' => function (  $status = 'approved' ) {
+        'commentions' => function ( $status = 'approved' ) {
 			$return = [];
 			foreach ( $this as $page ) :
 				$return = A::merge( $return, Commentions::retrieve( $page, $status ) );

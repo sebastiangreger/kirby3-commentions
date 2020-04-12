@@ -54,7 +54,7 @@ class Commentions {
 
 		$output = [];
 		foreach( Commentions::read( $page ) as $comment ) :
-			if ( ( $status == 'approved' && $comment['approved'] == 'true' ) || ( $status == 'pending' && $comment['approved'] == 'false' ) ) :
+			if ( ( $status == 'approved' && $comment['approved'] == 'true' ) || ( $status == 'pending' && $comment['approved'] == 'false' ) || $status == 'all' ) :
 				$comment['pageid'] = $page->id();
 				$output[] = $comment;
 			endif;
