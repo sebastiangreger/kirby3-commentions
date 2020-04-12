@@ -7,29 +7,29 @@ return [
     'routes' => [
     
 		[
-			'pattern' => 'commentions/approve/(:num)/(:all)',
+			'pattern' => 'commentions/(approve|unapprove|delete)/(:num)/(:all)',
 			'method'  => 'GET',
-			'action'  => function ( $commentid, $pageid ) {
-				return Commentions::update( page( $pageid ), $commentid, [ 'approved' => 'true' ] );
-            }
-        ],
+			'action'  => function ( $action, $commentid, $pageid ) {
 
-		[
-			'pattern' => 'commentions/unapprove/(:num)/(:all)',
-			'method'  => 'GET',
-			'action'  => function ( $commentid, $pageid ) {
-				return Commentions::update( page( $pageid ), $commentid, [ 'approved' => 'false' ] );
-            }
-        ],
+				switch ( $action ) {
+					case 'approve':
+						$array = [ 'approved' => 'true' ];
+						break;
+					case 'unapprove':
+						$array = [ 'approved' => 'false' ];
+						break;
+					case 'approve':
+						$array = 'delete';
+						break;
+					default:
+						return false;
+				}
 
-		[
-			'pattern' => 'commentions/delete/(:num)/(:all)',
-			'method'  => 'GET',
-			'action'  => function ( $commentid, $pageid ) {
-				return Commentions::update( page( $pageid ), $commentid, 'delete' );
+				return Commentions::update( page( $pageid ), $commentid, $array );
+
             }
         ],
-        
+       
 	]
 
 ];
