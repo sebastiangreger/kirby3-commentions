@@ -32,8 +32,13 @@ class Commentions {
     public static function read( $page ) {
 
 		// read the commentions text file and decode the yaml
-		$yaml = Data::read( Commentions::file( $page ) );
-		return Data::decode( $yaml['comments'], 'yaml' );
+		$file = Commentions::file( $page );
+		if ( F::exists( $file ) ) :
+			$yaml = Data::read( $file );
+			return Data::decode( $yaml['comments'], 'yaml' );
+		else :
+			return [];
+		endif;
 
 	}
 
@@ -45,11 +50,14 @@ class Commentions {
 
 	}
 
-    public static function retrieve( $page ) {
+    public static function retrieve( $page, $status = 'approved' ) {
 
+		$output = [];
 		foreach( Commentions::read( $page ) as $comment ) :
-			if ( $comment['approved'] == 'true' )
+			if ( ( $status == 'approved' && $comment['approved'] == 'true' ) || ( $status == 'pending' && $comment['approved'] == 'false' ) ) :
+				$comment['pageid'] = $page->id();
 				$output[] = $comment;
+			endif;
 		endforeach;
 
 		return $output;
@@ -103,59 +111,6 @@ class Commentions {
 
 	}
 
-    public static function approve( $filename ) {
-		
-		$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . $filename;
-		$data = Data::read( $inboxfile, 'json' );
-		$targetpage = page( $data['target'] );
-
-		// no need to keep target page info in comment meta
-		unset( $data['target'] );
-
-		// translate unix timestamp to format required by Kirby
-		$data['timestamp'] = date( date('Y-m-d H:i'), $data['timestamp'] );
-
-		if ( $data['type'] == 'comment' ) :
-		
-			// the comment array already exists in the required form
-			$finaldata = $data;
-
-			// remove empty fields
-			foreach ( $finaldata as $key => $value ) :
-				if ( $value == null ) :
-					unset( $finaldata[ $key ] );
-				endif;
-			endforeach;
-
-		else :
-
-			// for webmentions, some translations are required
-			$finaldata = [
-				'name' => $data['author']['name'],
-				'message' => $data['text'],
-				'timestamp' => $data['timestamp'],
-				'source' => $data['source'],
-				'website' => $data['author']['url'],
-				'type' => $data['type'],
-			];
-
-			// only create non-essential fields if they contain data
-			if ( isset( $data['author']['photo'] ) && $data['author']['photo'] != null )
-				$finaldata['avatar'] = $data['author']['photo'];
-
-		endif;
-
-		// set status to approved and save
-		$finaldata['approved'] = 'true';
-		Commentions::add( $targetpage, $finaldata );
-
-		// delete the processed inbox file
-		F::remove( $inboxfile );
-		
-		return ['ok'];
-		
-	}
-
     public static function determineLanguage( $path, $page ) {
 
 		// find the language where the configured URI matches the given URI
@@ -168,16 +123,6 @@ class Commentions {
 		// return null if no match (default on single-language sites)
 		return null;
 
-	}
-
-    public static function delete( $filename ) {
-		
-		// delete the inbox file
-		$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . $filename;
-		F::remove( $inboxfile );
-
-		return ['ok'];
-		
 	}
 
     public static function endpointRoute( $kirby ) {
@@ -289,10 +234,10 @@ class Commentions {
             'email' => get('email'),
             'website' => get('realwebsite'),
             'message' => get('message'),
-            'timestamp' => time(),
-            'target' => $page->id(),
+            'timestamp' => date( date('Y-m-d H:i'), time() ),
             'language' => static::determineLanguage( $path, $page ),
             'type' => 'comment',
+            'approved' => 'false',
         );
         $rules = array(
             'message' => array('required', 'min' => 4, 'max' => 4096),
@@ -313,10 +258,10 @@ class Commentions {
 
 			try {
 	
-				$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . time() . '.json';
-				$json = json_encode( $data );
-				F::write( $inboxfile, $json );
-				
+				// save commention to the according txt file
+				Commentions::add( page( $page->id() ), $data );
+
+				// return to the post page and display success message
 				go( $page->url() . "?thx=queued" );
 
 			} catch (Exception $e) {
@@ -453,20 +398,23 @@ class Commentions {
 
 			endif;
 
-			// store source and target URL in the result array
-			$result['source'] = $source;
-			$result['target'] = $page->id();
-			$result['language'] = static::determineLanguage( $path, $page );
-
 			// set comment type
 			if ( !isset( $result['type'] ) || $result['type'] == '' || $result['type'] == 'mention' )
 				$result['type'] = 'webmention';
 
-			// TODO: instead of writing into JSON, write this into the "comments inbox"
-			$json = json_encode( $result );
-			$hash = sha1( $source );
-			$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . time() /* . '-' . $hash */ . '.json';
-			F::write( $inboxfile, $json );
+			// save as new webmention
+			$finaldata = [
+				'approved' => false,
+				'name' => $result['author']['name'],
+				'website' => $result['author']['url'],
+				'avatar' => $result['author']['photo'],
+				'message' => $result['text'],
+				'timestamp' => date( date('Y-m-d H:i'), $result['timestamp'] ),
+				'source' => $source,
+				'type' => $result['type'],
+				'language' => static::determineLanguage( $path, $page ),
+			];
+			Commentions::add( page( $page->id() ), $finaldata );
 
 			return true;
 

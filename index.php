@@ -1,7 +1,5 @@
 <?php
 
-namespace sgkirby\Commentions;
-
 /**
  * Kirby 3 "Commentions" - Comments and Mentions Plugin
  *
@@ -11,6 +9,10 @@ namespace sgkirby\Commentions;
  * @link      https://github.com/sebastiangreger/kirby3-sendmentions
  * @license   MIT
  */
+
+namespace sgkirby\Commentions;
+
+use Kirby\Toolkit\A;
 
 load([
     'sgkirby\\Commentions\\Commentions' => 'src/Commentions.php'
@@ -44,9 +46,19 @@ require( __DIR__ . DS . 'helpers.php' );
     ],
 
     'pageMethods' => [
-        'commentions' => function () {
-            return Commentions::retrieve( page() );
+        'commentions' => function ( $status = 'approved' ) {
+            return Commentions::retrieve( page(), $status );
         }
-    ]
+    ],
+
+    'pagesMethods' => [
+        'commentions' => function (  $status = 'approved' ) {
+			$return = [];
+			foreach ( $this as $page ) :
+				$return = A::merge( $return, Commentions::retrieve( $page, $status ) );
+			endforeach;
+			return $return;
+        }
+    ],
 
 ]);

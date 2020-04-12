@@ -22,13 +22,8 @@ return [
 			// set the page currently open in the panel
 			$page = $this->model();
 
-			// read the commentions text file and decode the yaml
-			$datafile = $page->root() . '/.commentions.txt';
-			$rawdata = Data::read( $datafile );
-			$dataarray = Data::decode( $rawdata['comments'], 'yaml' );
-
 			// transpose all comments into an array
-			foreach ( $dataarray as $data ) {
+			foreach ( Commentions::read( $page ) as $data ) {
 
 				$text = htmlspecialchars( $data['message'] );
 				$name = htmlspecialchars( $data['name'] );

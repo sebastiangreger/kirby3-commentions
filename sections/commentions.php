@@ -17,46 +17,35 @@ return [
 	
 	'computed' => [
 	
-		'approve' => function () {
-			
-			return 'boo';
-			
-		},
-	
 		'commentions' => function () {
-			
-			$i = 0;
+
 			$array = [];
-			$files = kirby()->root() . '/content/.commentions/inbox/*.json';
-			foreach ( glob( $files ) as $inboxfile ) {
-				
-				$data = Data::read( $inboxfile, 'json' );
+			foreach( site()->index()->commentions('pending') as $data ) :
 
-				if ( isset( $data['message'] ) )
-					$text = htmlspecialchars( $data['message'] );
-				else
-					$text = htmlspecialchars( $data['text'] );
+				$text = htmlspecialchars( $data['message'] );
+				$name = htmlspecialchars( $data['name'] );
+				$meta = $data['type'];
 
-				if ( $data['type'] == 'comment' ) :
-					$name = htmlspecialchars( $data['name'] );
-					$meta = $data['type'] . ' on ' . $data['target'];
-				else :
-					$name = htmlspecialchars( $data['author']['name'] );
-					$meta = $data['type'] . ' on ' . $data['source'] . ' from ' . $data['target'];
-				endif;
+				$commentid = strtotime( $data['timestamp'] );
 
-				$array[ F::filename( $inboxfile ) ] =
+				$content =
 					$name
-					. ', ' . date( 'Y-m-d H:i', $data['timestamp'] )
+					. ', ' . date( 'Y-m-d H:i', strtotime($data['timestamp']) )
 					. ' (' . $meta
 					. '): ' . $text;
 
-				$i++;
-				
-			}
+				// create the dropdown options
+				if ( $data['approved'] == 'true' )
+					$options[0] = ['icon' => 'remove', 'text' => 'Unapprove', 'click' => 'unapprove-'.$commentid.'|'.$data['pageid']];
+				else
+					$options[0] = ['icon' => 'check', 'text' => 'Approve', 'click' => 'approve-'.$commentid.'|'.$data['pageid']];
+				$options[1] = ['icon' => 'trash', 'text' => 'Delete', 'click' => 'delete-'.$commentid.'|'.$data['pageid']];
 
-			if ( $i >= 0 )
-				return $array;
+				$return[ $commentid ] = [ $content, $options ];
+
+			endforeach;
+			
+			return $return;
 			
 		}
 		
