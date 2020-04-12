@@ -9,14 +9,22 @@ return [
 
 	'props' => [
 
-		'headline' => function ( $headline = "Comments and Webmentions" ) {
-			return $headline;
-		},
-
-		'show' => function ( $show = "page" ) {
+		'show' => function ( $show = 'page' ) {
 			if ( ! in_array( $show, [ 'page', 'pending', 'all' ] ) )
 				$show = 'page';
 			return $show;
+		},
+
+		'headline' => function ( $headline = null ) {
+			if ( $headline === null ) :
+				if ( $this->show() == 'pending' )
+					$headline = 'Comments and Webmentions inbox';
+				elseif ( $this->show() == 'all' )
+					$headline = 'All comments and Webmentions';
+				else
+					$headline = 'Comments and Webmentions';
+			endif;
+			return $headline;
 		},
 
 	],
