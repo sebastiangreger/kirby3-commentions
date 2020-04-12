@@ -28,7 +28,7 @@ return [
 		'headline' => function ( $headline = null ) {
 			if ( $headline === null ) :
 				if ( $this->show() == 'pending' )
-					$headline = 'Comments and Webmentions inbox';
+					$headline = 'Comments and Webmentions Inbox';
 				elseif ( $this->show() == 'all' )
 					$headline = 'All comments and Webmentions';
 				else

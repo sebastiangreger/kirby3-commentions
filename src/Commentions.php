@@ -13,8 +13,17 @@ use Exception;
 
 class Commentions {
 
+
 	public static $feedback = null;
 
+
+    /**
+     * Returns the path to the commentions file for a page
+     *
+     * @param \Kirby\Cms\Page $page
+     * @return string
+     */
+     
     public static function file( $page ) {
 
 		// for real pages, commentions are stored in .commentions.txt in the same folder
@@ -29,28 +38,72 @@ class Commentions {
 
 	}
 
-    public static function read( $page ) {
 
-		// read the commentions text file and decode the yaml
+    /**
+     * Reads data from the commentions file; by default from the comments field
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param string $field
+     * @return array
+     */
+     
+    public static function read( $page, string $field = 'comments' ) {
+
+		// read the data and return decoded yaml
 		$file = Commentions::file( $page );
 		if ( F::exists( $file ) ) :
-			$yaml = Data::read( $file );
-			return Data::decode( $yaml['comments'], 'yaml' );
+			$data = Data::read( $file );
+			if ( isset( $data[$field] ) )
+				return Data::decode( $data[$field], 'yaml' );
+			else
+				return [];
 		else :
 			return [];
 		endif;
 
 	}
 
-    public static function write( $page, $comments ) {
 
-		// encode the yaml and write the updated comments to the text file
-		$yaml['comments'] = Data::encode( $comments, 'yaml' );
-		Data::write( Commentions::file( $page ), $yaml );
+    /**
+     * Writes data to the commentions file; by default to the comments field
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param array $data
+     * @param string $field
+     * @return array
+     */
+     
+    public static function write( $page, array $data, string $field = 'comments' ) {
+
+		$file = Commentions::file( $page );
+		if ( F::exists( $file ) ) :
+			$fields = Data::read( $file );
+			foreach ( $fields as $key => $value ) :
+				if ( $key == $field )
+					$fields[$key] = Data::encode( $data, 'yaml' );
+			endforeach;
+			if ( !isset( $fields[$field] ) ) :
+				$fields[$field] = Data::encode( $data, 'yaml' );
+			endif;
+		else :
+			$fields[$field] = Data::encode( $data, 'yaml' );
+			//F::write( $file, '' )
+		endif;
+
+		Data::write( $file, $fields );
 
 	}
 
-    public static function retrieve( $page, $status = 'approved' ) {
+
+    /**
+     * Retrieves an array of comments for a given page
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param string $status
+     * @return array
+     */
+     
+    public static function retrieve( $page, string $status = 'approved' ) {
 
 		$output = [];
 		foreach( Commentions::read( $page ) as $comment ) :
@@ -64,52 +117,82 @@ class Commentions {
 
 	}
 
-    public static function add( $page, $data = [] ) {
+
+    /**
+     * Adds new entry to the commentions file; by default to the comments field
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param array $data
+     * @param string $field
+     * @return array
+     */
+     
+    public static function add( $page, $entry = [], $field = 'comments' ) {
 
 		// attach new data set to array of existing comments
-		$comments = Commentions::read( $page );
-		$comments[] = $data;
+		$data = Commentions::read( $page, $field );
+		$data[] = $entry;
 
 		// replace the old comments in the yaml data and write it back to the file
-		Commentions::write( $page, $comments );
+		Commentions::write( $page, $data, $field );
 
 	}
 
-    public static function update( $page, $commentid, $data = [] ) {
+
+    /**
+     * Updates or deletes a single entry in the commentions file; by default in the comments field
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param string $commentid
+     * @param string|array $data
+     * @return array
+     */
+     
+    public static function update( $page, $entryid, $data = [], $field = 'comments' ) {
 
 		// loop through array of all comments
-		foreach( Commentions::read( $page ) as $comment ) :
+		foreach( Commentions::read( $page, $field ) as $entry ) :
 
 			// find the entry with matching ID
-			if ( strtotime( $comment['timestamp'] ) == $commentid ) :
+			if ( $entry['timestamp'] == $entryid ) :
 
+				// if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
 				if ( is_array( $data ) ) :
 					// loop through all new data submitted in array and update accordingly
 					foreach( $data as $key => $value ) :
-						$comment[ $key ] = $value;
+						$entry[ $key ] = $value;
 					endforeach;
 				endif;
 
 				// if the data variable is not an array but string 'delete', omit this comment from the output array
 				if ( $data != 'delete' ) :
-					$output[] = $comment;
+					$output[] = $entry;
 				endif;
 
 			else :
 
 				// add the unchanged comment to the output array
-				$output[] = $comment;
+				$output[] = $entry;
 
 			endif;
 
 		endforeach;
 
 		// replace the old comments in the yaml data and write it back to the file
-		Commentions::write( $page, $output );
+		Commentions::write( $page, $output, $field );
 
 		return ['ok'];
 
 	}
+
+
+    /**
+     * Returns the two-letter language code for a given path and page
+     *
+     * @param string $path
+     * @param \Kirby\Cms\Page $page
+     * @return array
+     */
 
     public static function determineLanguage( $path, $page ) {
 
@@ -125,7 +208,14 @@ class Commentions {
 
 	}
 
-    public static function endpointRoute( $kirby ) {
+
+    /**
+     * Returns the route to the Webmention endpoint; called from index.php
+     * 
+     * @return array
+     */
+
+    public static function endpointRoute() {
 
 		return [
 			[
@@ -175,7 +265,7 @@ class Commentions {
 				'pattern' => 'commentions-processqueue',
 				'action'  => function () {
 
-					$secret = option( 'sgkirby.commentions.secret', '' );
+					$secret = option( 'sgkirby.commentions.secret', '1234567890' );
 
 					// validation with actionable error messages
 					if ( !get('token') )
@@ -202,6 +292,13 @@ class Commentions {
 
 	}
 	
+
+    /**
+     * Adds new comment to the given page's commention file
+     *
+     * @param string $path
+     */
+
     public static function queueComment( $path, $page ) {
 
 		$spamfilters = option( 'sgkirby.commentions.spamprotection', [ 'honeypot', 'timemin', 'timemax' ] );
@@ -274,39 +371,58 @@ class Commentions {
         
     }
 
+
+    /**
+     * Handles the asynchronous processing of webmentions from the queue
+     *
+     * @return bool
+     */
+
 	public static function processQueue() {
 
-        $files = kirby()->root() . '/content/.commentions/queue/webmention-*.json';
-        foreach ( glob( $files ) as $queuefile ) :
-        
-            $data = Data::read( $queuefile, 'json' );
+		// loop through all pages in the index
+		foreach ( site()->index() as $page ) :
 
-			if ( $result = static::parseRequest( $data['source'], $data['target'] ) ) :
+			// loop through every webmention request in the queue of every page
+			foreach( Commentions::read( $page, 'queue' ) as $queueitem ) :
 
-				// delete webmention from queue after successful parsing
-				if ( is_bool( $result ) ) :
+				// skip requests already marked as failed
+				if ( ! isset( $queueitem['failed'] ) ) :
+								
+					if ( $result = static::parseRequest( $queueitem['source'], $queueitem['target'] ) ) :
+
+						// delete webmention from queue after successful parsing
+						if ( is_bool( $result ) ) :
+							Commentions::update( $page, $queueitem['timestamp'], 'delete', 'queue' );
+							return true;
+
+						else :
+							// mark failed requests as failed
+							Commentions::update( $page, $queueitem['timestamp'], [ 'failed' => $result ], 'queue' );
+
+						endif;
+
+					else :
 				
-					F::remove( $queuefile );
-					return true;
+						throw new Exception( 'Problem processing queue file.' );
 
-				// rename failed webmention for debug
-				// TODO: delete after some time
-				else :
-							
-					F::rename( $queuefile, str_replace( 'webmention-', 'failed-', F::name( $queuefile ) ) );
-					throw new Exception( $result );
+					endif;
 
 				endif;
 
-			else :
-		
-				throw new Exception( 'Problem processing queue file.' );
-
-			endif;
-
+			endforeach;
         endforeach;
         
 	}
+
+
+    /**
+     * Parses webmention requests based on given source and target
+     *
+     * @param string $source
+     * @param string $target
+     * @return bool
+     */
 
 	public static function parseRequest( $source, $target ) {
 

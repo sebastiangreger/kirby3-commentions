@@ -2,6 +2,7 @@
 
 namespace sgkirby\Commentions;
 
+use Kirby\Http\Url;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
@@ -29,10 +30,19 @@ class Endpoint {
 		if( !Str::contains( $target, str_replace( array( 'http:', 'https:' ), '', site()->url() ) ) )
 			throw new Exception( 'Target URL not on this site.' );
 
-		$hash = sha1( $source );
-		$file = kirby()->root() . '/content/.commentions/queue' . DS . 'webmention-' . time() . '-' . $hash . '.json';
-		$json = json_encode( [ 'target' => $target, 'source' => $source ] );
-		F::write( $file, $json );
+		// find the Kirby page the target URL refers to
+		$path = Url::path( $target );
+		if ( $path == '' )
+			$page = page('home');
+		else
+			$page = page( kirby()->call( trim( $path, '/' ) ) );
+
+		// if the target resolves to an existing Kirby page, add to the queue in the according commention file
+		if( $page != null )
+			Commentions::add( $page, [ 'target' => $target, 'source' => $source, 'timestamp' => time() ], 'queue' );
+		// all other requests are enqueued in the home page commention file
+		else
+			Commentions::add( page('home'), [ 'target' => $target, 'source' => $source, 'timestamp' => time() ], 'queue' );
 
 	}
 

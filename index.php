@@ -34,8 +34,8 @@ require( __DIR__ . DS . 'helpers.php' );
         'commentions' => require __DIR__ . '/sections/commentions.php',
     ],
 
-    'routes'   		=> function ( $kirby ) {
-        return Commentions::endpointRoute( $kirby );
+    'routes'   		=> function () {
+        return Commentions::endpointRoute();
     },
     
     'snippets' 		=> [
