@@ -41,6 +41,15 @@ return [
 
 	'computed' => [
 
+		'error' => function () {
+			
+			if ( is_dir( kirby()->root() . DS . 'content' . DS . '.commentions' ) )
+				return 'version';
+			else
+				return false;
+			
+		},
+			
 		'commentions' => function () {
 
 			// retrieve the show property

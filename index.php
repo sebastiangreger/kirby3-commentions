@@ -34,9 +34,7 @@ require( __DIR__ . DS . 'helpers.php' );
         'commentions' => require __DIR__ . '/sections/commentions.php',
     ],
 
-    'routes'   		=> function () {
-        return Commentions::endpointRoute();
-    },
+    'routes'   		=> require __DIR__ . '/config/routes.php',
     
     'snippets' 		=> [
         'commentions-list' => __DIR__ . '/snippets/commentions-list.php',

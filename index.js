@@ -9,7 +9,8 @@ panel.plugin('sgkirby/commentions', {
 				return {
 					headline: null,
 					commentions: null,
-					empty: null
+					empty: null,
+					error: null
 				}
 
 			},
@@ -20,6 +21,7 @@ panel.plugin('sgkirby/commentions', {
 					this.headline 		= response.headline;
 					this.commentions    = response.commentions;
 					this.empty    		= response.empty;
+					this.error    		= response.error;
 				});
 			},
 
@@ -32,6 +34,14 @@ panel.plugin('sgkirby/commentions', {
 							<k-button icon="refresh" @click="refresh">Refresh</k-button>
 						</k-button-group>
 					</header>
+					<k-box theme="negative" v-if="error">
+						<k-text size="small" v-if="error == 'version'">
+							<strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/" target="_blank">Migration assistant</a> to get things running again!
+						</k-text>
+						<k-text size="small" v-else>
+							{{ error }}
+						</k-text>
+					</k-box>
 					<k-list>
 						<k-list-item
 							v-for="(value, key) in commentions"
