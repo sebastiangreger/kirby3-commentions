@@ -71,7 +71,7 @@
 
 		<?php endif; ?>
 
-		<form action="<?= site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' ) ?>" method="post" <?php if ( option( 'sgkirby.commentions.expand' ) ) echo 'class="expandertarget"'; ?>>
+		<form action="<?= site()->url() . '/' . option( 'sgkirby.commentions.endpoint' ) ?>" method="post" <?php if ( option( 'sgkirby.commentions.expand' ) ) echo 'class="expandertarget"'; ?>>
 
 			<div class="commentions-form-source">
 				<label for="source">URL of the response on your site (make sure it has a hyperlink to this page)</label>
