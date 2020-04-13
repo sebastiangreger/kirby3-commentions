@@ -19,7 +19,7 @@
 										(
 											( isset( $comment['name'] ) && $comment['name'] != null )
 											? htmlspecialchars( $comment['name'] )
-											: 'Anonymous'
+											: t('commentions.snippet.list.anonymous')
 										) ?>
 								</a>
 							</li>
@@ -36,7 +36,7 @@
 
 		<?php if ( sizeof( $comments ) > 0 ) : ?>
 		
-			<h3>Comments</h3>
+			<h3><?= t('commentions.snippet.list.comments') ?></h3>
 		   
 			<ul>
 
@@ -49,7 +49,7 @@
 							<?php $name = (
 								( isset( $comment['name'] ) && $comment['name'] != null )
 								? htmlspecialchars( $comment['name'] )
-								: 'Anonymous'
+								: t('commentions.snippet.list.anonymous')
 							) ?>
 
 							<?php if ( isset( $comment['website'] ) && $comment['website'] != '' ) : ?>
@@ -65,18 +65,18 @@
 								case 'mention':
 								case 'trackback':
 								case 'pingback':
-									echo 'mentioned this';
+									echo t('commentions.snippet.list.at');
 									if ( isset( $domain ) )
-										echo' at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
+										echo ' ' . t('commentions.snippet.list.mentioned') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'like':
-									echo 'liked this at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
+									echo t('commentions.snippet.list.liked') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'bookmark':
-									echo 'bookmarked this at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
+									echo t('commentions.snippet.list.bookmarked') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'reply':
-									echo 'replied at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>:';
+									echo t('commentions.snippet.list.replies') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>:';
 									break;
 								default:
 									echo ":";
