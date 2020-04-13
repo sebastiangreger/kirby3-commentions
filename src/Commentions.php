@@ -102,7 +102,7 @@ class Commentions {
             'website' => get('realwebsite'),
             'message' => get('message'),
             'timestamp' => date( date('Y-m-d H:i'), time() ),
-            'language' => static::determineLanguage( $path, $page ),
+            'language' => Commentions::determineLanguage( $path, $page ),
             'type' => 'comment',
             'approved' => 'false',
         );
@@ -254,7 +254,7 @@ class Commentions {
 				'timestamp' => date( date('Y-m-d H:i'), $result['timestamp'] ),
 				'source' => $source,
 				'type' => $result['type'],
-				'language' => static::determineLanguage( $path, $page ),
+				'language' => Commentions::determineLanguage( $path, $page ),
 			];
 			Storage::add( page( $page->id() ), $finaldata );
 
