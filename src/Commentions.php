@@ -113,8 +113,6 @@ class Commentions {
             'message' => 'Please enter a text between 4 and 4096 characters'
         );
 
-		// TODO: kirby()->trigger( "commentions.queuecomment:before", $page, $path, $data );
-
         // some of the data is invalid
         if ( $invalid = invalid( $data, $rules, $messages ) ) {
 
@@ -130,6 +128,9 @@ class Commentions {
 
 			// save commention to the according txt file
 			Storage::add( page( $page->id() ), $data );
+
+			// trigger a hook that allows further processing of the data
+			kirby()->trigger( "commentions.queueComment:after", $page, $data );
 
 			// return to the post page and display success message
 			go( $page->url() . "?thx=queued" );
