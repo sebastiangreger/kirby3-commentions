@@ -2,15 +2,15 @@
 
 ## Overview
 
-A minimalistic comment system with Webmention support.
+A minimalist comment system and Webmention endpoint.
 
 * Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention).
 * Incoming webmentions are stored in a queue and processed asynchronously.
 * Comments can be approved/deleted in the Kirby Panel
 
-_NB. The plugin only covers incoming webmentions (i.e. receiving notifications from other websites who link to a page). Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
+Versions 1.x (April 2020 and later) are no longer compatible with the exploratory 0.x versions. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); to go back to an old version, the last release of the old branch was [0.3.0](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v0.3.0).
 
-Version 1.0 (April 2020) is no longer compatible with the exploratory 0.x versions. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); to go back to an old version, the last release of the old branch was [0.3.0](https://github.com/sebastiangreger/kirby3-commentions/tree/v0.3.0).
+_NB. The plugin only covers incoming webmentions (i.e. receiving notifications from other websites who link to a page). Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
 ## Installation
 
@@ -20,58 +20,42 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ## Setup
 
-### Announcing your webmentions endpoint in your HTML head
+### Quickstart
 
-In order to receive webmentions (this is optional, you may also use the plugin for traditional comments only), you have to announce your webmention endpoint in the HTML head. The easiest way is by placing the following helper within the &lt;head&gt; tags of your template (often in `snippets/header.php`):
+For the advanced or impatient user, following these steps (all explained in detail below) should get a default Starterkit up and running with Commentions:
 
-```php
-<?= commentionsEndpoints(); ?>
-```
+I. Add `<?php commentionsEndpoints(); ?>` and `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (Starterkit: `site/snippets/header.php`).
 
-By default, the above helper is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
+II. Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (Starterkit: `site/template/note.php`).
 
-```HTML
-<link rel="webmention" href="https://<SITE-URL>/webmention-endpoint" />
-<link rel="http://webmention.org/" href="https://<SITE-URL>/webmention-endpoint" />
-```
-
-### Adding the Commentions UIs to the Panel blueprints
-
-All comments are stored in small text files attached to each page in the Kirby CMS. In order to display and manage these, it is required to add them to your Panel blueprints.
-
-#### Inbox view
-
-To approve/delete incoming comments, add the following to a suitable blueprint; e.g. to `site/blueprints/site.yml`:
+III. Add this section to a blueprint where you would like to manage the approval of incoming comments (Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column).
 
 ```yaml
 sections:
   commentions:
     type: commentions
     show: pending
-```
+``` 
 
-Alternatively, `pending` can be replaced with `all`, in which case all comments are displayed. This is useful in setups where new comments are set to be approved automatically.
-
-#### Page-specific list of comments
-
-To display and manage the comments for each page, add the following to the according blueprint in `site/blueprints/pages` (i.e. to all page blueprints where you want to use comments):
+IV. Add this section to the blueprint of your content page (Starterkit: `site/blueprints/pages/note.php` below the `content` section).
 
 ```yaml
 sections:
   commentions:
     type: commentions
+``` 
+
+V. Add these minimal settings to `site/config/config.php` (the secret key may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
+
+```php
+return [
+	'sgkirby.commentions.secret' => '<YOUR-SECRET>'
+];
 ```
 
-By default, newest comments are shown on top; this is to ensure you immediately notice new, unapproved comments. If you prefer an ascending sorting by date, add the `flip` variable as follows:
+VI. Test the URL `https://<SITE-URL>/commentions-processqueue?token=<YOUR-SECRET>` and set up a cronjob to run at the interval you would like to process your incoming webmention queue (an hour is likely sufficient).
 
-```yaml
-sections:
-  commentions:
-    type: commentions
-    flip: true
-```
-
-### Adding frontend UIs to your templates
+### Step 1: Adding frontend UIs to your templates
 
 The plugin comes with a set of default snippets. These are optimized to work with the [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart) but might be of use in other themes as well; they can also serve as boilerplates for designing your own (you can find them in the `site/plugins/kirby3-commentions/snippets` folder).
 
@@ -94,19 +78,19 @@ Alternatively, you can add the form feedback snippet (error or success message),
 To render the user feedback UI (error/success message after a user submits the comment form):
 
 ```php
-<?= commentionsFeedback(); ?>
+<?php commentionsFeedback(); ?>
 ```
 
 To render the comment form:
 
 ```php
-<?= commentionsForm(); ?>
+<?php commentionsForm(); ?>
 ```
 
 To render a list of comments:
 
 ```php
-<?= commentionsList(); /* adds list of comments */ ?>
+<?php commentionsList(); /* adds list of comments */ ?>
 ```
 
 By default, `commentionsList()` presents all comments and mentions in one list. To present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentionsList('grouped')` instead (check options further below for additional control).
@@ -121,17 +105,70 @@ The page method `$page->commentions()` on a page object returns an array with th
 
 _NB. The array returned by this page method also includes comments pending approval, as indicated by the `approved` field. It also may contain e-mail addresses etc., so make sure to carefully limit what data is being displayed publicly._
 
-### Adding CSS styles
+### Step 2: Adding CSS styles
 
-If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit):
+If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
 
 ```php
-<?= commentionsCss(); ?>
+<?php commentionsCss(); ?>
 ```
 
-Unless your site is running on the Starterkit, you would likely want to write your own CSS for the pre-rendered markup. If you want to build on the prefabricated styles, they can be found in `site/plugins/kirby3-commentions/assets/styles.css`.
+Unless your site is running on the Starterkit, you would likely want to write your own CSS for the pre-rendered markup. If you, however, want to build on the prefabricated styles, they can be found in `site/plugins/kirby3-commentions/assets/styles.css`.
 
-### Setting up a cronjob to process the inbox queue
+### Step 3: Adding the Commentions UIs to the Panel blueprints
+
+All comments are stored in small text files attached to each page in the Kirby CMS. In order to display and manage these, it is required to add them to your Panel blueprints.
+
+#### Inbox view
+
+To approve/delete incoming comments, add the following to a suitable blueprint; e.g. to `site/blueprints/site.yml` if you want the Commentions inbox to be displayed in the main Panel view of your site:
+
+```yaml
+sections:
+  commentions:
+    type: commentions
+    show: pending
+```
+
+Alternatively, `pending` can be replaced with `all`, in which case all comments are displayed. This is useful in setups where new comments are set to be approved automatically.
+
+_NB. If you leave out the `show` attribute, the comments of the page itself are displayed instead. If you are embedding the inbox on a page that also receives comments/webmentions itself, you would have to set up two sections of `type: commentions` (see immediately below for the other one)._
+
+#### Page-specific list of comments
+
+To display and manage the comments for each page, add the following to the according blueprint in `site/blueprints/pages` (i.e. to all page blueprints where you want to use comments):
+
+```yaml
+sections:
+  commentions:
+    type: commentions
+```
+
+By default, newest comments are shown on top; this is to ensure you immediately notice new, unapproved comments. If you prefer an ascending sorting by date, add the `flip` variable as follows:
+
+```yaml
+sections:
+  commentions:
+    type: commentions
+    flip: true
+```
+
+### Step 4: Announcing your webmentions endpoint in your HTML &lt;head&gt; (only applicable if using Webmentions)
+
+In order to receive webmentions (this is optional, you may also use the plugin for traditional comments only), you have to announce your webmention endpoint in the HTML &lt;head&gt;. The easiest way is by placing the following helper within the applicable template (often in `snippets/header.php`); if in doubt, place it at the very end just before the &lt;</head>&gt; tag:
+
+```php
+<?php commentionsEndpoints(); ?>
+```
+
+By default, the above helper is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
+
+```HTML
+<link rel="webmention" href="https://<SITE-URL>/webmention-endpoint" />
+<link rel="http://webmention.org/" href="https://<SITE-URL>/webmention-endpoint" />
+```
+
+### Step 5: Setting up a cronjob to process the inbox queue (only applicable if using Webmentions)
 
 Per the specification ([ch 3.2](https://www.w3.org/TR/webmention/#receiving-webmentions)), incoming webmentions are always placed in a backlog queue for asynchronous processing (this is to mitigate the risk of DDoS attacks by flooding your site with webmentions). In order to have these webmentions processed, this queue needs to be run regularly.
 
