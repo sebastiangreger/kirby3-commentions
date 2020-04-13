@@ -20,13 +20,13 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ## Quickstart
 
-For the advanced or impatient user, following these steps (all explained in detail below) should get a default Starterkit up and running with Commentions:
+For the advanced or impatient user, following these steps (all explained in detail below) should get a default [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart) up and running with Commentions:
 
-- [ ] Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (Starterkit: `site/template/note.php`).
+- [ ] Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (in Starterkit: `site/template/note.php`).
 
-- [ ] Add `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (Starterkit: `site/snippets/header.php`).
+- [ ] Add `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (in Starterkit: `site/snippets/header.php`).
 
-- [ ] Add this section to a blueprint where you would like to manage the approval of incoming comments (Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column).
+- [ ] Add this section to a blueprint where you would like to manage the approval of incoming comments (in Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column).
 
 ```yaml
 sections:
@@ -35,7 +35,7 @@ sections:
     show: pending
 ``` 
 
-- [ ] Add this section to the blueprint of your content page (Starterkit: `site/blueprints/pages/note.php` below the `content` section).
+- [ ] Add this section to the blueprint of your content page (in Starterkit: `site/blueprints/pages/note.php` below the `content` section).
 
 ```yaml
 sections:
@@ -43,7 +43,7 @@ sections:
     type: commentions
 ``` 
 
-- [ ] (If you want to receive Webmentions) Add `<?php commentionsEndpoints(); ?>` to the &lt;head&gt; of your HTML template (Starterkit: `site/snippets/header.php`).
+- [ ] (If you want to receive Webmentions) Add `<?php commentionsEndpoints(); ?>` to the &lt;head&gt; of your HTML template (in Starterkit: `site/snippets/header.php`).
 
 - [ ] (If you want to receive Webmentions) Add these minimum settings to `site/config/config.php` (the secret key has to be 10 or more characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
 
@@ -59,17 +59,13 @@ return [
 
 ### Step 1: Adding frontend UIs to your templates
 
-The plugin comes with a set of default snippets. These are optimized to work with the [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart) but might be of use in other themes as well; they can also serve as boilerplates for designing your own (you can find them in the `site/plugins/kirby3-commentions/snippets` folder).
+The plugin comes with a set of default snippets. These are optimized to work with the Starterkit but might be of use in other themes as well; they can also serve as boilerplates for designing your own (you can find them in the `site/plugins/kirby3-commentions/snippets` folder).
 
 To show comments on pages and display a form to leave new comments, there are three options:
 
 #### Option A. Add everything at once
 
-In order to add everything at once, add the following helper to the according templates in `site/templates` - a shorthand for the three helpers described in alternative B:
-
-```php
-<?= commentions(); ?>
-```
+In order to add everything at once, add helper `<?php commentions(); ?>` to the according templates in `site/templates` - a shorthand for the three helpers described in alternative B:
 
 This is your one-stop-shop, and it should sit rather nicely at the bottom of your content. But it might be too limited for your needs, hence there is Option B...
 
@@ -77,25 +73,9 @@ This is your one-stop-shop, and it should sit rather nicely at the bottom of you
 
 Alternatively, you can add the form feedback snippet (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list.
 
-To render the user feedback UI (error/success message after a user submits the comment form):
-
-```php
-<?php commentionsFeedback(); ?>
-```
-
-To render the comment form:
-
-```php
-<?php commentionsForm(); ?>
-```
-
-To render a list of comments:
-
-```php
-<?php commentionsList(); /* adds list of comments */ ?>
-```
-
-By default, `commentionsList()` presents all comments and mentions in one list. To present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentionsList('grouped')` instead (check options further below for additional control).
+* The helper `<?php commentionsFeedback(); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
+* To render the comment form, include `<?php commentionsForm(); ?>` in your template.
+* Finally, `<?php commentionsList(); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentionsList('grouped')` instead (check options further below for additional control).
 
 #### Option C. Create your own frontend presentation
 
@@ -109,13 +89,9 @@ _NB. The array returned by this page method also includes comments pending appro
 
 ### Step 2: Adding CSS styles
 
-If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add the following to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
+If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentionsCss(); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
 
-```php
-<?php commentionsCss(); ?>
-```
-
-Unless your site is running on the Starterkit, you would likely want to write your own CSS for the pre-rendered markup. If you, however, want to build on the prefabricated styles, they can be found in `site/plugins/kirby3-commentions/assets/styles.css`.
+Unless your site is running on the Starterkit, you likely want to write your own CSS for the pre-rendered markup. To build on the prefabricated styles, they can be found in `site/plugins/kirby3-commentions/assets/styles.css`.
 
 ### Step 3: Adding the Commentions UIs to the Panel blueprints
 
@@ -157,11 +133,7 @@ sections:
 
 ### Step 4: Announcing your webmentions endpoint in your HTML &lt;head&gt; (only applicable if using Webmentions)
 
-In order to receive webmentions (this is optional, you may also use the plugin for traditional comments only), you have to announce your webmention endpoint in the HTML &lt;head&gt;. The easiest way is by placing the following helper within the applicable template (often in `snippets/header.php`); if in doubt, place it at the very end just before the &lt;</head>&gt; tag:
-
-```php
-<?php commentionsEndpoints(); ?>
-```
+In order to receive webmentions (this is optional, you may also use the plugin for traditional comments only), you have to announce your webmention endpoint in the HTML &lt;head&gt;. The easiest way is by placing `<?php commentionsEndpoints(); ?>` within the applicable template (often in `snippets/header.php`); if in doubt, place it at the very end just before the &lt;</head>&gt; tag:
 
 By default, the above helper is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
 
