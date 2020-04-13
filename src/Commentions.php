@@ -113,6 +113,8 @@ class Commentions {
             'message' => 'Please enter a text between 4 and 4096 characters'
         );
 
+		// TODO: kirby()->trigger( "commentions.queuecomment:before", $page, $path, $data );
+
         // some of the data is invalid
         if ( $invalid = invalid( $data, $rules, $messages ) ) {
 
@@ -121,24 +123,23 @@ class Commentions {
 				'alert' => $invalid,
 			];
 
-        } else {
-
-			try {
-	
-				// save commention to the according txt file
-				Storage::add( page( $page->id() ), $data );
-
-				// return to the post page and display success message
-				go( $page->url() . "?thx=queued" );
-
-			} catch (Exception $e) {
-
-				echo $e->getMessage();
-
-			}
-
         }
-        
+
+		// store the new commention
+		try {
+
+			// save commention to the according txt file
+			Storage::add( page( $page->id() ), $data );
+
+			// return to the post page and display success message
+			go( $page->url() . "?thx=queued" );
+
+		} catch (Exception $e) {
+
+			echo $e->getMessage();
+
+		}
+
     }
 
 
