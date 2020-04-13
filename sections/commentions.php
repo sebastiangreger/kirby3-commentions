@@ -15,6 +15,10 @@ return [
 			return $show;
 		},
 
+		'flip' => function ( $flip = false ) {
+			return $flip;
+		},
+
 		'empty' => function ( $empty = null ) {
 			if ( $empty === null ) :
 				if ( $this->show() == 'pending' )
@@ -137,7 +141,11 @@ return [
 					];
 				endif;
 
-				$return[ $commentid ] = [ $content, $options, $class, $icon ];
+				$return[] = [ $content, $options, $class, $icon ];
+
+				// display comments newest first, unless flip option is true
+				if ( ! $this->flip() )
+					$return = array_reverse( $return );
 
 			}
 
