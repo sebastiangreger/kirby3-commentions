@@ -18,17 +18,15 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 
 Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
-## Setup
-
-### Quickstart
+## Quickstart
 
 For the advanced or impatient user, following these steps (all explained in detail below) should get a default Starterkit up and running with Commentions:
 
-I. Add `<?php commentionsEndpoints(); ?>` and `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (Starterkit: `site/snippets/header.php`).
+- [ ] Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (Starterkit: `site/template/note.php`).
 
-II. Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (Starterkit: `site/template/note.php`).
+- [ ] Add `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (Starterkit: `site/snippets/header.php`).
 
-III. Add this section to a blueprint where you would like to manage the approval of incoming comments (Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column).
+- [ ] Add this section to a blueprint where you would like to manage the approval of incoming comments (Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column).
 
 ```yaml
 sections:
@@ -37,7 +35,7 @@ sections:
     show: pending
 ``` 
 
-IV. Add this section to the blueprint of your content page (Starterkit: `site/blueprints/pages/note.php` below the `content` section).
+- [ ] Add this section to the blueprint of your content page (Starterkit: `site/blueprints/pages/note.php` below the `content` section).
 
 ```yaml
 sections:
@@ -45,7 +43,9 @@ sections:
     type: commentions
 ``` 
 
-V. Add these minimal settings to `site/config/config.php` (the secret key may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
+- [ ] (If you want to receive Webmentions) Add `<?php commentionsEndpoints(); ?>` to the &lt;head&gt; of your HTML template (Starterkit: `site/snippets/header.php`).
+
+- [ ] (If you want to receive Webmentions) Add these minimum settings to `site/config/config.php` (the secret key has to be 10 or more characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
 
 ```php
 return [
@@ -53,7 +53,9 @@ return [
 ];
 ```
 
-VI. Test the URL `https://<SITE-URL>/commentions-processqueue?token=<YOUR-SECRET>` and set up a cronjob to run at the interval you would like to process your incoming webmention queue (an hour is likely sufficient).
+- [ ] (If you want to receive Webmentions) Test the URL `https://<SITE-URL>/commentions-processqueue?token=<YOUR-SECRET>` and then set up a cronjob to poll this URL at the interval you would like to process your incoming webmention queue (an hour is likely sufficient).
+
+## Detailed setup instructions
 
 ### Step 1: Adding frontend UIs to your templates
 
@@ -270,27 +272,6 @@ When comments are displayed using the `<?= commentionsList('grouped') ?>` helper
 ```
 
 _NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
-
-## Features
-
-### Plugin features
-
-- [x] Accepts comments on content via comment form or webmention
-- [x] Processes incoming webmentions asynchronously (triggered by a cronjob)
-- [x] Sets new comments to "waiting for approval" by default (unless changed via setting)
-- [x] Stores approved comments/webmentions in a "_commentions.txt" file in the page folder
-- [x] Comments/webmentions for each page can be viewed/managed in the Panel view
-- [x] A inbox section can be added to a desired blueprint to give easy access to new/unapproved comments
-- [x] A helper adds the (configurable) URL of the webmention endpoint in the HTML head
-- [x] Comments and the comments form can be included in a page template using a helper function
-- [x] UI feedback, form and comment list can be integrated flexibly across templates
-- [x] Configurable meta fields (name, e-mail, website); default is name only
-
-### Roadmap/Ideas
-
-- [ ] Extend HTML markup of form elements, to allow for easy theming
-- [ ] Research using [Kirby Queue](https://github.com/bvdputte/kirby-queue) plugin for queue processing instead of own queue and cronjob
-- [ ] Additional configuration options (e.g. required/optional) for form meta fields
 
 ## Requirements
 
