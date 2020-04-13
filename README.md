@@ -20,13 +20,13 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ## Quickstart
 
-For the advanced or impatient user, following these steps (all explained in detail below) should get a default [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart) up and running with Commentions:
+For the advanced or impatient user, following these steps (all explained in detail below) should get most websites (tested on a default [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart)) up and running with Commentions:
 
 - [ ] Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (in Starterkit: `site/template/note.php`).
 
 - [ ] Add `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (in Starterkit: `site/snippets/header.php`).
 
-- [ ] Add this section to a blueprint where you would like to manage the approval of incoming comments (in Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column).
+- [ ] Add the following section to a blueprint where you would like to manage the approval of incoming comments (in Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column):
 
 ```yaml
 sections:
@@ -35,7 +35,7 @@ sections:
     show: pending
 ``` 
 
-- [ ] Add this section to the blueprint of your content page (in Starterkit: `site/blueprints/pages/note.php` below the `content` section).
+- [ ] Add the following section to the blueprint of your content page (in Starterkit: `site/blueprints/pages/note.php` below the `content` section):
 
 ```yaml
 sections:
@@ -45,7 +45,7 @@ sections:
 
 - [ ] (If you want to receive Webmentions) Add `<?php commentionsEndpoints(); ?>` to the &lt;head&gt; of your HTML template (in Starterkit: `site/snippets/header.php`).
 
-- [ ] (If you want to receive Webmentions) Add these minimum settings to `site/config/config.php` (the secret key has to be 10 or more characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
+- [ ] (If you want to receive Webmentions) Add these minimum settings to `site/config/config.php` (<YOUR-SECRET> has to be 10 or more characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
 
 ```php
 return [
