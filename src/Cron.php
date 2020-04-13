@@ -16,7 +16,7 @@ class Cron {
 
 	public static function route() {
 
-		$secret = option( 'sgkirby.commentions.secret', '' );
+		$secret = option( 'sgkirby.commentions.secret' );
 
 		// validation with actionable error messages
 		if ( !get('token') )
@@ -57,7 +57,7 @@ class Cron {
 				// skip requests already marked as failed
 				if ( ! isset( $queueitem['failed'] ) ) :
 								
-					if ( $result = static::parseRequest( $queueitem['source'], $queueitem['target'] ) ) :
+					if ( $result = Commentions::parseRequest( $queueitem['source'], $queueitem['target'] ) ) :
 
 						// delete webmention from queue after successful parsing
 						if ( is_bool( $result ) ) :

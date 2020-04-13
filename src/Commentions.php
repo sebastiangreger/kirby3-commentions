@@ -71,7 +71,7 @@ class Commentions {
 
     public static function queueComment( $path, $page ) {
 
-		$spamfilters = option( 'sgkirby.commentions.spamprotection', [ 'honeypot', 'timemin', 'timemax' ] );
+		$spamfilters = option( 'sgkirby.commentions.spamprotection' );
 
 		// honeypot: if field has been filed, it is very likely a robot
         if ( in_array( 'honeypot', $spamfilters ) && empty( get('website') ) === false ) {
@@ -80,16 +80,16 @@ class Commentions {
         }
 
 		// time measuring spam filter only active if no cache active and values are not impossible
-		if ( (int) get('commentions') > 0 && (int) option( 'sgkirby.commentions.spamtimemin', 5 ) < (int) option( 'sgkirby.commentions.spamtimemax', 86400 ) ) :
+		if ( (int) get('commentions') > 0 && (int) option( 'sgkirby.commentions.spamtimemin' ) < (int) option( 'sgkirby.commentions.spamtimemax' ) ) :
 
 			// spam timeout min: if less than n seconds between form creation and submission, it is most likely a bot
-			if ( in_array( 'timemin', $spamfilters ) && (int) get('commentions') > ( time() - (int) option( 'sgkirby.commentions.spamtimemin', 5 ) ) ) {
+			if ( in_array( 'timemin', $spamfilters ) && (int) get('commentions') > ( time() - (int) option( 'sgkirby.commentions.spamtimemin' ) ) ) {
 				go( $page->url() );
 				exit;
 			}
 
 			// spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
-			if ( in_array( 'timemax', $spamfilters ) && (int) get('commentions') < ( time() - (int) option( 'sgkirby.commentions.spamtimemax', 86400 ) ) ) {
+			if ( in_array( 'timemax', $spamfilters ) && (int) get('commentions') < ( time() - (int) option( 'sgkirby.commentions.spamtimemax' ) ) ) {
 				go( $page->url() );
 				exit;
 			}
@@ -184,7 +184,7 @@ class Commentions {
 			}
 
 			// do not keep author avatar URL unless activated in config option
-			if ( isset( $result['author']['photo'] ) && (bool) option( 'sgkirby.commentions.avatarurls', false ) )
+			if ( isset( $result['author']['photo'] ) && (bool) option( 'sgkirby.commentions.avatarurls' ) )
 				unset( $result['author']['photo'] );
 
 			// timestamp the webmention

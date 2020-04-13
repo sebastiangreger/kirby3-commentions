@@ -34,7 +34,7 @@ class Endpoint {
 			// for GET requests, provide a submission form instead
 			return new Response( '
 				<html><body>
-					<form action="' . site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' ) .  '" method="post">
+					<form action="' . site()->url() . '/' . option( 'sgkirby.commentions.endpoint' ) .  '" method="post">
 						<div>
 							<label for="target">The URL on ' . site()->url() . ' you linked to</label>
 							<input type="url" name="target" value="' . get('target') . '" pattern=".*' . str_replace( '.', '\.', site()->url() ) . '.*" required>

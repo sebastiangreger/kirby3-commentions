@@ -7,7 +7,7 @@ use Kirby\Http\Response;
 return [
 
 	[
-		'pattern' => option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' ),
+		'pattern' => option( 'sgkirby.commentions.endpoint' ),
 		'method'  => 'GET|POST',
 		'action'  => function () { return Endpoint::route(); }
 	],

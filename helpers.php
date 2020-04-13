@@ -22,7 +22,7 @@ function commentionsForm() {
 
 	if ( !get('thx') ) :
 		snippet( 'commentions-form', [
-			'fields' => (array) option( 'sgkirby.commentions.formfields', ['name'] ),
+			'fields' => (array) option( 'sgkirby.commentions.formfields' ),
 		]);
 	endif;
 
@@ -46,16 +46,7 @@ function commentionsList( string $format = 'list' ) {
 
 
 			// array of all groups to be pulled out from content list, in presentation order
-			$groups = option( 'sgkirby.commentions.grouped', [
-				'read' => 'Read by',
-				'like' => 'Likes',
-				'repost' => 'Reposts',
-				'bookmark' => 'Bookmarks',
-				'rsvp:yes' => 'RSVP: yes',
-				'rsvp:maybe' => 'RSVP: maybe',
-				'rsvp:interested' => 'RSVP: interested',
-				'rsvp:no' => 'RSVP: no',
-			] );
+			$groups = option( 'sgkirby.commentions.grouped' );
 
 			$commentsonly = [];
 
@@ -88,7 +79,7 @@ function commentionsList( string $format = 'list' ) {
 
 function commentionsEndpoints() {
 
-	$endpoint = site()->url() . '/' . option( 'sgkirby.commentions.endpoint', 'webmention-endpoint' );
+	$endpoint = site()->url() . '/' . option( 'sgkirby.commentions.endpoint' );
 	
 	return '
 		<link rel="webmention" href="' . $endpoint . '" />
