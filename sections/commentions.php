@@ -18,9 +18,9 @@ return [
 		'empty' => function ( $empty = null ) {
 			if ( $empty === null ) :
 				if ( $this->show() == 'pending' )
-					$empty = 'No pending comments';
+					$empty = t('commentions.section.empty.pending');
 				else
-					$empty = 'No comments yet';
+					$empty = t('commentions.section.empty.default');
 			endif;
 			return $empty;
 		},
@@ -28,11 +28,11 @@ return [
 		'headline' => function ( $headline = null ) {
 			if ( $headline === null ) :
 				if ( $this->show() == 'pending' )
-					$headline = 'Comments and Webmentions Inbox';
+					$headline = t('commentions.section.headline.pending');
 				elseif ( $this->show() == 'all' )
-					$headline = 'All comments and Webmentions';
+					$headline = t('commentions.section.headline.all');
 				else
-					$headline = 'Comments and Webmentions';
+					$headline = t('commentions.section.headline.default');
 			endif;
 			return $headline;
 		},
@@ -92,7 +92,7 @@ return [
 					$icon = [ 'type' => 'chat', 'back' => 'transparent' ];
 					$options[] = [
 						'icon' => 'remove',
-						'text' => 'Unapprove',
+						'text' => t('commentions.section.option.unapprove'),
 						'click' => 'unapprove-'.$commentid.'|'.$data['pageid']
 					];
 				else :
@@ -100,7 +100,7 @@ return [
 					$icon = [ 'type' => 'protected', 'back' => 'transparent' ];
 					$options[] = [
 						'icon' => 'check',
-						'text' => 'Approve',
+						'text' => t('commentions.section.option.approve'),
 						'click' => 'approve-'.$commentid.'|'.$data['pageid']
 					];
 				endif;
@@ -108,7 +108,7 @@ return [
 				// second option is always 'delete'
 				$options[] = [
 					'icon' => 'trash',
-					'text' => 'Delete',
+					'text' => t('commentions.section.option.delete'),
 					'click' => 'delete-'.$commentid.'|'.$data['pageid']
 				];
 
@@ -117,14 +117,14 @@ return [
 					$options[] = '-';
 					$options[] = [
 						'icon' => 'open',
-						'text' => 'View source',
+						'text' => t('commentions.section.option.viewsource'),
 						'click' => 'open-'.$commentid.'|'.$data['source']
 					];
 				elseif ( ! empty($data['website']) ) :
 					$options[] = '-';
 					$options[] = [
 						'icon' => 'open',
-						'text' => 'View website',
+						'text' => t('commentions.section.option.viewwebsite'),
 						'click' => 'open-'.$commentid.'|'.$data['website']
 					];
 				endif;
@@ -132,7 +132,7 @@ return [
 					$options[] = '-';
 					$options[] = [
 						'icon' => 'open',
-						'text' => 'Send e-mail',
+						'text' => t('commentions.section.option.sendemail'),
 						'click' => 'open-'.$commentid.'|mailto:'.$data['email']
 					];
 				endif;

@@ -98,4 +98,10 @@ require( __DIR__ . DS . 'helpers.php' );
 
     ],
 
+    'translations' => array(
+
+        'en' 					=> require_once __DIR__ . '/languages/en.php',
+
+    ),
+
 ]);
