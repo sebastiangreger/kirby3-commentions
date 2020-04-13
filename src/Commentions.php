@@ -18,84 +18,6 @@ class Commentions {
 
 
     /**
-     * Returns the path to the commentions file for a page
-     *
-     * @param \Kirby\Cms\Page $page
-     * @return string
-     */
-     
-    public static function file( $page ) {
-
-		// for real pages, commentions are stored in .commentions.txt in the same folder
-		if ( is_dir( $page->root() ) )
-			$filepath = $page->root() . DS . '.commentions.txt';
-
-		// for virtual pages, commentions are stored in .commentions-<slug>.txt in the parent folder
-		else
-			$filepath = $page->parent()->root() . DS . '.commentions-' . $page->slug() . '.txt';
-
-		return $filepath;
-
-	}
-
-
-    /**
-     * Reads data from the commentions file; by default from the comments field
-     *
-     * @param \Kirby\Cms\Page $page
-     * @param string $field
-     * @return array
-     */
-     
-    public static function read( $page, string $field = 'comments' ) {
-
-		// read the data and return decoded yaml
-		$file = Commentions::file( $page );
-		if ( F::exists( $file ) ) :
-			$data = Data::read( $file );
-			if ( isset( $data[$field] ) )
-				return Data::decode( $data[$field], 'yaml' );
-			else
-				return [];
-		else :
-			return [];
-		endif;
-
-	}
-
-
-    /**
-     * Writes data to the commentions file; by default to the comments field
-     *
-     * @param \Kirby\Cms\Page $page
-     * @param array $data
-     * @param string $field
-     * @return array
-     */
-     
-    public static function write( $page, array $data, string $field = 'comments' ) {
-
-		$file = Commentions::file( $page );
-		if ( F::exists( $file ) ) :
-			$fields = Data::read( $file );
-			foreach ( $fields as $key => $value ) :
-				if ( $key == $field )
-					$fields[$key] = Data::encode( $data, 'yaml' );
-			endforeach;
-			if ( !isset( $fields[$field] ) ) :
-				$fields[$field] = Data::encode( $data, 'yaml' );
-			endif;
-		else :
-			$fields[$field] = Data::encode( $data, 'yaml' );
-			//F::write( $file, '' )
-		endif;
-
-		Data::write( $file, $fields );
-
-	}
-
-
-    /**
      * Retrieves an array of comments for a given page
      *
      * @param \Kirby\Cms\Page $page
@@ -106,7 +28,7 @@ class Commentions {
     public static function retrieve( $page, string $status = 'approved' ) {
 
 		$output = [];
-		foreach( Commentions::read( $page ) as $comment ) :
+		foreach( Storage::read( $page ) as $comment ) :
 			if ( ( $status == 'approved' && $comment['approved'] == 'true' ) || ( $status == 'pending' && $comment['approved'] == 'false' ) || $status == 'all' ) :
 				$comment['pageid'] = $page->id();
 				$output[] = $comment;
@@ -114,74 +36,6 @@ class Commentions {
 		endforeach;
 
 		return $output;
-
-	}
-
-
-    /**
-     * Adds new entry to the commentions file; by default to the comments field
-     *
-     * @param \Kirby\Cms\Page $page
-     * @param array $data
-     * @param string $field
-     * @return array
-     */
-     
-    public static function add( $page, $entry = [], $field = 'comments' ) {
-
-		// attach new data set to array of existing comments
-		$data = Commentions::read( $page, $field );
-		$data[] = $entry;
-
-		// replace the old comments in the yaml data and write it back to the file
-		Commentions::write( $page, $data, $field );
-
-	}
-
-
-    /**
-     * Updates or deletes a single entry in the commentions file; by default in the comments field
-     *
-     * @param \Kirby\Cms\Page $page
-     * @param string $commentid
-     * @param string|array $data
-     * @return array
-     */
-     
-    public static function update( $page, $entryid, $data = [], $field = 'comments' ) {
-
-		// loop through array of all comments
-		foreach( Commentions::read( $page, $field ) as $entry ) :
-
-			// find the entry with matching ID
-			if ( $entry['timestamp'] == $entryid || strtotime( $entry['timestamp'] ) == $entryid ) :
-
-				// if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
-				if ( is_array( $data ) ) :
-					// loop through all new data submitted in array and update accordingly
-					foreach( $data as $key => $value ) :
-						$entry[ $key ] = $value;
-					endforeach;
-				endif;
-
-				// if the data variable is not an array but string 'delete', omit this comment from the output array
-				if ( $data != 'delete' ) :
-					$output[] = $entry;
-				endif;
-
-			else :
-
-				// add the unchanged comment to the output array
-				$output[] = $entry;
-
-			endif;
-
-		endforeach;
-
-		// replace the old comments in the yaml data and write it back to the file
-		Commentions::write( $page, $output, $field );
-
-		return ['ok'];
 
 	}
 
@@ -272,7 +126,7 @@ class Commentions {
 			try {
 	
 				// save commention to the according txt file
-				Commentions::add( page( $page->id() ), $data );
+				Storage::add( page( $page->id() ), $data );
 
 				// return to the post page and display success message
 				go( $page->url() . "?thx=queued" );
@@ -286,50 +140,6 @@ class Commentions {
         }
         
     }
-
-
-    /**
-     * Handles the asynchronous processing of webmentions from the queue
-     *
-     * @return bool
-     */
-
-	public static function processQueue() {
-
-		// loop through all pages in the index
-		foreach ( site()->index() as $page ) :
-
-			// loop through every webmention request in the queue of every page
-			foreach( Commentions::read( $page, 'queue' ) as $queueitem ) :
-
-				// skip requests already marked as failed
-				if ( ! isset( $queueitem['failed'] ) ) :
-								
-					if ( $result = static::parseRequest( $queueitem['source'], $queueitem['target'] ) ) :
-
-						// delete webmention from queue after successful parsing
-						if ( is_bool( $result ) ) :
-							Commentions::update( $page, $queueitem['timestamp'], 'delete', 'queue' );
-							return true;
-
-						else :
-							// mark failed requests as failed
-							Commentions::update( $page, $queueitem['timestamp'], [ 'failed' => $result ], 'queue' );
-
-						endif;
-
-					else :
-				
-						throw new Exception( 'Problem processing queue file.' );
-
-					endif;
-
-				endif;
-
-			endforeach;
-        endforeach;
-        
-	}
 
 
     /**
@@ -446,7 +256,7 @@ class Commentions {
 				'type' => $result['type'],
 				'language' => static::determineLanguage( $path, $page ),
 			];
-			Commentions::add( page( $page->id() ), $finaldata );
+			Storage::add( page( $page->id() ), $finaldata );
 
 			return true;
 
@@ -458,40 +268,5 @@ class Commentions {
 
 	}
 
-	public static function queueWebmention() {
-
-		// source is the external site sending the webmention;
-		$source = get('source');
-		
-		// target is the local URL, claimed to be mentioned in the source
-		$target = get('target');
-
-		if( !V::url( $source ) )
-			throw new Exception( 'Invalid source URL.' );
-
-		if( !V::url( $target ) )
-			throw new Exception( 'Invalid target URL.' );
-
-		if( $source == $target )
-			throw new Exception( 'Target and source are identical.' );
-
-		if( !Str::contains( $target, str_replace( array( 'http:', 'https:' ), '', site()->url() ) ) )
-			throw new Exception( 'Target URL not on this site.' );
-
-		// find the Kirby page the target URL refers to
-		$path = Url::path( $target );
-		if ( $path == '' )
-			$page = page('home');
-		else
-			$page = page( kirby()->call( trim( $path, '/' ) ) );
-
-		// if the target resolves to an existing Kirby page, add to the queue in the according commention file
-		if( $page != null )
-			Commentions::add( $page, [ 'target' => $target, 'source' => $source, 'timestamp' => time() ], 'queue' );
-		// all other requests are enqueued in the home page commention file
-		else
-			Commentions::add( page('home'), [ 'target' => $target, 'source' => $source, 'timestamp' => time() ], 'queue' );
-
-	}
 
 }

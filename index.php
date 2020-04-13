@@ -3,7 +3,7 @@
 /**
  * Kirby 3 "Commentions" - Comments and Mentions Plugin
  *
- * @version   0.4.0
+ * @version   1.0.0-alpha1
  * @author    Sebastian Greger <msg@sebastiangreger.net>
  * @copyright Sebastian Greger <msg@sebastiangreger.net>
  * @link      https://github.com/sebastiangreger/kirby3-sendmentions
@@ -12,10 +12,12 @@
 
 namespace sgkirby\Commentions;
 
-use Kirby\Toolkit\A;
-
 load([
-    'sgkirby\\Commentions\\Commentions' => 'src/Commentions.php'
+    'sgkirby\\Commentions\\Commentions'	=> 'src/Commentions.php',
+    'sgkirby\\Commentions\\Storage'		=> 'src/Storage.php',
+    'sgkirby\\Commentions\\Endpoint'	=> 'src/Endpoint.php',
+    'sgkirby\\Commentions\\Cron'		=> 'src/Cron.php',
+    'sgkirby\\Commentions\\Migration' 	=> 'src/Migration.php'
 ], __DIR__);
 
 require( __DIR__ . DS . 'helpers.php' );
@@ -52,7 +54,7 @@ require( __DIR__ . DS . 'helpers.php' );
         'commentions' => function ( $status = 'approved' ) {
 			$return = [];
 			foreach ( $this as $page ) :
-				$return = A::merge( $return, Commentions::retrieve( $page, $status ) );
+				$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status ) );
 			endforeach;
 			return $return;
         }

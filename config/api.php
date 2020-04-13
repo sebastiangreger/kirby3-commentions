@@ -25,7 +25,7 @@ return [
 						return false;
 				}
 
-				return Commentions::update( page( $pageid ), $commentid, $array );
+				return Storage::update( page( $pageid ), $commentid, $array );
 
             }
         ],
