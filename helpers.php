@@ -81,7 +81,7 @@ function commentionsEndpoints() {
 
 	$endpoint = site()->url() . '/' . option( 'sgkirby.commentions.endpoint' );
 	
-	return '
+	echo '
 		<link rel="webmention" href="' . $endpoint . '" />
 		<link rel="http://webmention.org/" href="' . $endpoint . '" />
 	';
@@ -90,6 +90,6 @@ function commentionsEndpoints() {
 
 function commentionsCss() {
 
-	return css( 'media/plugins/sgkirby/commentions/styles.css' );
+	echo css( 'media/plugins/sgkirby/commentions/styles.css' );
 
 }
