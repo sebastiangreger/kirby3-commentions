@@ -76,8 +76,8 @@ return [
 			// transpose all comments into an array
 			foreach ( $comments as $data ) {
 
-				$text = htmlspecialchars( $data['message'] );
-				$name = htmlspecialchars( $data['name'] );
+				$text = isset( $data['message'] ) ? htmlspecialchars( $data['message'] ) : '';
+				$name = isset( $data['name'] ) ? htmlspecialchars( $data['name'] ) : '';
 				$meta = $data['type'];
 
 				$content =
@@ -86,8 +86,7 @@ return [
 					. date( $data['timestamp'] ) . ")\n"
 					. ( !empty($data['source']) ? $data['source'] . "\n" : '' )
 					. ( empty($data['source']) && !empty($data['website']) ? $data['website'] . "\n" : '' )
-					. "\n"
-					. $text;
+					. ( $text != '' ? "\n" . $text : '' );
 
 				$options = [];
 
