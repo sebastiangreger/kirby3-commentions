@@ -86,7 +86,11 @@ class Storage {
 			//F::write( $file, '' )
 		endif;
 
-		Data::write( $file, $fields );
+		try {
+			Data::write( $file, $fields );
+		} catch (Exception $e) {
+			echo $e->getMessage();
+		}
 
 	}
 

@@ -25,7 +25,28 @@ class Commentions {
      * @param string $sort
      * @return array
      */
-     
+
+    public static function add( $page, $data ) {
+
+		// remove empty fields
+		foreach ( $data as $key => $value ) :
+			if ( $value == null ) :
+				unset( $data[ $key ] );
+			endif;
+		endforeach;
+
+		// add uid
+		$uidchars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		$uid = '';
+		for ( $i = 0; $i < 10; $i++ )
+			$uid .= $uidchars[ random_int( 0, strlen( $uidchars ) - 1)];
+		$data['uid'] = $uid;
+
+		// save commention to the according txt file
+		Storage::add( $page, $data );
+
+	}
+
     public static function retrieve( $page, string $status = 'approved', string $sort = 'asc' ) {
 
 		$output = [];
@@ -128,23 +149,14 @@ class Commentions {
 
         }
 
-		// store the new commention
-		try {
+		// save commention to the according txt file
+		Commentions::add( $page, $data );
 
-			// save commention to the according txt file
-			Storage::add( page( $page->id() ), $data );
+		// trigger a hook that allows further processing of the data
+		kirby()->trigger( "commentions.queueComment:after", $page, $data );
 
-			// trigger a hook that allows further processing of the data
-			kirby()->trigger( "commentions.queueComment:after", $page, $data );
-
-			// return to the post page and display success message
-			go( $page->url() . "?thx=queued" );
-
-		} catch (Exception $e) {
-
-			echo $e->getMessage();
-
-		}
+		// return to the post page and display success message
+		go( $page->url() . "?thx=queued" );
 
     }
 
@@ -263,7 +275,8 @@ class Commentions {
 				'type' => $result['type'],
 				'language' => Commentions::determineLanguage( $path, $page ),
 			];
-			Storage::add( page( $page->id() ), $finaldata );
+
+			Commentions::add( page( $page->id() ), $finaldata );
 
 			return true;
 
