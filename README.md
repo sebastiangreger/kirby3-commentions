@@ -118,7 +118,7 @@ Every time this URL is called, the queue of incoming webmentions is processed; v
 
 ### commentions
 
-<?php commentions(); ?> is a shorthand for displaying three helpers (described below) in the following order:
+`<?php commentions(); ?>` is a shorthand for displaying three helpers (described below) in the following order:
 
 ```php
 <?php
@@ -183,7 +183,7 @@ sections:
 
 Returns an array with comments for the page object.
 
-`$page->commentions( string $status = 'approved', string $sort = 'asc' )`
+`$page->commentions( $status, $sort )`
 
 #### Parameters
 
@@ -194,7 +194,46 @@ Returns an array with comments for the page object.
 
 #### Return
 
-array
+Array with all comments for the requested object.
+
+| Field     | Comment  | Webment. | Description                                                                                                                                        | Example                               |
+|-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
+| timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
+| type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
+| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'all'                                                                               | approved                              |
+| uid       | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
+| text      | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
+| source    |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
+| email     | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
+| avatar    |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
+| website   | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
+| language  | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
+| pageid    | default  | default  | The page ID of the Kirby page is added to the output of the page(s) method by default. It is not stored in the text file.                          | notes/exploring-the-universe          |
+
+The following example shows the most minimal comment and webmentions possible (displayed fields are compulsory):
+
+```
+Array (
+    [0] => Array
+        (
+            [timestamp] => 2020-04-01 11:30
+            [text] => Most minimal comment possible
+            [type] => comment
+            [status] => approved
+            [uid] => 1m6los473p
+            [pageid] => notes/exploring-the-universe
+        )
+    [1] => Array
+        (
+            [timestamp] => 2020-04-01 11:32
+            [type] => like
+            [status] => approved
+            [source] => https://example.com
+            [uid] => 126los473p
+            [pageid] => notes/exploring-the-universe
+        )
+)
+```
 
 ## Pages methods
 
@@ -213,7 +252,7 @@ Returns an array with comments for the page collection.
 
 #### Return
 
-array
+Same as for page method `$page->commentions()`.
 
 ## Config options
 
