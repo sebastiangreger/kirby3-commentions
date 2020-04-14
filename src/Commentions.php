@@ -134,17 +134,17 @@ class Commentions {
             'name' => get('name'),
             'email' => get('email'),
             'website' => get('realwebsite'),
-            'message' => get('message'),
+            'text' => get('message'),
             'timestamp' => date( date('Y-m-d H:i'), time() ),
             'language' => Commentions::determineLanguage( $path, $page ),
             'type' => 'comment',
             'status' => 'pending',
         );
         $rules = array(
-            'message' => array('required', 'min' => 4, 'max' => 4096),
+            'text' => array('required', 'min' => 4, 'max' => 4096),
         );
         $messages = array(
-            'message' => 'Please enter a text between 4 and 4096 characters'
+            'text' => 'Please enter a text between 4 and 4096 characters'
         );
 
         // some of the data is invalid
@@ -286,7 +286,7 @@ class Commentions {
 				'name' => $result['author']['name'],
 				'website' => $result['author']['url'],
 				'avatar' => $result['author']['photo'],
-				'message' => $result['text'],
+				'text' => $result['text'],
 				'timestamp' => date( date('Y-m-d H:i'), $result['timestamp'] ),
 				'source' => $source,
 				'type' => $result['type'],

@@ -76,7 +76,7 @@ return [
 			// transpose all comments into an array
 			foreach ( $comments as $data ) {
 
-				$text = isset( $data['message'] ) ? htmlspecialchars( $data['message'] ) : '';
+				$text = isset( $data['text'] ) ? htmlspecialchars( $data['text'] ) : '';
 				$name = isset( $data['name'] ) ? htmlspecialchars( $data['name'] ) : '';
 				$meta = $data['type'];
 

@@ -93,7 +93,7 @@
 
 						<?php if ( $comment['type'] == 'reply' || $comment['type'] == 'comment' ) : ?>
 						<div class="commentions-list-message">
-							<?= strip_tags( kirbytext( $comment['message'] ), '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>' ) ?>
+							<?= strip_tags( kirbytext( $comment['text'] ), '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>' ) ?>
 						</div>
 						<?php endif; ?>
 
