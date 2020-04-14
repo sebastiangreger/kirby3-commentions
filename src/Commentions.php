@@ -18,12 +18,9 @@ class Commentions {
 
 
     /**
-     * Retrieves an array of comments for a given page
+     * Generates a random 10-character string to be used as comment UID
      *
-     * @param \Kirby\Cms\Page $page
-     * @param string $status
-     * @param string $sort
-     * @return array
+     * @return string
      */
 
     public static function uid() {
@@ -37,6 +34,14 @@ class Commentions {
 		return $uid;
 		
 	}
+
+
+    /**
+     * Adds a new comment to the page, incl. some cleanup and adding a UID
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param array $data
+     */
 
     public static function add( $page, $data ) {
 
@@ -54,6 +59,16 @@ class Commentions {
 		Storage::add( $page, $data );
 
 	}
+
+
+    /**
+     * Retrieves an array of comments for a given page
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param string $status
+     * @param string $sort
+     * @return array
+     */
 
     public static function retrieve( $page, string $status = 'approved', string $sort = 'asc' ) {
 
