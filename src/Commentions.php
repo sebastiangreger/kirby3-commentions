@@ -170,14 +170,17 @@ class Commentions {
 
 
     /**
-     * Parses webmention requests based on given source and target
+     * Parses webmention from the queue, based on given source and target
      *
      * @param string $source
      * @param string $target
      * @return bool
      */
 
-	public static function parseRequest( $source, $target ) {
+	public static function parseRequest( $request ) {
+
+		$source = $request['source'];
+		$target = $request['target'];
 
 		// retrieve the source HTML
 		$sourcecontent = F::read( $source );
@@ -215,10 +218,16 @@ class Commentions {
 				unset( $result['author']['photo'] );
 
 			// timestamp the webmention
-			if( !empty( $result['published'] ) )
-				$result['timestamp'] = strtotime($result['published']);
-			else
-				$result['timestamp'] = time();
+			if( !empty( $result['published'] ) ) :
+				// use date of source, if available
+				if ( is_numeric( $result['published'] ) )
+					$result['timestamp'] = $result['published'];
+				else
+					$result['timestamp'] = strtotime( $result['published'] );
+			else :
+				// otherwise use date the request received
+				$result['timestamp'] = $request['timestamp'];
+			endif;
 
 		// neither microformats nor backlink = no processing possible
 		elseif( ! Str::contains( $sourcecontent, $target ) ) :
@@ -267,7 +276,7 @@ class Commentions {
 
 			endif;
 
-			// set comment type
+			// set comment type, if not given or deprecated 'mention' given
 			if ( !isset( $result['type'] ) || $result['type'] == '' || $result['type'] == 'mention' )
 				$result['type'] = 'webmention';
 

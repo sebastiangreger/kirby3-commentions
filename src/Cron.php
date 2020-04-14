@@ -56,8 +56,8 @@ class Cron {
 
 				// skip requests already marked as failed
 				if ( ! isset( $queueitem['failed'] ) ) :
-								
-					if ( $result = Commentions::parseRequest( $queueitem['source'], $queueitem['target'] ) ) :
+
+					if ( $result = Commentions::parseRequest( $queueitem ) ) :
 
 						// delete webmention from queue after successful parsing
 						if ( is_bool( $result ) ) :
