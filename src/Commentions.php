@@ -22,6 +22,7 @@ class Commentions {
      *
      * @param \Kirby\Cms\Page $page
      * @param string $status
+     * @param string $sort
      * @return array
      */
      
