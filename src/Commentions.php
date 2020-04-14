@@ -25,7 +25,7 @@ class Commentions {
      * @return array
      */
      
-    public static function retrieve( $page, string $status = 'approved' ) {
+    public static function retrieve( $page, string $status = 'approved', string $sort = 'asc' ) {
 
 		$output = [];
 		foreach( Storage::read( $page ) as $comment ) :
@@ -35,7 +35,11 @@ class Commentions {
 			endif;
 		endforeach;
 
-		return $output;
+		// default sorting is chronological
+		if ( $sort == 'desc' )
+			return array_reverse( $output );
+		else
+			return $output;
 
 	}
 

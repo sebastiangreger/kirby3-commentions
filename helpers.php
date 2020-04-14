@@ -31,9 +31,10 @@ function commentionsForm() {
 function commentionsList( string $format = 'list' ) {
 
 	// retrieve all approved comments for this page
-	$comments = page()->commentions();
+	$comments = page()->commentions('approved');
 	$reactions = [];
 
+	// DEPRECATED: as of 1.0.0
 	if ( $format == 'raw' ) :
 
 		// return an array with all comments for this page

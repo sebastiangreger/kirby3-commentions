@@ -143,11 +143,11 @@ return [
 
 				$return[] = [ $content, $options, $class, $icon ];
 
-				// display comments newest first, unless flip option is true
-				if ( ! $this->flip() )
-					$return = array_reverse( $return );
-
 			}
+
+			// display comments newest first, unless flip option is true
+			if ( ! $this->flip() )
+				$return = array_reverse( $return );
 
 			// return the array to the vue component
 			return ( isset( $return ) ? $return : [] );

@@ -80,8 +80,8 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'pageMethods' => [
 
-        'commentions' 			=> function ( $status = 'approved' ) {
-									return Commentions::retrieve( $this, $status );
+        'commentions' 			=> function ( $status = 'approved', $sort = 'asc' ) {
+									return Commentions::retrieve( $this, $status, $sort );
 								}
 
     ],
@@ -91,7 +91,7 @@ require( __DIR__ . DS . 'helpers.php' );
         'commentions'			=> function ( $status = 'approved' ) {
 									$return = [];
 									foreach ( $this as $page ) :
-										$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status ) );
+										$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status, 'asc' ) );
 									endforeach;
 									return $return;
 								}
