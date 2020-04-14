@@ -16,11 +16,11 @@ class Commentions {
 	public static $feedback = null;
 
     public static function approve( $filename ) {
-		
-		$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . $filename;
+
+		$inboxfile = kirby()->root('content') . '/.commentions/inbox/' . $filename;
 		$data = Data::read( $inboxfile, 'json' );
 		$targetpage = kirby()->page( $data['target'] );
-		
+
 		// translate unix timestamp to format required by Kirby
 		$data['timestamp'] = date( date('Y-m-d H:i'), $data['timestamp'] );
 
@@ -29,9 +29,9 @@ class Commentions {
 			$comments = $targetpage->comments()->yaml();
 		else
 			$comments = [];
-		
+
 		if ( $data['type'] == 'comment' ) :
-		
+
 			// the comment array already exists in the required form
 			$data['approved'] = 'true';
 
@@ -43,7 +43,7 @@ class Commentions {
 			unset( $data['target'] );
 
 			$comments[] = $data;
-		
+
 		else :
 
 			// no need to keep target page info in comment meta
@@ -65,19 +65,19 @@ class Commentions {
 				$mentiondata['avatar'] = $data['author']['photo'];
 
 			$comments[] = $mentiondata;
-		
+
 		endif;
 
 		// save the updated comment array to the text file
 		$targetpage->update(array(
 			'comments' => yaml::encode($comments),
-		), $data['language'] );
+		), $data['language']);
 
 		// delete the processed inbox file
 		F::remove( $inboxfile );
-		
+
 		return ['ok'];
-		
+
 	}
 
     public static function determineLanguage( $path, $page ) {
@@ -95,13 +95,13 @@ class Commentions {
 	}
 
     public static function delete( $filename ) {
-		
+
 		// delete the inbox file
-		$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . $filename;
+		$inboxfile = kirby()->root('content') . '/.commentions/inbox/' . $filename;
 		F::remove( $inboxfile );
 
 		return ['ok'];
-		
+
 	}
 
     public static function endpointRoute( $kirby ) {
@@ -115,7 +115,7 @@ class Commentions {
 					require_once( 'Endpoint.php' );
 
 					if ( kirby()->request()->is('POST') ) :
-					
+
 						// for POST requests, queue the incoming webmention
 						try {
 							Endpoint::queueWebmention();
@@ -180,7 +180,7 @@ class Commentions {
 		];
 
 	}
-	
+
     public static function queueComment( $path, $page ) {
 
 		$spamfilters = option( 'sgkirby.commentions.spamprotection', [ 'honeypot', 'timemin', 'timemax' ] );
@@ -236,11 +236,11 @@ class Commentions {
         } else {
 
 			try {
-	
-				$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . time() . '.json';
+
+				$inboxfile = kirby()->root('content') . '/.commentions/inbox/' . time() . '.json';
 				$json = json_encode( $data );
 				F::write( $inboxfile, $json );
-				
+
 				go( $page->url() . "?thx=queued" );
 
 			} catch (Exception $e) {
@@ -250,41 +250,41 @@ class Commentions {
 			}
 
         }
-        
+
     }
 
 	public static function processQueue() {
 
-        $files = kirby()->root() . '/content/.commentions/queue/webmention-*.json';
+        $files = kirby()->root('content') . '/.commentions/queue/webmention-*.json';
         foreach ( glob( $files ) as $queuefile ) :
-        
+
             $data = Data::read( $queuefile, 'json' );
 
 			if ( $result = static::parseRequest( $data['source'], $data['target'] ) ) :
 
 				// delete webmention from queue after successful parsing
 				if ( is_bool( $result ) ) :
-				
+
 					F::remove( $queuefile );
 					return true;
 
 				// rename failed webmention for debug
 				// TODO: delete after some time
 				else :
-							
+
 					F::rename( $queuefile, str_replace( 'webmention-', 'failed-', F::name( $queuefile ) ) );
 					throw new Exception( $result );
 
 				endif;
 
 			else :
-		
+
 				throw new Exception( 'Problem processing queue file.' );
 
 			endif;
 
         endforeach;
-        
+
 	}
 
 	public static function parseRequest( $source, $target ) {
@@ -389,15 +389,15 @@ class Commentions {
 			// TODO: instead of writing into JSON, write this into the "comments inbox"
 			$json = json_encode( $result );
 			$hash = sha1( $source );
-			$inboxfile = kirby()->root() . '/content/.commentions/inbox' . DS . time() /* . '-' . $hash */ . '.json';
+			$inboxfile = kirby()->root('content') . '/.commentions/inbox' . DS . time() /* . '-' . $hash */ . '.json';
 			F::write( $inboxfile, $json );
 
 			return true;
 
 		} else {
-		
+
 			throw new Exception('Invalid page');
-		
+
 		}
 
 	}
