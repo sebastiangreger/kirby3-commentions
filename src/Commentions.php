@@ -59,7 +59,7 @@ class Commentions {
 
 		$output = [];
 		foreach( Storage::read( $page ) as $comment ) :
-			if ( ( $status == 'approved' && $comment['approved'] == 'true' ) || ( $status == 'pending' && $comment['approved'] == 'false' ) || $status == 'all' ) :
+			if ( ( $status == $comment['status'] ) || $status == 'all' ) :
 				$comment['pageid'] = $page->id();
 				$output[] = $comment;
 			endif;
@@ -138,7 +138,7 @@ class Commentions {
             'timestamp' => date( date('Y-m-d H:i'), time() ),
             'language' => Commentions::determineLanguage( $path, $page ),
             'type' => 'comment',
-            'approved' => 'false',
+            'status' => 'pending',
         );
         $rules = array(
             'message' => array('required', 'min' => 4, 'max' => 4096),
@@ -273,7 +273,7 @@ class Commentions {
 
 			// save as new webmention
 			$finaldata = [
-				'approved' => false,
+				'status' => 'pending',
 				'name' => $result['author']['name'],
 				'website' => $result['author']['url'],
 				'avatar' => $result['author']['photo'],

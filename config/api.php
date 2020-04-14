@@ -13,10 +13,10 @@ return [
 
 				switch ( $action ) {
 					case 'approve':
-						$array = [ 'approved' => 'true' ];
+						$array = [ 'status' => 'approved' ];
 						break;
 					case 'unapprove':
-						$array = [ 'approved' => 'false' ];
+						$array = [ 'status' => 'unapproved' ];
 						break;
 					case 'approve':
 						$array = 'delete';

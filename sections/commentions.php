@@ -92,13 +92,21 @@ return [
 				$options = [];
 
 				// appearance and dropdown options depend on comment status
-				if ( $data['approved'] == 'true' ) :
+				if ( $data['status'] == 'approved' ) :
 					$class = 'k-list-item-commention-approved';
 					$icon = [ 'type' => 'chat', 'back' => 'transparent' ];
 					$options[] = [
 						'icon' => 'remove',
 						'text' => t('commentions.section.option.unapprove'),
 						'click' => 'unapprove-'.$data['uid'].'|'.$data['pageid']
+					];
+				elseif ( $data['status'] == 'unapproved' ) :
+					$class = 'k-list-item-commention-pending';
+					$icon = [ 'type' => 'protected', 'back' => 'transparent' ];
+					$options[] = [
+						'icon' => 'check',
+						'text' => t('commentions.section.option.approve'),
+						'click' => 'approve-'.$data['uid'].'|'.$data['pageid']
 					];
 				else :
 					$class = 'k-list-item-commention-pending';
