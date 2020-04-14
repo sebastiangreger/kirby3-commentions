@@ -5,6 +5,8 @@ namespace sgkirby\Commentions;
 use Kirby\Data\Data;
 use Kirby\Data\Yaml;
 use Kirby\Http\Response;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\F;
 
 class Migration {
 
@@ -17,6 +19,8 @@ class Migration {
 		
 		// POST request is the filled in form	
 		if ( kirby()->request()->is('POST') && get('backup') == 'yes' && get('disclaimer') == 'yes' ) :
+
+			$log = '';
 		
 			// loop through all pages
 			foreach ( site()->index() as $page ) :
@@ -24,23 +28,61 @@ class Migration {
 				// extract the 'comments' field
 				$data = $page->comments()->toArray();
 				$comments = Data::decode( $data['comments'], 'yaml' );
+
+				$oldcount = sizeof( $comments );
+				$currentcount = sizeof( Commentions::retrieve( $page, 'all' ) );
+
+				if ( $oldcount > 0 && $currentcount == 0 ) :
+
+					// make sure the comments are in chronological order
+					$comments = A::sort( $comments, 'timestamp', 'asc' );
+
+					// modify the data format where spec has changed
+					$newcount = 0;
+					foreach( $comments as $comment ) :
+
+						// rename all 'message' fields to 'text'
+						if ( isset( $comment['message'] ) && ( !isset( $comment['text'] ) || $comment['text'] == '' ) ) :
+							$comment['text'] = $comment['message'];
+							unset( $comment['message'] );
+						endif;
+
+						// replace bool 'approved' with string 'status'
+						if ( $comment['approved'] == 'true' ) :
+							$comment['status'] = 'approved';
+						else :
+							$comment['status'] = 'unapproved';
+						endif;
+						unset( $comment['approved'] );
+
+						// add it using the new API
+						Commentions::add( $page, $comment );
+						$newcount++;
+
+					endforeach;
+
+					if ( $newcount == $oldcount ) :
+						// delete the 'comments' field from the page
+						$page->update([ 'comments' => null ]);
+						$log .= "OK";
+					else :
+						$log .= "ERROR";
+					endif;
+					 $log .= " " . $page->id() . " (" . $newcount . "/" . $oldcount . " migrated)\n";
+
+				elseif ( $currentcount > 0 ) :
+
+					$log .= "ERROR " . $page->id() . " (already has 1.x format comments)\n";
+
+				else :
 				
-				if ( is_array( $comments ) && sizeof( $comments > 0 ) ) :
-				
-					// write it to the commentions file
-					Commentions::write( $page, $comments, 'comments' );
-					
-					if ( $comments == Commentions::read( $page, 'comments' ) )
-						echo 'identical';
-					
-					// delete the 'comments' field from the page
-					//$page->update([ 'comments' => null ]);
-				
+					$log .= "OK " . $page->id() . " (0)\n";
+
 				endif;
 				
 			endforeach;
 		
-			return new Response( 'ok', 'text/html' );
+			return new Response( '<p>Migration concluded. Log file:</p><textarea style="width:100%; height:80vh;">' . $log . '</textarea>', 'text/html' );
 		
 		// GET request is the default view
 		else :
@@ -59,11 +101,12 @@ class Migration {
 			$pageswithcomments = 0;
 			foreach( site()->index()->pluck('comments') as $probe ) :
 				$probe = Data::decode( $probe->comments(), 'yaml' );
+				// type, timestamp, and approved are the smallest common denominator of v0.x comments
 				if ( sizeof( $probe ) > 0 && isset( $probe[0]['type'] ) && isset( $probe[0]['timestamp'] ) && isset( $probe[0]['approved'] ) )
 					$pageswithcomments++;
 			endforeach;
 			if ( $pageswithcomments > 0 )
-				$evidence .= '<li>One or more pages appear to contain comments stored in the old 0.x version format</li>';
+				$evidence .= '<li>' . $pageswithcomments . ' page(s) appear to contain comments stored in the old 0.x version format</li>';
 
 			// if any evidence has been found, output the list
 			if ( $evidence != '' ) :
@@ -88,6 +131,14 @@ class Migration {
 					<p>Based on the automated checks, it does not appear that your site has any commentions data in the old (0.x) format. Sorry, this tool won\'t be able to assist you.</p>
 				';
 			endif;
+
+			$html .= '
+				<h2>Things to check manually:</h2>
+				<ul>
+				<li>Check your templates/snippets for use of the now deprecated helper commentionsList(\'raw\'). Change this to the page method $page->commentions(), which returns a similar array.</li>
+				<li>commentionsList(\'raw\') and $page->commentions() return slightly different fields: the \'message\' field for comments is now \'text\' (as it has always been for webmentions) and the boolean value \'approved\' has changed to a string field \'status\' (values: approved, unapproved, pending).</li>
+				</ul>
+			';
 
 			return new Response( $html, 'text/html' );
 
