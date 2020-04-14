@@ -1,7 +1,5 @@
 # Kirby 3 Commentions
 
-## Overview
-
 A minimalist comment system and Webmention endpoint.
 
 * Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention).
@@ -20,11 +18,11 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ## Quickstart
 
-For the advanced or impatient user, following these steps (all explained in detail below) should get most websites (tested on a default [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart)) up and running with Commentions:
+For the advanced or impatient user, following these steps (all explained in detail further down below) should get most websites (tested on a default [Kirby Starterkit](https://getkirby.com/docs/guide/quickstart)) up and running with Commentions:
 
-- [ ] Add `<?php commentions(); ?>` to your content page's HTML template, e.g. right below the content (in Starterkit: `site/template/note.php`).
+- [ ] Add `<?php commentions(); ?>` to your content page's HTML template where you want the comment form and list of comments to be displayed, e.g. right below the content (in Starterkit: `site/template/note.php`).
 
-- [ ] Add `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template (in Starterkit: `site/snippets/header.php`).
+- [ ] Add `<?php commentionsCss(); ?>` to the &lt;head&gt; of your HTML template to include a basic style sheet (in Starterkit: `site/snippets/header.php`).
 
 - [ ] Add the following section to a blueprint where you would like to manage the approval of incoming comments (in Starterkit: `site/blueprints/pages/notes.php` at the bottom of the first column):
 
@@ -43,7 +41,7 @@ sections:
     type: commentions
 ``` 
 
-- [ ] (If you want to receive Webmentions) Add `<?php commentionsEndpoints(); ?>` to the &lt;head&gt; of your HTML template (in Starterkit: `site/snippets/header.php`).
+- [ ] (If you want to receive Webmentions) Add `<?php commentionsEndpoints(); ?>` to the &lt;head&gt; of your HTML template to publish the URL of your endpoint (in Starterkit: `site/snippets/header.php`).
 
 - [ ] (If you want to receive Webmentions) Add these minimum settings to `site/config/config.php` (<YOUR-SECRET> has to be 10 or more characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
 
@@ -83,9 +81,9 @@ Since above snippets are mainly provided to enable a quick start, you may of cou
 
 While it may be advisable to use the `commentionsFeedback()` and `commentionsForm()` helpers, as their markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting your list of comments and webmentions.
 
-The page method `$page->commentions()` on a page object returns an array with the raw and complete comments data for that page. This is the preferred API if you want to control how your comments and webmentions are displayed (the `commentionsList('raw')` from Commentions 0.x is deprecated and no longer recommended). Use that array to build your presentation logic to taste.
+The page method `$page->commentions()` on a page object returns an array with all approved comments for that page. This is the preferred API if you want to control how your comments and webmentions are displayed (the `commentionsList('raw')` from Commentions 0.x is deprecated and no longer recommended). Use that array to build your presentation logic to taste. To include unapproved comments in that array, use `$page->commentions('all')` (handle with care!).
 
-_NB. The array returned by this page method also includes comments pending approval, as indicated by the `approved` field. It also may contain e-mail addresses etc., so make sure to carefully limit what data is being displayed publicly._
+_NB. The raw data array returned by this page method may contain e-mail addresses etc., so make sure to carefully limit what data is being displayed publicly._
 
 ### Step 2: Adding CSS styles
 
