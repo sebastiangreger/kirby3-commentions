@@ -61,12 +61,12 @@ class Cron {
 
 						// delete webmention from queue after successful parsing
 						if ( is_bool( $result ) ) :
-							Storage::update( $page, $queueitem['timestamp'], 'delete', 'queue' );
+							Storage::update( $page, $queueitem['uid'], 'delete', 'queue' );
 							return true;
 
 						else :
 							// mark failed requests as failed
-							Storage::update( $page, $queueitem['timestamp'], [ 'failed' => $result ], 'queue' );
+							Storage::update( $page, $queueitem['uid'], [ 'failed' => $result ], 'queue' );
 
 						endif;
 

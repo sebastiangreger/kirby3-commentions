@@ -80,8 +80,6 @@ return [
 				$name = htmlspecialchars( $data['name'] );
 				$meta = $data['type'];
 
-				$commentid = strtotime( $data['timestamp'] );
-
 				$content =
 					strtoupper( $meta ) . ": "
 					. $name . " ("
@@ -100,7 +98,7 @@ return [
 					$options[] = [
 						'icon' => 'remove',
 						'text' => t('commentions.section.option.unapprove'),
-						'click' => 'unapprove-'.$commentid.'|'.$data['pageid']
+						'click' => 'unapprove-'.$data['uid'].'|'.$data['pageid']
 					];
 				else :
 					$class = 'k-list-item-commention-pending';
@@ -108,7 +106,7 @@ return [
 					$options[] = [
 						'icon' => 'check',
 						'text' => t('commentions.section.option.approve'),
-						'click' => 'approve-'.$commentid.'|'.$data['pageid']
+						'click' => 'approve-'.$data['uid'].'|'.$data['pageid']
 					];
 				endif;
 
@@ -116,7 +114,7 @@ return [
 				$options[] = [
 					'icon' => 'trash',
 					'text' => t('commentions.section.option.delete'),
-					'click' => 'delete-'.$commentid.'|'.$data['pageid']
+					'click' => 'delete-'.$data['uid'].'|'.$data['pageid']
 				];
 
 				// third option is link to source
@@ -125,14 +123,14 @@ return [
 					$options[] = [
 						'icon' => 'open',
 						'text' => t('commentions.section.option.viewsource'),
-						'click' => 'open-'.$commentid.'|'.$data['source']
+						'click' => 'open-'.$data['uid'].'|'.$data['source']
 					];
 				elseif ( ! empty($data['website']) ) :
 					$options[] = '-';
 					$options[] = [
 						'icon' => 'open',
 						'text' => t('commentions.section.option.viewwebsite'),
-						'click' => 'open-'.$commentid.'|'.$data['website']
+						'click' => 'open-'.$data['uid'].'|'.$data['website']
 					];
 				endif;
 				if ( ! empty($data['email']) ) :
@@ -140,7 +138,7 @@ return [
 					$options[] = [
 						'icon' => 'open',
 						'text' => t('commentions.section.option.sendemail'),
-						'click' => 'open-'.$commentid.'|mailto:'.$data['email']
+						'click' => 'open-'.$data['uid'].'|mailto:'.$data['email']
 					];
 				endif;
 

@@ -7,7 +7,7 @@ return [
     'routes' => [
     
 		[
-			'pattern' => 'commentions/(approve|unapprove|delete)/(:num)/(:all)',
+			'pattern' => 'commentions/(approve|unapprove|delete)/(\w{10})/(:all)',
 			'method'  => 'GET',
 			'action'  => function ( $action, $commentid, $pageid ) {
 

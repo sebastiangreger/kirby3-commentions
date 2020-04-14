@@ -26,6 +26,18 @@ class Commentions {
      * @return array
      */
 
+    public static function uid() {
+
+		// generate uid
+		$uidchars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		$uid = '';
+		for ( $i = 0; $i < 10; $i++ )
+			$uid .= $uidchars[ random_int( 0, strlen( $uidchars ) - 1)];
+
+		return $uid;
+		
+	}
+
     public static function add( $page, $data ) {
 
 		// remove empty fields
@@ -35,12 +47,8 @@ class Commentions {
 			endif;
 		endforeach;
 
-		// add uid
-		$uidchars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-		$uid = '';
-		for ( $i = 0; $i < 10; $i++ )
-			$uid .= $uidchars[ random_int( 0, strlen( $uidchars ) - 1)];
-		$data['uid'] = $uid;
+		// add a uid field
+		$data['uid'] = Commentions::uid();
 
 		// save commention to the according txt file
 		Storage::add( $page, $data );

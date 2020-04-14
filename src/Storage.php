@@ -125,13 +125,13 @@ class Storage {
      * @return array
      */
      
-    public static function update( $page, $entryid, $data = [], $field = 'comments' ) {
+    public static function update( $page, $uid, $data = [], $field = 'comments' ) {
 
 		// loop through array of all comments
 		foreach( Storage::read( $page, $field ) as $entry ) :
 
 			// find the entry with matching ID
-			if ( $entry['timestamp'] == $entryid || strtotime( $entry['timestamp'] ) == $entryid ) :
+			if ( $entry['uid'] == $uid ) :
 
 				// if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
 				if ( is_array( $data ) ) :

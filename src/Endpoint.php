@@ -79,12 +79,19 @@ class Endpoint {
 		else
 			$page = page( kirby()->call( trim( $path, '/' ) ) );
 
+		$data = [
+			'target' => $target,
+			'source' => $source,
+			'timestamp' => time(),
+			'uid' => Commentions::uid()
+		];
+
 		// if the target resolves to an existing Kirby page, add to the queue in the according commention file
 		if( $page != null )
-			Storage::add( $page, [ 'target' => $target, 'source' => $source, 'timestamp' => time() ], 'queue' );
+			Storage::add( $page, $data, 'queue' );
 		// all other requests are enqueued in the home page commention file
 		else
-			Storage::add( page('home'), [ 'target' => $target, 'source' => $source, 'timestamp' => time() ], 'queue' );
+			Storage::add( page('home'), $data, 'queue' );
 
 	}
 

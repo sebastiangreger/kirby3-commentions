@@ -69,7 +69,7 @@ panel.plugin('sgkirby/commentions', {
 				action(type) {
 
 					// distill action and commentid from action
-					var re = /^([a-z]+)-(\d{10})\|(.*?)$/;
+					var re = /^([a-z]+)-(\w{10})\|(.*?)$/;
 					var array = re.exec(type);
 					var action = array[1];
 					var commentid = array[2];
