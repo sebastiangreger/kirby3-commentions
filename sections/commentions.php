@@ -8,28 +8,28 @@ use Kirby\Toolkit\F;
 return [
 
 	'props' => [
-	
+
 		'headline' => function ( $message = "Pending comments" ) {
 			return $message;
 		}
-		
+
 	],
-	
+
 	'computed' => [
-	
+
 		'approve' => function () {
-			
+
 			return 'boo';
-			
+
 		},
-	
+
 		'commentions' => function () {
-			
+
 			$i = 0;
 			$array = [];
-			$files = kirby()->root() . '/content/.commentions/inbox/*.json';
+			$files = kirby()->root('content') . '/.commentions/inbox/*.json';
 			foreach ( glob( $files ) as $inboxfile ) {
-				
+
 				$data = Data::read( $inboxfile, 'json' );
 
 				if ( isset( $data['message'] ) )
@@ -52,14 +52,14 @@ return [
 					. '): ' . $text;
 
 				$i++;
-				
+
 			}
 
 			if ( $i >= 0 )
 				return $array;
-			
+
 		}
-		
+
 	],
 
 ];

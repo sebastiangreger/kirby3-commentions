@@ -13,7 +13,7 @@ class Endpoint {
 
 		// source is the external site sending the webmention;
 		$source = get('source');
-		
+
 		// target is the local URL, claimed to be mentioned in the source
 		$target = get('target');
 
@@ -30,7 +30,7 @@ class Endpoint {
 			throw new Exception( 'Target URL not on this site.' );
 
 		$hash = sha1( $source );
-		$file = kirby()->root() . '/content/.commentions/queue' . DS . 'webmention-' . time() . '-' . $hash . '.json';
+		$file = kirby()->root('content') . '/.commentions/queue' . DS . 'webmention-' . time() . '-' . $hash . '.json';
 		$json = json_encode( [ 'target' => $target, 'source' => $source ] );
 		F::write( $file, $json );
 
