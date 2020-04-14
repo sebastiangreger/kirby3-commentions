@@ -63,7 +63,7 @@ class Migration {
 
 					if ( $newcount == $oldcount ) :
 						// delete the 'comments' field from the page
-						$page->update([ 'comments' => null ]);
+						//$page->update([ 'comments' => null ]);
 						$log .= "OK";
 					else :
 						$log .= "ERROR";
@@ -94,7 +94,7 @@ class Migration {
 			$evidence = '';
 
 			// check for presence of the old content/.commentions folder
-			if ( is_dir( kirby()->root() . DS . 'content' . DS . '.commentions' ) )
+			if ( is_dir( kirby()->root('content') . DS . '.commentions' ) )
 				$evidence .= '<li>The folder ' . kirby()->root() . DS . 'content' . DS . '.commentions' . ' (used for storing the comments inbox and Webmention queue) is no longer used in version 1.x</li>';
 
 			// check for any content files that contain a comments field with a data pattern as used in Commentions
