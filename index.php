@@ -88,12 +88,12 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'pagesMethods' => [
 
-        'commentions'			=> function ( $status = 'approved' ) {
+        'commentions'			=> function ( $status = 'approved', $sort = 'asc' ) {
 									$return = [];
 									foreach ( $this as $page ) :
-										$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status, 'asc' ) );
+										$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status ) );
 									endforeach;
-									return $return;
+									return \Kirby\Toolkit\A::sort( $return, 'timestamp', $sort );
 								}
 
     ],

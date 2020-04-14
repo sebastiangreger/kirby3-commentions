@@ -56,17 +56,20 @@ return [
 			
 		'commentions' => function () {
 
+			// display comments newest first, unless flip option is true
+			$sort = $this->flip() ? 'asc' : 'desc';
+
 			// retrieve the show property
 			switch ( $this->show() ) {
 				case 'all':
-					$comments = site()->index()->commentions('all');
+					$comments = site()->index()->commentions( 'all', $sort );
 					break;
 				case 'pending':
-					$comments = site()->index()->commentions('pending');
+					$comments = site()->index()->commentions( 'pending', $sort );
 					break;
 				default:
 					$page = $this->model();
-					$comments = $page->commentions('all');
+					$comments = $page->commentions( 'all', $sort );
 					break;
 			}
 
@@ -144,10 +147,6 @@ return [
 				$return[] = [ $content, $options, $class, $icon ];
 
 			}
-
-			// display comments newest first, unless flip option is true
-			if ( ! $this->flip() )
-				$return = array_reverse( $return );
 
 			// return the array to the vue component
 			return ( isset( $return ) ? $return : [] );
