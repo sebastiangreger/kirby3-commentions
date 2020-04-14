@@ -34,7 +34,7 @@ function commentionsList( string $format = 'list' ) {
 	$comments = page()->commentions('approved');
 	$reactions = [];
 
-	// DEPRECATED: as of 1.0.0
+	// DEPRECATED as of 1.0.0: use $page->comments() instead
 	if ( $format == 'raw' ) :
 
 		// return an array with all comments for this page

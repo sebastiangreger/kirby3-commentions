@@ -56,7 +56,8 @@ require( __DIR__ . DS . 'helpers.php' );
     
     'blueprints' 	=> [
 
-        'fields/commentions' 	=> __DIR__ . '/blueprints/fields/commentions.yml'
+		// DEPRECATED as of 1.0.0: replaced with section 'commentions'
+		'fields/commentions' 	=> __DIR__ . '/blueprints/fields/commentions.yml'
 
     ],
         
