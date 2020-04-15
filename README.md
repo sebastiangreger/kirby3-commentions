@@ -116,9 +116,11 @@ Every time this URL is called, the queue of incoming webmentions is processed; v
 
 ## Frontend helper
 
+The frontend helper is a PHP function that can be called from within templates or snippets and renders HTML. The function can be used with various arguments (and without).
+
 ### commentions()
 
-`<?php commentions(); ?>` with no attributes is a shorthand for displaying three helpers (described below) in the following order:
+`<?php commentions(); ?>` with no arguments is a shorthand for displaying three helpers (described below) in the following order:
 
 ```php
 <?php
@@ -130,28 +132,44 @@ Every time this URL is called, the queue of incoming webmentions is processed; v
 
 ### commentions('feedback')
 
-The helper `<?php commentions('feedback'); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
+Renders the user feedback UI (error/success message after a user submits the comment form; beneficial to include "above the fold" on your page).
+
+`<?php commentions('feedback'); ?>`
 
 ### commentions('form')
 
-To render the comment form, include `<?php commentions('form'); ?>` in your template.
+Renders the comment form, based on the config settings, for direct use in the template.
+
+`<?php commentions('form'); ?>`
 
 ### commentions('list')
 
-`<?php commentions('list'); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentions('list','grouped')` instead (check options further below for additional control).
+Renders a list of comments for display in the frontend.
+
+`<?php commentions('list'); ?>`
+
+By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, add 'grouped' as a second attribute.
+
+`<?php commentions('list','grouped'); ?>`
+
+The behaviour of the grouping is controlled via config settings (see further below).
 
 ### commentions('endpoints')
 
-By default, the helper `<?php commentions('endpoints'); ?>` is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
+By default, the helper is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
 
 ```HTML
 <link rel="webmention" href="https://<SITE-URL>/webmention-endpoint" />
 <link rel="http://webmention.org/" href="https://<SITE-URL>/webmention-endpoint" />
 ```
 
+`<?php commentions('endpoints'); ?>`
+
 ### commentions('css')
 
-If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentions('css'); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
+Renders elementary CSS styles for the HTML snippets rendered by the frontend helper; add this to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag.
+
+`<?php commentions('css'); ?>`
 
 Unless your site is running on the Starterkit, you likely want to write your own CSS for the pre-rendered markup. To build on the prefabricated styles, they can be found in `site/plugins/kirby3-commentions/assets/styles.css`.
 
