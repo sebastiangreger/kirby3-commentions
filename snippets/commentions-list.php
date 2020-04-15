@@ -76,10 +76,7 @@
 									echo t('commentions.snippet.list.bookmarked') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 								case 'reply':
-									echo t('commentions.snippet.list.replies') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>:';
-									break;
-								default:
-									echo ":";
+									echo t('commentions.snippet.list.replies') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
 									break;
 							}
 						
