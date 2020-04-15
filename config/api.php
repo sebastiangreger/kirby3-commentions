@@ -13,19 +13,20 @@ return [
 
 				switch ( $action ) {
 					case 'approve':
-						$array = [ 'status' => 'approved' ];
+						page( $pageid )->updateCommention( $commentid, [ 'status' => 'approved' ] );
+						return true;
 						break;
 					case 'unapprove':
-						$array = [ 'status' => 'unapproved' ];
+						page( $pageid )->updateCommention( $commentid, [ 'status' => 'unapproved' ] );
+						return true;
 						break;
 					case 'delete':
-						$array = 'delete';
+						page( $pageid )->deleteCommention( $commentid );
+						return true;
 						break;
 					default:
 						return false;
 				}
-
-				return Storage::update( page( $pageid ), $commentid, $array );
 
             }
         ],

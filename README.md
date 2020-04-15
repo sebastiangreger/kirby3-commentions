@@ -18,6 +18,7 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 * [Panel sections](#panel-sections)
 * [Page methods](#page-methods)
 * [Pages methods](#pages-methods)
+* [API endpoints](#api-endpoints)
 * [Data structure](#data-structure)
 * [Config options](#config-options)
 * [Requirements, credits, license](#requirements)
@@ -347,6 +348,63 @@ Returns an array with comments for the page collection.
 #### Return
 
 Same as for page method `$page->commentions()`.
+
+## API endpoints
+
+The following API endpoints can be used when authenticated (e.g. from within the panel).
+
+### approve
+
+`/api/commentions/approve/uid/uri`
+
+Changes a comment's status from 'pending' or 'unapproved' to 'approved'.
+
+#### Parameters
+
+| Name | Type   | Required |Description                                 |
+|------|--------|----------|--------------------------------------------|
+| uid  | string | required | the 10-character alphanumeric comment UID  |
+| uri  | string | required | The URI of the page the comment belongs to |
+
+#### Return
+
+True if successful, false if failed.
+
+### unapprove
+
+`/api/commentions/unapprove/uid/uri`
+
+Changes a comment's status from 'approved' to 'unapproved'.
+
+_NB. This does not reinstate the 'pending' status, which only applies for new incoming comments.
+
+#### Parameters
+
+| Name | Type   | Required |Description                                 |
+|------|--------|----------|--------------------------------------------|
+| uid  | string | required | the 10-character alphanumeric comment UID  |
+| uri  | string | required | The URI of the page the comment belongs to |
+
+#### Return
+
+True if successful, false if failed.
+
+### delete
+
+`/api/commentions/delete/uid/uri`
+
+Deletes a comment.
+
+#### Parameters
+
+| Name | Type   | Required |Description                                 |
+|------|--------|----------|--------------------------------------------|
+| uid  | string | required | the 10-character alphanumeric comment UID  |
+| uri  | string | required | The URI of the page the comment belongs to |
+
+#### Return
+
+True if successful, false if failed.
 
 ## Data structure
 
