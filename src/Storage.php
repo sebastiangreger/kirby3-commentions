@@ -110,6 +110,7 @@ class Storage {
 
 		// attach new data set to array of existing comments
 		$data = static::read( $page, $field );
+		ksort( $entry );
 		$data[] = $entry;
 
 		// replace the old comments in the yaml data and write it back to the file
@@ -130,8 +131,10 @@ class Storage {
     public static function update( $page, $uid, $data = [], $field = 'comments' ) {
 
 		// clean up the data if it is an array (skip for string, which would be a command like 'delete')
-		if ( is_array( $data ) && !empty( $data ) )
+		if ( is_array( $data ) && !empty( $data ) ) :
 			$data = Commentions::sanitize( $data );
+			ksort( $data );
+		endif;
 
 		// loop through array of all comments
 		foreach( static::read( $page, $field ) as $entry ) :
