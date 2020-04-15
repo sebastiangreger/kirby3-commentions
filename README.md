@@ -343,7 +343,7 @@ To change the URL of the webmention endpoint (default is `https://<SITE-URL>/web
 
 ### Comment form fields
 
-By default, only an optional name field and a textarea for the comment are shown. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):
+By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):
 
 ```php
 'sgkirby.commentions.formfields' => [
@@ -355,7 +355,7 @@ By default, only an optional name field and a textarea for the comment are shown
 
 ### Collapsible forms (show/hide)
 
-If desired, the following setting triggers additional markup in the included form markup that can be used to hide the forms by default, allowing for an accessible open/close functionality:
+If desired, the following setting triggers additional markup in the included form markup (when using the `commentions('form')` helper) that can be used to hide the forms by default, allowing for an accessible open/close functionality:
 
 ```php
 'sgkirby.commentions.hideforms' => true,
@@ -398,7 +398,7 @@ _NB. These time settings do not have an effect if Kirby's built-in page cache is
 
 ### Grouping certain standard reactions
 
-When comments are displayed using the `<?= commentionsList('grouped') ?>` helper, adding the following settings array gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
+When comments are displayed using the `commentions('grouped')` helper, adding the following settings array gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
 
 ```php
 'sgkirby.commentions.grouped', [
@@ -425,6 +425,8 @@ Inspiration and code snippets from:
 
 - https://github.com/bastianallgeier/kirby-webmentions
 - https://github.com/sebsel/seblog-kirby-webmentions
+- https://github.com/fabianmichael/kirby-pluginstorage
+- https://github.com/bnomei/kirby3-autoid
 
 Included vendor libraries:
 

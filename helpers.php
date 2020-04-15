@@ -2,8 +2,8 @@
 
 use sgkirby\Commentions\Frontend;
 
-function commentions( $template = null, $var = null ) {
-	Frontend::render( $template, $var );
+function commentions( $template = null ) {
+	Frontend::render( $template );
 }
 
 // DEPRECATED as of 1.0.0: separate helpers replaced with commentions() helper + template variable
@@ -14,7 +14,12 @@ function commentionsForm() {
 	commentions( 'form' );
 }
 function commentionsList( string $format = 'list' ) {
-	commentions( 'list', $format );
+	if ( $format == 'grouped' )
+		commentions( 'grouped' );
+	elseif ( $format == 'raw' )
+		commentions( 'raw' );
+	else
+		commentions( 'list' );
 }
 function commentionsEndpoints() {
 	commentions( 'endpoints' );

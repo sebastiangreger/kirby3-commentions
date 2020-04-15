@@ -5,7 +5,7 @@ namespace sgkirby\Commentions;
 class Frontend {
 
 
-	public static function render( $template = null, $var = null ) {
+	public static function render( $template = null ) {
 
 		switch ( $template ) {
 
@@ -47,13 +47,15 @@ class Frontend {
 
 			// display comments
 			case 'list':
+			case 'grouped':
+			case 'raw':
 
 				// retrieve all approved comments for this page
 				$comments = page()->commentions('approved');
 				$reactions = [];
 
 				// DEPRECATED as of 1.0.0: use $page->comments() instead
-				if ( $var == 'raw' ) :
+				if ( $template == 'raw' ) :
 
 					// return an array with all comments for this page
 					return $comments;
@@ -61,7 +63,7 @@ class Frontend {
 				elseif ( sizeof( $comments ) > 0 ) :
 
 					// restructure the data if grouped view
-					if ( $var == 'grouped' ) :
+					if ( $template == 'grouped' ) :
 
 						// array of all groups to be pulled out from content list, in presentation order
 						$groups = option( 'sgkirby.commentions.grouped' );
