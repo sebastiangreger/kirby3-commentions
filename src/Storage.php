@@ -132,8 +132,13 @@ class Storage {
 
 		// clean up the data if it is an array (skip for string, which would be a command like 'delete')
 		if ( is_array( $data ) && !empty( $data ) ) :
-			$data = Commentions::sanitize( $data );
+
+			// sanitize data array, but keep the uid
+			$data = Commentions::sanitize( $data, true );
+
+			// sort fields alphabetically for consistency
 			ksort( $data );
+
 		endif;
 
 		// loop through array of all comments

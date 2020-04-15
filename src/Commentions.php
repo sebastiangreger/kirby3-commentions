@@ -45,8 +45,8 @@ class Commentions {
 
     public static function add( $page, $data ) {
 
-		// clean up the data
-		$data = Commentions::sanitize( $data );
+		// clean up the data; incl. removal of any user-provided uid
+		$data = Commentions::sanitize( $data, false );
 
 		// add a uid field
 		$data['uid'] = Commentions::uid();
@@ -69,10 +69,6 @@ class Commentions {
 
     public static function update( $page, $uid, $data ) {
 
-		// clean up the data if it is an array (skip for string, which would be a command like 'delete')
-		if ( is_array( $data ) && !empty( $data ) )
-			$data = Commentions::sanitize( $data );
-
 		return Storage::update( $page, $uid, $data, 'comments' );
 
 	}
@@ -82,10 +78,15 @@ class Commentions {
      * Verifies and cleans up commentions data for saving
      *
      * @param array $data
+     * @param book $keepuid
      * @return array
      */
 
-    public static function sanitize( $data ) {
+    public static function sanitize( $data, $keepuid = false ) {
+
+		// users may not send 'uid' as part of the data payload
+		if ( ! $keepuid && ! empty( $data['uid'] ) )
+			unset( $data['uid'] );
 
 		// timestamp is required; use current time if missing or not a unix epoch
 		if ( empty( $data['timestamp'] ) || ! is_numeric( $data['timestamp'] ) )
