@@ -10,6 +10,18 @@ Versions 1.x (April 2020 and later) are no longer compatible with the explorator
 
 _NB. The plugin only covers incoming webmentions (i.e. receiving notifications from other websites who link to a page). Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
+## Table of contents
+
+* [Installation](#installation)
+* [Setup](#setup)
+* [Frontend helper](#frontend-helper)
+* [Panel sections](#panel-sections)
+* [Page methods](#page-methods)
+* [Pages methods](#pages-methods)
+* [Data structure](#data-structure)
+* [Config options](#config-options)
+* [Requirements, credits, license](#requirements)
+
 ## Installation
 
 ### Download
@@ -341,6 +353,18 @@ To change the URL of the webmention endpoint (default is `https://<SITE-URL>/web
 'sgkirby.commentions.endpoint' => 'webmention-endpoint',
 ```
 
+### Cronjob secret
+
+A cronjob is required for the asynchronous processing of incoming webmentions. The HTTP request for that job requires a `token` attribute, which is set in the config file.
+
+```php
+'sgkirby.commentions.secret' => '<YOUR-SECRET>',
+```
+
+A valid secret key must be at least 10 characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `.
+
+_NB. Without this setting, the cronjob will always fail._
+
 ### Comment form fields
 
 By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):
@@ -360,6 +384,8 @@ If desired, the following setting triggers additional markup in the included for
 ```php
 'sgkirby.commentions.hideforms' => true,
 ```
+
+_NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required._
 
 ### Privacy settings
 
@@ -396,7 +422,7 @@ When timeout protections are active, comments are rejected if submitted too soon
 
 _NB. These time settings do not have an effect if Kirby's built-in page cache is used._
 
-### Grouping certain standard reactions
+### Grouping reactions
 
 When comments are displayed using the `commentions('grouped')` helper, adding the following settings array gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
 
