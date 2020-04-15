@@ -81,9 +81,21 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'pageMethods' => [
 
-        'commentions' 			=> function ( $status = 'approved', $sort = 'asc' ) {
+        'commentions' 			=> function ( string $status = 'approved', string $sort = 'asc' ) {
 									return Commentions::retrieve( $this, $status, $sort );
-								}
+								},
+
+        'addCommention' 		=> function ( array $data ) {
+									return Commentions::add( $this, $data );
+								},
+
+        'deleteCommention' 		=> function ( string $uid ) {
+									return Commentions::update( $this, $uid, 'delete' );
+								},
+
+        'updateCommention' 		=> function ( string $uid, array $data ) {
+									return Commentions::update( $this, $uid, $data );
+								},
 
     ],
 
@@ -95,7 +107,7 @@ require( __DIR__ . DS . 'helpers.php' );
 										$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status ) );
 									endforeach;
 									return \Kirby\Toolkit\A::sort( $return, 'timestamp', $sort );
-								}
+								},
 
     ],
 

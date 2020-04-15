@@ -194,21 +194,7 @@ Returns an array with comments for the page object.
 
 #### Return
 
-Array with all comments for the requested object.
-
-| Field     | Comment  | Webment. | Description                                                                                                                                        | Example                               |
-|-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
-| timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
-| type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
-| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'all'                                                                               | approved                              |
-| uid       | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
-| text      | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
-| source    |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
-| email     | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
-| avatar    |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
-| website   | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
-| language  | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
-| pageid    | default  | default  | The page ID of the Kirby page is added to the output of the page(s) method by default. It is not stored in the text file.                          | notes/exploring-the-universe          |
+Array with all comments for the requested object (see "Data structure" chapter below for details).
 
 The following example shows the most minimal comment and webmentions possible (displayed fields are compulsory):
 
@@ -235,6 +221,55 @@ Array (
 )
 ```
 
+### $page->addCommention()
+
+Adds a comment entry to the page.
+
+`$page->addCommentions( $data )`
+
+#### Parameters
+
+| Name  | Type  | Description                                                                                    |
+|-------|-------|------------------------------------------------------------------------------------------------|
+| $data | array | All the data for the comment/webmention, according to the specifications of the Data structure |
+
+#### Return
+
+On success: Array with the data as saved, including the assigned UID.
+
+### $page->updateCommention()
+
+Updated a comment entry on the page.
+
+`$page->updateCommentions( $uid, $data )`
+
+#### Parameters
+
+| Name  | Type   | Description                                                                                    |
+|-------|--------|------------------------------------------------------------------------------------------------|
+| $uid  | string | The unique ID of the comment; 10 alphanumeric characters (lower-case letters and numbers).     |
+| $data | array  | All the data for the comment/webmention, according to the specifications of the Data structure |
+
+#### Return
+
+On success: Array with the data as saved, including the assigned UID.
+
+### $page->deleteCommention()
+
+Deletes a comment entry from the page.
+
+`$page->deleteCommentions( $data )`
+
+#### Parameters
+
+| Name | Type   | Description                                                                                |
+|------|--------|--------------------------------------------------------------------------------------------|
+| $uid | string | The unique ID of the comment; 10 alphanumeric characters (lower-case letters and numbers). |
+
+#### Return
+
+Boolean `true` on success.
+
 ## Pages methods
 
 ### $pages->commentions()
@@ -253,6 +288,28 @@ Returns an array with comments for the page collection.
 #### Return
 
 Same as for page method `$page->commentions()`.
+
+## Data structure
+
+The commentions are stored in a `_commentions.txt` file in the according page's folder. For virtual pages, the storage location is `_commentions-<PAGE-SLUG>.txt` in the parent page's folder.
+
+### Comments
+
+These are the fields that can be used, including information on which are compulsory for what type of comment:
+
+| Field     | Comment  | Webment. | Description                                                                                                                                        | Example                               |
+|-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
+| timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
+| type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
+| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'all'                                                                               | approved                              |
+| uid       | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
+| text      | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
+| source    |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
+| email     | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
+| avatar    |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
+| website   | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
+| language  | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
+| pageid    | default  | default  | The page ID of the Kirby page is added to the output of the page(s) method by default. It is not stored in the text file.                          | notes/exploring-the-universe          |
 
 ## Config options
 

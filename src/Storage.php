@@ -92,6 +92,8 @@ class Storage {
 			echo $e->getMessage();
 		}
 
+		return true;
+
 	}
 
 
@@ -127,6 +129,10 @@ class Storage {
      
     public static function update( $page, $uid, $data = [], $field = 'comments' ) {
 
+		// clean up the data if it is an array (skip for string, which would be a command like 'delete')
+		if ( is_array( $data ) && !empty( $data ) )
+			$data = Commentions::sanitize( $data );
+
 		// loop through array of all comments
 		foreach( Storage::read( $page, $field ) as $entry ) :
 
@@ -156,9 +162,7 @@ class Storage {
 		endforeach;
 
 		// replace the old comments in the yaml data and write it back to the file
-		Storage::write( $page, $output, $field );
-
-		return ['ok'];
+		return Storage::write( $page, $output, $field );
 
 	}
 

@@ -45,18 +45,87 @@ class Commentions {
 
     public static function add( $page, $data ) {
 
-		// remove empty fields
-		foreach ( $data as $key => $value ) :
-			if ( $value == null ) :
-				unset( $data[ $key ] );
-			endif;
-		endforeach;
+		// clean up the data
+		$data = Commentions::sanitize( $data );
 
 		// add a uid field
 		$data['uid'] = Commentions::uid();
 
 		// save commention to the according txt file
 		Storage::add( $page, $data );
+
+		return $data;
+
+	}
+
+
+    /**
+     * Updates a comment on the page, incl. some cleanup
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param string $uid
+     * @param array $data
+     */
+
+    public static function update( $page, $uid, $data ) {
+
+		// clean up the data if it is an array (skip for string, which would be a command like 'delete')
+		if ( is_array( $data ) && !empty( $data ) )
+			$data = Commentions::sanitize( $data );
+
+		return Storage::update( $page, $uid, $data, 'comments' );
+
+	}
+
+
+    /**
+     * Verifies and cleans up commentions data for saving
+     *
+     * @param array $data
+     * @return array
+     */
+
+    public static function sanitize( $data ) {
+
+		// timestamp is required; use current time if missing or not a unix epoch
+		if ( empty( $data['timestamp'] ) || ! is_numeric( $data['timestamp'] ) )
+			$data['timestamp'] = date( date('Y-m-d H:i'), time() );
+
+		// status is required; set to 'pending' default if missing or invalid value
+		if ( empty( $data['status'] ) || !in_array( $data['status'], [ 'approved', 'unapproved', 'pending' ] ) )
+			$data['status'] = 'pending';
+
+		// type is required; set to 'comment' default if missing
+		if ( empty( $data['type'] ) )
+			$data['type'] = 'comment';
+
+		// validations based on type
+		if ( $data['type'] == 'comment' ) :
+
+			// text is required for comments
+			if ( empty( $data['text'] ) )
+				$data['text'] = '';
+
+			// 'source' only used for webmentions
+			if ( !empty( $data['source'] ) )
+				unset( $data['source'] );
+
+		endif;
+
+		foreach ( $data as $key => $value ) :
+
+			// remove fields that are not allowed
+			$allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid' ];
+			if ( !in_array( $key, $allowlist ) )
+				unset( $data[ $key ] );
+
+			// remove empty fields
+			if ( $value == null )
+				unset( $data[ $key ] );
+
+		endforeach;
+
+		return $data;
 
 	}
 
