@@ -241,18 +241,19 @@ sections:
 
 Returns an array with comments for the page object.
 
-`$page->commentions( $status, $sort )`
+`$page->commentions( $query, $sort )`
 
 #### Parameters
 
-| Name     | Type   | Default    | Description                                                                                     |
-|----------|--------|------------|-------------------------------------------------------------------------------------------------|
-| $status  | string | 'approved' | Selects the comments to be included in the array; possible values: 'approved', 'pending', 'all' |
-| $sort    | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically       |
+| Name    | Type   | Default    | Description                                                                                                                                        |
+|---------|--------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| $query  | string | 'approved' | Selects the comments to be included in the array; possible values are either a valid status('approved', 'pending', 'all') or a single comment UID. |
+| $sort   | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically                                                          |
 
 #### Return
 
-Array with all comments for the requested object (see "Data structure" chapter below for details).
+* When requesting with a status: array with all comments for the requested object (see "Data structure" chapter below for details); empty array if none. A field `'pageid'` is added to each comment's array, indicating the Kirby page ID the comment belongs to.
+* When requesting with a UID: array with the data of the comment; boolean `false` if UID is not valid.
 
 The following example shows the most minimal comment and webmentions possible (displayed fields are compulsory):
 

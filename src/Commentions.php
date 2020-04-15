@@ -145,26 +145,38 @@ class Commentions {
      * Retrieves an array of comments for a given page
      *
      * @param \Kirby\Cms\Page $page
-     * @param string $status
+     * @param string $query
      * @param string $sort
      * @return array
      */
 
-    public static function retrieve( $page, string $status = 'approved', string $sort = 'asc' ) {
+    public static function retrieve( $page, string $query = 'approved', string $sort = 'asc' ) {
 
-		$output = [];
-		foreach( Storage::read( $page ) as $comment ) :
-			if ( ( $status == $comment['status'] ) || $status == 'all' ) :
-				$comment['pageid'] = $page->id();
-				$output[] = $comment;
-			endif;
-		endforeach;
+		// if the query is a comment UID, return only that comment
+		if ( !in_array( $query, ['approved','unapproved','pending'] ) && strlen( $query ) == 10 ) :
 
-		// default sorting is chronological
-		if ( $sort == 'desc' )
-			return array_reverse( $output );
-		else
-			return $output;
+			foreach( Storage::read( $page ) as $comment ) :
+				if ( $comment['uid'] == $query )
+					return $comment;
+			endforeach;
+
+		else:
+
+			$output = [];
+			foreach( Storage::read( $page ) as $comment ) :
+				if ( ( $query == $comment['status'] ) || $query == 'all' ) :
+					$comment['pageid'] = $page->id();
+					$output[] = $comment;
+				endif;
+			endforeach;
+
+			// default sorting is chronological
+			if ( $sort == 'desc' )
+				return array_reverse( $output );
+			else
+				return $output;
+
+		endif;
 
 	}
 
