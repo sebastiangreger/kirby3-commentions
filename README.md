@@ -148,11 +148,15 @@ Renders the user feedback UI (error/success message after a user submits the com
 
 `<?php commentions('feedback'); ?>`
 
+![feedback](https://user-images.githubusercontent.com/6355217/79339976-fc35ea80-7f29-11ea-8a62-f8b3d6d7382e.png)
+
 ### commentions('form')
 
 Renders the comment form, based on the config settings, for direct use in the template.
 
 `<?php commentions('form'); ?>`
+
+![form](https://user-images.githubusercontent.com/6355217/79339978-fcce8100-7f29-11ea-9102-42f1070977d3.png)
 
 ### commentions('list')
 
@@ -160,11 +164,17 @@ Renders a list of comments for display in the frontend.
 
 `<?php commentions('list'); ?>`
 
-By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, add 'grouped' as a second attribute.
+![list](https://user-images.githubusercontent.com/6355217/79339982-fd671780-7f29-11ea-967d-c0e507d570e4.png)
 
-`<?php commentions('list','grouped'); ?>`
+### commentions('grouped')
 
-The behaviour of the grouping is controlled via config settings (see further below).
+`'list'` presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `'grouped'` instead:
+
+`<?php commentions('grouped'); ?>`
+
+![grouped](https://user-images.githubusercontent.com/6355217/79339979-fcce8100-7f29-11ea-8464-e25d0cb98764.png)
+
+The behaviour of the grouping can be adjusted via config settings (see further below).
 
 ### commentions('endpoints')
 
@@ -193,6 +203,29 @@ This universal panel section displays either
 * all comments for the page it is on (no `show` property, or `show: page`), or
 * an "inbox" of all or all pending comments for all pages (`show: all`, `show: pending`)
 
+| Property | Type    | Default | Description                                                                                                                                                                                           |
+|----------|---------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| empty    | string  | –       | Sets the text for the empty state box                                                                                                                                                                 |
+| flip     | boolean | false   | Default presentation order (`false`) is latest first; `true` shows comments chronologically                                                                                                           |
+| headline | string  | –       | The headline for the section.                                                                                                                                                                         |
+| show     | string  | 'page'  | Defines what comments are shown; 'page' lists comments for current page, 'pending' lists all pending comments for the entire site (aka. the "Inbox"), and 'all' lists all comments of the entire site |
+
+#### Default
+
+By default, the `commentions` section displays all comments for the page the blueprint applies to.
+
+```yaml
+sections:
+  commentions:
+    type: commentions
+```
+
+![page](https://user-images.githubusercontent.com/6355217/79339984-fdffae00-7f29-11ea-9bf1-8b938ac89019.png)
+
+#### Pending
+
+For creating an "inbox" of comments, the property `show: pending` renders a list of all pending comments and webmentions instead.
+
 ```yaml
 sections:
   commentions:
@@ -200,12 +233,7 @@ sections:
     show: pending
 ```
 
-| Property | Type    | Default | Description                                                                                                                                                                                           |
-|----------|---------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| empty    | string  | –       | Sets the text for the empty state box                                                                                                                                                                 |
-| flip     | boolean | false   | Default presentation order (`false`) is latest first; `true` shows comments chronologically                                                                                                           |
-| headline | string  | –       | The headline for the section.                                                                                                                                                                         |
-| show     | string  | 'page'  | Defines what comments are shown; 'page' lists comments for current page, 'pending' lists all pending comments for the entire site (aka. the "Inbox"), and 'all' lists all comments of the entire site |
+![pending](https://user-images.githubusercontent.com/6355217/79339985-fdffae00-7f29-11ea-9f1a-4457f5e02fc3.png)
 
 ## Page methods
 
