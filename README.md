@@ -83,25 +83,25 @@ In order to add everything at once, add helper `<?php commentions(); ?>` to the 
 
 This is your one-stop-shop, and it should sit rather nicely at the bottom of your content. But it might be too limited for your needs, hence there is Option B...
 
-If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentionsCss(); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
+If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentions('css'); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
 
 #### Option B. Add three template parts where you see them fit best
 
 Alternatively, you can add the form feedback snippet (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list.
 
-* The helper `<?php commentionsFeedback(); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
-* To render the comment form, include `<?php commentionsForm(); ?>` in your template.
-* Finally, `<?php commentionsList(); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentionsList('grouped')` instead (check options further below for additional control).
+* The helper `<?php commentions('feedback'); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
+* To render the comment form, include `<?php commentions('form'); ?>` in your template.
+* Finally, `<?php commentions('list'); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentions('grouped')` instead (check options further below for additional control).
 
-As with option A, you may want to include the `<?php commentionsCss(); ?>` to your HTML &lt;head&gt; template.
+As with option A, you may want to include the `<?php commentions('css'); ?>` to your HTML &lt;head&gt; template.
 
 #### Option C. Create your own frontend presentation
 
 Since above snippets are mainly provided to enable a quick start, you may of course run your own frontend code entirely. If you'd like to build on the templates, you can find them in the `site/plugins/kirby3-commentions/snippets` folder.
 
-While it may be advisable to use the `commentionsFeedback()` and `commentionsForm()` helpers, as their markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting your list of comments and webmentions.
+While it may be advisable to use the `commentions('feedback')` and `commentions('form')` helpers, as their markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting your list of comments and webmentions.
 
-The page method `$page->commentions()` on a page object returns an array with all approved comments for that page. This is the preferred API if you want to control how your comments and webmentions are displayed (the `commentionsList('raw')` from Commentions 0.x is deprecated and no longer recommended). Use that array to build your presentation logic to taste. To include unapproved comments in that array, use `$page->commentions('all')` (handle with care!).
+The page method `$page->commentions()` on a page object returns an array with all approved comments for that page. This is the preferred API if you want to control how your comments and webmentions are displayed (the `commentions('raw')` from Commentions 0.x is deprecated and no longer recommended). Use that array to build your presentation logic to taste. To include unapproved comments in that array, use `$page->commentions('all')` (handle with care!).
 
 _NB. The raw data array returned by this page method may contain e-mail addresses etc., so make sure to carefully limit what data is being displayed publicly._
 
@@ -109,7 +109,7 @@ _NB. The raw data array returned by this page method may contain e-mail addresse
 
 #### Announcing your webmentions endpoint in your HTML &lt;head&gt;
 
-In order to receive webmentions (this is optional, you may also use the plugin for traditional comments only), you have to announce your webmention endpoint in the HTML &lt;head&gt;. The easiest way is by placing `<?php commentionsEndpoints(); ?>` within the applicable template (often in `snippets/header.php`); if in doubt, place it at the very end just before the &lt;</head>&gt; tag.
+In order to receive webmentions (this is optional, you may also use the plugin for traditional comments only), you have to announce your webmention endpoint in the HTML &lt;head&gt;. The easiest way is by placing `<?php commentions('endpoints'); ?>` within the applicable template (often in `snippets/header.php`); if in doubt, place it at the very end just before the &lt;</head>&gt; tag.
 
 #### Setting up a cronjob to process the inbox queue (only applicable if using Webmentions)
 
