@@ -19,6 +19,7 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 * [Page methods](#page-methods)
 * [Pages methods](#pages-methods)
 * [API endpoints](#api-endpoints)
+* [Hooks](#hooks)
 * [Data structure](#data-structure)
 * [Config options](#config-options)
 * [Requirements, credits, license](#requirements)
