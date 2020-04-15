@@ -18,7 +18,7 @@ return [
 					case 'unapprove':
 						$array = [ 'status' => 'unapproved' ];
 						break;
-					case 'approve':
+					case 'delete':
 						$array = 'delete';
 						break;
 					default:
