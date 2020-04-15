@@ -293,7 +293,7 @@ Adds a comment entry to the page.
 
 #### Return
 
-On success: Array with the data as saved, including the assigned UID.
+Array with the data as saved, including the assigned UID, or boolean `false` if failed.
 
 ### $page->updateCommention()
 
@@ -310,13 +310,13 @@ Updates a comment entry on the page.
 
 #### Return
 
-On success: Array with the data as saved, including the assigned UID.
+Array with the data as saved, or boolean `false` if failed.
 
 ### $page->deleteCommention()
 
 Deletes a comment entry from the page.
 
-`$page->deleteCommentions( $data )`
+`$page->deleteCommentions( $uid )`
 
 #### Parameters
 
@@ -326,7 +326,7 @@ Deletes a comment entry from the page.
 
 #### Return
 
-Boolean `true` on success.
+Boolean `true` on success, `false` if failed.
 
 ## Pages methods
 

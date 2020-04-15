@@ -8,3 +8,6 @@ debug.txt
 # temp stuff
 *.bak
 
+# local stuff
+.screenshots
+

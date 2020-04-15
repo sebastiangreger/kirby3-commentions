@@ -142,6 +142,7 @@ class Storage {
 		endif;
 
 		// loop through array of all comments
+		$output = [];
 		foreach( static::read( $page, $field ) as $entry ) :
 
 			// find the entry with matching ID
@@ -155,9 +156,19 @@ class Storage {
 					endforeach;
 				endif;
 
-				// if the data variable is not an array but string 'delete', omit this comment from the output array
-				if ( $data != 'delete' ) :
+				if ( $data == 'delete' ) :
+
+					// on deletion, simply return true on success
+					$return = true;
+
+				else:
+
+					// add this field to the array to be written to the file
 					$output[] = $entry;
+
+					// keep the values of the changed entry for returning
+					$return = $entry;
+
 				endif;
 
 			else :
@@ -170,7 +181,9 @@ class Storage {
 		endforeach;
 
 		// replace the old comments in the yaml data and write it back to the file
-		return static::write( $page, $output, $field );
+		static::write( $page, $output, $field );
+
+		return $return ?? false;
 
 	}
 

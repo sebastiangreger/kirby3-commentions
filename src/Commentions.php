@@ -45,6 +45,14 @@ class Commentions {
 
     public static function add( $page, $data ) {
 
+		// a regular comment has to at least feature a text
+		if ( ( empty( $data['type'] ) || $data['type'] == 'comment' ) && empty( $data['text'] ) )
+			return false;
+
+		// a webmention has to at least feature a source that is a valid URL
+		if ( ( ! empty( $data['type'] ) && $data['type'] != 'comment' ) && ( empty( $data['source'] ) || ! Str::isURL( $data['source'] ) ) )
+			return false;
+
 		// clean up the data; incl. removal of any user-provided uid
 		$data = Commentions::sanitize( $data, false );
 
@@ -68,6 +76,10 @@ class Commentions {
      */
 
     public static function update( $page, $uid, $data ) {
+
+		// UID cannot be updated externally
+		if ( !empty( $data['uid'] ) )
+			unset( $data['uid'] );
 
 		return Storage::update( $page, $uid, $data, 'comments' );
 
