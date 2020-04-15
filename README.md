@@ -114,44 +114,44 @@ Second, set up a cronjob to call the URL `https://<SITE-URL>/commentions-process
 
 Every time this URL is called, the queue of incoming webmentions is processed; valid webmentions are moved to the comment inbox, while invalid ones are silently deleted.
 
-## Helpers
+## Frontend helper
 
-### commentions
+### commentions()
 
-`<?php commentions(); ?>` is a shorthand for displaying three helpers (described below) in the following order:
+`<?php commentions(); ?>` with no attributes is a shorthand for displaying three helpers (described below) in the following order:
 
 ```php
 <?php
-	commentionsFeedback();
-	commentionsForm();
-	commentionsList();
+	commentions('feedback');
+	commentions('form');
+	commentions('list');
 ?>
 ```
 
-### commentionsFeedback
+### commentions('feedback')
 
-The helper `<?php commentionsFeedback(); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
+The helper `<?php commentions('feedback'); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
 
-### commentionsForm
+### commentions('form')
 
-To render the comment form, include `<?php commentionsForm(); ?>` in your template.
+To render the comment form, include `<?php commentions('form'); ?>` in your template.
 
-### commentionsList
+### commentions('list')
 
-`<?php commentionsList(); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentionsList('grouped')` instead (check options further below for additional control).
+`<?php commentions('list'); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentions('list','grouped')` instead (check options further below for additional control).
 
-### commentionsEndpoints
+### commentions('endpoints')
 
-By default, the helper `<?php commentionsEnpoints(); ?>` is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
+By default, the helper `<?php commentions('endpoints'); ?>` is nothing more than a shortcut to render the following HTML, which allows other websites to discover that your site accepts webmentions:
 
 ```HTML
 <link rel="webmention" href="https://<SITE-URL>/webmention-endpoint" />
 <link rel="http://webmention.org/" href="https://<SITE-URL>/webmention-endpoint" />
 ```
 
-### commentionsCss
+### commentions('css')
 
-If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentionsCss(); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
+If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentions('css'); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
 
 Unless your site is running on the Starterkit, you likely want to write your own CSS for the pre-rendered markup. To build on the prefabricated styles, they can be found in `site/plugins/kirby3-commentions/assets/styles.css`.
 
@@ -239,7 +239,7 @@ On success: Array with the data as saved, including the assigned UID.
 
 ### $page->updateCommention()
 
-Updated a comment entry on the page.
+Updates a comment entry on the page.
 
 `$page->updateCommentions( $uid, $data )`
 

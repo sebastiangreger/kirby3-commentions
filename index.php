@@ -17,8 +17,11 @@ load([
     'sgkirby\\Commentions\\Commentions'	=> 'src/Commentions.php',
     'sgkirby\\Commentions\\Storage'		=> 'src/Storage.php',
 
+    'sgkirby\\Commentions\\Frontend'	=> 'src/Frontend.php',
+
     'sgkirby\\Commentions\\Endpoint'	=> 'src/Endpoint.php',
     'sgkirby\\Commentions\\Cron'		=> 'src/Cron.php',
+
     'sgkirby\\Commentions\\Migration' 	=> 'src/Migration.php'
 
 ], __DIR__);
