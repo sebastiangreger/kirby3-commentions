@@ -60,9 +60,7 @@ class Commentions {
 		$data['uid'] = Commentions::uid();
 
 		// save commention to the according txt file
-		Storage::add( $page, $data );
-
-		return $data;
+		return Storage::add( $page, $data );
 
 	}
 
