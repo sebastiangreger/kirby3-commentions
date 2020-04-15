@@ -71,28 +71,41 @@ class Storage {
      
     public static function write( $page, array $data, string $field = 'comments' ) {
 
+		// get the file path
 		$file = static::file( $page );
+
 		if ( F::exists( $file ) ) :
+
+			// read all the fields stored in the text file (e.g. 'comments' and 'queue')
 			$fields = Data::read( $file );
+
+			// if the targeted field already exists, replace its data with the new array
 			foreach ( $fields as $key => $value ) :
 				if ( $key == $field )
 					$fields[$key] = Data::encode( $data, 'yaml' );
 			endforeach;
+
+			// if the targeted field does not yet exist, add it to the $fields array
 			if ( !isset( $fields[$field] ) ) :
 				$fields[$field] = Data::encode( $data, 'yaml' );
 			endif;
+
 		else :
+
+			// create a fields array from scratch
 			$fields[$field] = Data::encode( $data, 'yaml' );
-			//F::write( $file, '' )
+
 		endif;
 
+		// write the fields array to the text file
 		try {
 			Data::write( $file, $fields );
+			return true;
 		} catch (Exception $e) {
 			echo $e->getMessage();
+			return false;
 		}
 
-		return true;
 
 	}
 
@@ -116,6 +129,8 @@ class Storage {
 		// replace the old comments in the yaml data and write it back to the file
 		static::write( $page, $data, $field );
 
+		return $entry;
+
 	}
 
 
@@ -135,9 +150,6 @@ class Storage {
 
 			// sanitize data array, but keep the uid
 			$data = Commentions::sanitize( $data, true );
-
-			// sort fields alphabetically for consistency
-			ksort( $data );
 
 		endif;
 
@@ -162,6 +174,9 @@ class Storage {
 					$return = true;
 
 				else:
+
+					// sort fields alphabetically for consistency
+					ksort( $entry );
 
 					// add this field to the array to be written to the file
 					$output[] = $entry;
