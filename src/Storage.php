@@ -46,7 +46,7 @@ class Storage {
     public static function read( $page, string $field = 'comments' ) {
 
 		// read the data and return decoded yaml
-		$file = Storage::file( $page );
+		$file = static::file( $page );
 		if ( F::exists( $file ) ) :
 			$data = Data::read( $file );
 			if ( isset( $data[$field] ) )
@@ -71,7 +71,7 @@ class Storage {
      
     public static function write( $page, array $data, string $field = 'comments' ) {
 
-		$file = Storage::file( $page );
+		$file = static::file( $page );
 		if ( F::exists( $file ) ) :
 			$fields = Data::read( $file );
 			foreach ( $fields as $key => $value ) :
@@ -109,11 +109,11 @@ class Storage {
     public static function add( $page, $entry = [], $field = 'comments' ) {
 
 		// attach new data set to array of existing comments
-		$data = Storage::read( $page, $field );
+		$data = static::read( $page, $field );
 		$data[] = $entry;
 
 		// replace the old comments in the yaml data and write it back to the file
-		Storage::write( $page, $data, $field );
+		static::write( $page, $data, $field );
 
 	}
 
@@ -134,7 +134,7 @@ class Storage {
 			$data = Commentions::sanitize( $data );
 
 		// loop through array of all comments
-		foreach( Storage::read( $page, $field ) as $entry ) :
+		foreach( static::read( $page, $field ) as $entry ) :
 
 			// find the entry with matching ID
 			if ( $entry['uid'] == $uid ) :
@@ -162,7 +162,7 @@ class Storage {
 		endforeach;
 
 		// replace the old comments in the yaml data and write it back to the file
-		return Storage::write( $page, $output, $field );
+		return static::write( $page, $output, $field );
 
 	}
 
