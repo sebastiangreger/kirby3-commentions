@@ -146,7 +146,7 @@ class Storage {
     public static function update( $page, $uid, $data = [], $field = 'comments' ) {
 
 		// clean up the data if it is an array (skip for string, which would be a command like 'delete')
-		if ( is_array( $data ) && !empty( $data ) ) :
+		if ( $field == 'comments' && is_array( $data ) && !empty( $data ) ) :
 
 			// sanitize data array, but keep the uid
 			$data = Commentions::sanitize( $data, true );

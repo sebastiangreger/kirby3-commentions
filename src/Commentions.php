@@ -60,7 +60,12 @@ class Commentions {
 		$data['uid'] = Commentions::uid();
 
 		// save commention to the according txt file
-		return Storage::add( $page, $data );
+		$saved = Storage::add( $page, $data );
+
+		// trigger a hook that allows further processing of the data
+		kirby()->trigger( "commentions.add:after", $page, $saved );
+
+		return $saved;
 
 	}
 
@@ -79,7 +84,12 @@ class Commentions {
 		if ( !empty( $data['uid'] ) )
 			unset( $data['uid'] );
 
-		return Storage::update( $page, $uid, $data, 'comments' );
+		$saved = Storage::update( $page, $uid, $data, 'comments' );
+
+		// trigger a hook that allows further processing of the data
+		kirby()->trigger( "commentions.update:after", $page, $saved );
+		
+		return $saved;
 
 	}
 
@@ -92,36 +102,49 @@ class Commentions {
      * @return array
      */
 
-    public static function sanitize( $data, $keepuid = false ) {
+    public static function sanitize( $data, $update = false ) {
 
-		// users may not send 'uid' as part of the data payload
-		if ( ! $keepuid && ! empty( $data['uid'] ) )
-			unset( $data['uid'] );
+		// validations on missing required fields only apply when creating new entries
+		if ( ! $update ) :
 
-		// timestamp is required; use current time if missing or not a unix epoch
-		if ( empty( $data['timestamp'] ) || ! is_numeric( $data['timestamp'] ) )
-			$data['timestamp'] = date( date('Y-m-d H:i'), time() );
+			// users may not send 'uid' as part of the data payload
+			if ( ! empty( $data['uid'] ) )
+				unset( $data['uid'] );
 
-		// status is required; set to 'pending' default if missing or invalid value
-		if ( empty( $data['status'] ) || !in_array( $data['status'], [ 'approved', 'unapproved', 'pending' ] ) )
-			$data['status'] = 'pending';
+			// timestamp is required; use current time if missing
+			if ( empty( $data['timestamp'] ) )
+				$data['timestamp'] = date( date('Y-m-d H:i'), time() );
 
-		// type is required; set to 'comment' default if missing
-		if ( empty( $data['type'] ) )
-			$data['type'] = 'comment';
+			// status is required; set to 'pending' by default if missing
+			if ( empty( $data['status'] ) )
+				$data['status'] = 'pending';
 
-		// validations based on type
-		if ( $data['type'] == 'comment' ) :
+			// type is required; set to 'comment' default if missing
+			if ( empty( $data['type'] ) )
+				$data['type'] = 'comment';
 
-			// text is required for comments
-			if ( empty( $data['text'] ) )
-				$data['text'] = '';
+			// validations based on type
+			if ( $data['type'] == 'comment' ) :
 
-			// 'source' only used for webmentions
-			if ( !empty( $data['source'] ) )
-				unset( $data['source'] );
+				// text is required for comments
+				if ( empty( $data['text'] ) )
+					$data['text'] = '';
+
+				// 'source' only used for webmentions
+				if ( !empty( $data['source'] ) )
+					unset( $data['source'] );
+
+			endif;
 
 		endif;
+
+		// timestamp is required; use current time if missing or not a unix epoch
+		if ( ! empty( $data['timestamp'] ) && ! is_numeric( $data['timestamp'] ) )
+			$data['timestamp'] = date( date('Y-m-d H:i'), time() );
+
+		// status is required; set to 'pending' by default if missing or invalid value
+		if ( ! empty( $data['status'] ) && !in_array( $data['status'], [ 'approved', 'unapproved', 'pending' ] ) )
+			$data['status'] = 'pending';
 
 		foreach ( $data as $key => $value ) :
 
@@ -267,9 +290,6 @@ class Commentions {
 		// save commention to the according txt file
 		Commentions::add( $page, $data );
 
-		// trigger a hook that allows further processing of the data
-		kirby()->trigger( "commentions.queueComment:after", $page, $data );
-
 		// return to the post page and display success message
 		go( $page->url() . "?thx=queued" );
 
@@ -400,9 +420,9 @@ class Commentions {
 				'language' => Commentions::determineLanguage( $path, $page ),
 			];
 
-			Commentions::add( page( $page->id() ), $finaldata );
+			Commentions::add( $page, $finaldata );
 
-			return true;
+			return $finaldata;
 
 		} else {
 		

@@ -376,7 +376,7 @@ True if successful, false if failed.
 
 Changes a comment's status from 'approved' to 'unapproved'.
 
-_NB. This does not reinstate the 'pending' status, which only applies for new incoming comments.
+_NB. This does not reinstate the 'pending' status, which only applies for new incoming comments._
 
 #### Parameters
 
@@ -405,6 +405,59 @@ Deletes a comment.
 #### Return
 
 True if successful, false if failed.
+
+## Hooks
+
+Hooks provide various ways to modify the behaviour of the plugin and "hook into" the processing happening in the background.
+
+### commentions.add:after
+
+This hook is triggered after a comment/webmention is added.
+
+#### Variables
+
+| Name  | Type   | Description                                                                                                                    |
+|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| $page | object | The Kirby page object the comment was added to                                                                                 |
+| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+
+#### Example
+
+Adding the following code to `site/config.php` or in a plugin would replace every incoming comment's text field to contain a dump of the entire comment and its meta data:
+
+```php
+'hooks' => [
+	'commentions.add:after' => function ( $page, $data ) {
+		$page->updateCommention( $data['uid'], [ 'text' => print_r( $data, true ) ] );
+	}
+], 
+```
+
+### commentions.update:after
+
+This hook is triggered after a comment/webmention is updated.
+
+#### Variables
+
+| Name  | Type   | Description                                                                                                                    |
+|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| $page | object | The Kirby page object the comment was added to                                                                                 |
+| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+
+### commentions.webmention:after
+
+This hook is triggered after a received webmention has been parsed successfully.
+
+Since the parsing of a received webmention also manifests the addition of a new comment/webmention, the hook `commentions.add:after` is triggered before this more specific hook.
+
+#### Variables
+
+| Name  | Type   | Description                                                                                                                    |
+|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| $page | object | The Kirby page object the webmention was added to                                                                              |
+| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+
+_NB. Incoming webmentions are parsed asynchronously; this hook is not triggered when the request is submitted, but once the cronjob has successfully parsed and processed the request._
 
 ## Data structure
 

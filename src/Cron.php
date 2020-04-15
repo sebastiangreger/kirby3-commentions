@@ -59,12 +59,20 @@ class Cron {
 
 					if ( $result = Commentions::parseRequest( $queueitem ) ) :
 
-						// delete webmention from queue after successful parsing
-						if ( is_bool( $result ) ) :
+						// if parsing was successful, $result is the array with the saved data
+						if ( is_array( $result ) ) :
+
+							// delete webmention from queue after successful parsing
 							Storage::update( $page, $queueitem['uid'], 'delete', 'queue' );
+
+							// trigger a hook that allows further processing of the data
+							kirby()->trigger( "commentions.webmention:after", $page, $result );
+
 							return true;
 
+						// if parsing led to an error, $result is a string with the error message
 						else :
+
 							// mark failed requests as failed
 							Storage::update( $page, $queueitem['uid'], [ 'failed' => $result ], 'queue' );
 

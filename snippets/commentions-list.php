@@ -88,7 +88,7 @@
 							<?= date ( 'Y-m-d H:i', strtotime( $comment['timestamp'] ) ) ?>
 						</p>
 
-						<?php if ( $comment['type'] == 'reply' || $comment['type'] == 'comment' ) : ?>
+						<?php if ( ( $comment['type'] == 'reply' || $comment['type'] == 'comment' ) && !empty( $comment['text'] ) ) : ?>
 						<div class="commentions-list-message">
 							<?= strip_tags( kirbytext( $comment['text'] ), '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>' ) ?>
 						</div>
