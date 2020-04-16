@@ -57,7 +57,7 @@ class Cron {
 				// skip requests already marked as failed
 				if ( ! isset( $queueitem['failed'] ) ) :
 
-					if ( $result = Commentions::parseRequest( $queueitem ) ) :
+					if ( $result = Commentions::processWebmention( $queueitem ) ) :
 
 						// if parsing was successful, $result is the array with the saved data
 						if ( is_array( $result ) ) :

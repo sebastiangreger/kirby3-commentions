@@ -2,9 +2,11 @@
 
 namespace sgkirby\Commentions;
 
+use Exception;
+
 return [
 
-	'route:after' => function ( $route, $path, $method, $result ) {
+	'route:after' => function ( $route, $path, $method, $page ) {
 
 		// create the feedback message
 		if ( get('thx') ) {
@@ -20,8 +22,22 @@ return [
 		}
 
 		// process form submission
-		if ( get('commentions') && get('submit') )
-			Commentions::queueComment( $path, $result );
+		if ( get('commentions') && get('submit') ) :
+
+			$return = Commentions::processCommentform( $page, $path );
+
+			if ( isset( $return['uid'] ) ) :
+			
+				// return to the post page and display success message
+				go( $page->url() . "?thx=queued" );
+
+			else :
+		
+				throw new Exception( 'Could not process comment.' );
+
+			endif;
+
+		endif;
 
 	}
 

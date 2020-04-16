@@ -37,7 +37,7 @@ class Commentions {
 			return $setting[ $type ];
 
 		// string: use the preset value
-		elseif ( is_string( $setting ) && in_array( $setting[ $type ], $valid ) )
+		elseif ( is_string( $setting ) && in_array( $setting, $valid ) )
 			return $setting;
 
 		// fallback is always 'pending'
@@ -258,12 +258,12 @@ class Commentions {
 
 
     /**
-     * Adds new comment to the given page's commention file
+     * Processes the comment form data and stores the comment
      *
      * @param string $path
      */
 
-    public static function queueComment( $path, $page ) {
+    public static function processCommentform( $page, $path ) {
 
 		$spamfilters = option( 'sgkirby.commentions.spamprotection' );
 
@@ -317,11 +317,8 @@ class Commentions {
 
         }
 
-		// save commention to the according txt file
-		Commentions::add( $page, $data );
-
-		// return to the post page and display success message
-		go( $page->url() . "?thx=queued" );
+		// save comment to the according txt file
+		return Commentions::add( $page, $data );
 
     }
 
@@ -331,10 +328,10 @@ class Commentions {
      *
      * @param string $source
      * @param string $target
-     * @return bool
+     * @return $array
      */
 
-	public static function parseRequest( $request ) {
+	public static function processWebmention( $request ) {
 
 		$source = $request['source'];
 		$target = $request['target'];
@@ -450,9 +447,8 @@ class Commentions {
 				'language' => Commentions::determineLanguage( $path, $page ),
 			];
 
-			Commentions::add( $page, $finaldata );
-
-			return $finaldata;
+			// save webmention to the according txt file
+			return Commentions::add( $page, $finaldata );
 
 		} else {
 		
