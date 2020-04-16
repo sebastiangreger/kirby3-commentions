@@ -9,7 +9,6 @@
  * @link      https://github.com/sebastiangreger/kirby3-sendmentions
  * @license   MIT
  */
-
 namespace sgkirby\Commentions;
 
 load([
@@ -26,41 +25,41 @@ load([
 
 ], __DIR__);
 
-require( __DIR__ . DS . 'helpers.php' );
+require __DIR__ . DS . 'helpers.php';
 
 \Kirby::plugin('sgkirby/commentions', [
 
-	'options' 		=> array(
+    'options' 		=> [
 
-		'secret'				=> '',
-		'defaultstatus'			=> 'pending',
-		'endpoint' 				=> 'webmention-endpoint',
-		'spamprotection' 		=> [ 'honeypot', 'timemin', 'timemax' ],
-		'spamtimemin' 			=> 5,
-		'spamtimemax'			=> 86400,
-		'avatarurls'			=> false,
-		'hideforms'				=> false,
-		'expand'				=> false,
-		'formfields'			=> ['name'],
-		'grouped' 				=> [
-									'read' 				=> 'Read by',
-									'like' 				=> 'Likes',
-									'repost' 			=> 'Reposts',
-									'bookmark' 			=> 'Bookmarks',
-									'rsvp:yes' 			=> 'RSVP: yes',
-									'rsvp:maybe' 		=> 'RSVP: maybe',
-									'rsvp:interested' 	=> 'RSVP: interested',
-									'rsvp:no' 			=> 'RSVP: no',
-								],
+        'secret'				=> '',
+        'defaultstatus'			=> 'pending',
+        'endpoint' 				=> 'webmention-endpoint',
+        'spamprotection' 		=> [ 'honeypot', 'timemin', 'timemax' ],
+        'spamtimemin' 			=> 5,
+        'spamtimemax'			=> 86400,
+        'avatarurls'			=> false,
+        'hideforms'				=> false,
+        'expand'				=> false,
+        'formfields'			=> ['name'],
+        'grouped' 				=> [
+            'read' 				=> 'Read by',
+            'like' 				=> 'Likes',
+            'repost' 			=> 'Reposts',
+            'bookmark' 			=> 'Bookmarks',
+            'rsvp:yes' 			=> 'RSVP: yes',
+            'rsvp:maybe' 		=> 'RSVP: maybe',
+            'rsvp:interested' 	=> 'RSVP: interested',
+            'rsvp:no' 			=> 'RSVP: no',
+        ],
 
-	),
-	
+    ],
+    
     'api'     		=> require __DIR__ . '/config/api.php',
     
     'blueprints' 	=> [
 
-		// DEPRECATED as of 1.0.0: replaced with section 'commentions'
-		'fields/commentions' 	=> __DIR__ . '/blueprints/fields/commentions.yml'
+        // DEPRECATED as of 1.0.0: replaced with section 'commentions'
+        'fields/commentions' 	=> __DIR__ . '/blueprints/fields/commentions.yml'
 
     ],
         
@@ -84,40 +83,40 @@ require( __DIR__ . DS . 'helpers.php' );
 
     'pageMethods' => [
 
-        'commentions' 			=> function ( string $status = 'approved', string $sort = 'asc' ) {
-									return Commentions::retrieve( $this, $status, $sort );
-								},
+        'commentions' 			=> function (string $status = 'approved', string $sort = 'asc') {
+            return Commentions::retrieve($this, $status, $sort);
+        },
 
-        'addCommention' 		=> function ( array $data ) {
-									return Commentions::add( $this, $data );
-								},
+        'addCommention' 		=> function (array $data) {
+            return Commentions::add($this, $data);
+        },
 
-        'deleteCommention' 		=> function ( string $uid ) {
-									return Commentions::update( $this, $uid, 'delete' );
-								},
+        'deleteCommention' 		=> function (string $uid) {
+            return Commentions::update($this, $uid, 'delete');
+        },
 
-        'updateCommention' 		=> function ( string $uid, array $data ) {
-									return Commentions::update( $this, $uid, $data );
-								},
+        'updateCommention' 		=> function (string $uid, array $data) {
+            return Commentions::update($this, $uid, $data);
+        },
 
     ],
 
     'pagesMethods' => [
 
-        'commentions'			=> function ( $status = 'approved', $sort = 'asc' ) {
-									$return = [];
-									foreach ( $this as $page ) :
-										$return = \Kirby\Toolkit\A::merge( $return, Commentions::retrieve( $page, $status ) );
-									endforeach;
-									return \Kirby\Toolkit\A::sort( $return, 'timestamp', $sort );
-								},
+        'commentions'			=> function ($status = 'approved', $sort = 'asc') {
+            $return = [];
+            foreach ($this as $page) :
+                                        $return = \Kirby\Toolkit\A::merge($return, Commentions::retrieve($page, $status));
+            endforeach;
+            return \Kirby\Toolkit\A::sort($return, 'timestamp', $sort);
+        },
 
     ],
 
-    'translations' => array(
+    'translations' => [
 
         'en' 					=> require_once __DIR__ . '/languages/en.php',
 
-    ),
+    ],
 
 ]);

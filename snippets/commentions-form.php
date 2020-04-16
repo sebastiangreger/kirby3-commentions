@@ -1,7 +1,7 @@
 
 	<div class="commentions-form">
 
-		<?php if ( option( 'sgkirby.commentions.hideforms' ) ) : ?>
+		<?php if (option('sgkirby.commentions.hideforms')) : ?>
 
 		<h3 class="expander" id="commentions-form-comment">
 			<button aria-expanded="false">
@@ -16,16 +16,18 @@
 
 		<?php endif; ?>
 
-		<form action="<?= $page->url() ?>" method="post" <?php if ( option( 'sgkirby.commentions.hideforms' ) ) echo 'class="expandertarget"'; ?>>
+		<form action="<?= $page->url() ?>" method="post" <?php if (option('sgkirby.commentions.hideforms')) {
+    echo 'class="expandertarget"';
+} ?>>
 
-			<?php if ( in_array( 'name', $fields ) ) : ?>
+			<?php if (in_array('name', $fields)) : ?>
 			<div class="commentions-form-name">
 				<label for="name"><?= t('commentions.snippet.form.name') ?></label>
 				<input type="text" id="name" name="name">
 			</div>
 			<?php endif; ?>
 
-			<?php if ( in_array( 'email', $fields ) ) : ?>
+			<?php if (in_array('email', $fields)) : ?>
 			<div class="commentions-form-email">
 				<label for="email"><?= t('commentions.snippet.form.email') ?></label>
 				<input type="email" id="email" name="email">
@@ -37,7 +39,7 @@
 				<input type="url" id="website" name="website">
 			</div>
 
-			<?php if ( in_array( 'url', $fields ) ) : ?>
+			<?php if (in_array('url', $fields)) : ?>
 			<div class="commentions-form-website">
 				<label for="realwebsite"><?= t('commentions.snippet.form.website') ?></label>
 				<input type="url" id="realwebsite" name="realwebsite">
@@ -50,13 +52,13 @@
 			</div>
 
 			<?php /* "commentions" value enables identifying commentions submissions in route:before hook + creation timestamp is used for spam protection */ ?>
-			<input type="hidden" name="commentions" value="<?php e ( !$page->isCacheable(), time(), 0 ) ?>">
+			<input type="hidden" name="commentions" value="<?php e(!$page->isCacheable(), time(), 0) ?>">
 
 			<input type="submit" name="submit" value="Submit">
 
 		</form>
 
-		<?php if ( option( 'sgkirby.commentions.expand' ) ) : ?>
+		<?php if (option('sgkirby.commentions.expand')) : ?>
 
 		<h3 class="expander" id="commentions-form-webmention">
 			<button aria-expanded="false">
@@ -71,7 +73,9 @@
 
 		<?php endif; ?>
 
-		<form action="<?= site()->url() . '/' . option( 'sgkirby.commentions.endpoint' ) ?>" method="post" <?php if ( option( 'sgkirby.commentions.expand' ) ) echo 'class="expandertarget"'; ?>>
+		<form action="<?= site()->url() . '/' . option('sgkirby.commentions.endpoint') ?>" method="post" <?php if (option('sgkirby.commentions.expand')) {
+    echo 'class="expandertarget"';
+} ?>>
 
 			<div class="commentions-form-source">
 				<label for="source"><?= t('commentions.snippet.form.responseurl') ?></label>
