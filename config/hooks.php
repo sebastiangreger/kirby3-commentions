@@ -24,7 +24,7 @@ return [
 		// process form submission
 		if ( get('commentions') && get('submit') ) :
 
-			$return = Commentions::processCommentform( $page, $path );
+			$return = Frontend::processCommentform( $page, $path );
 
 			if ( isset( $return['uid'] ) ) :
 			

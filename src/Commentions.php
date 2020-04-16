@@ -84,10 +84,10 @@ class Commentions {
 			return false;
 
 		// clean up the data; incl. removal of any user-provided uid
-		$data = Commentions::sanitize( $data, false );
+		$data = static::sanitize( $data, false );
 
 		// add a uid field
-		$data['uid'] = Commentions::uid();
+		$data['uid'] = static::uid();
 
 		// save commention to the according txt file
 		$saved = Storage::add( $page, $data );
@@ -258,203 +258,45 @@ class Commentions {
 
 
     /**
-     * Processes the comment form data and stores the comment
+     * Runs spam checks on submitted data
      *
-     * @param string $path
+     * @param string $data
+     * @param array $get
+     * @return bool
      */
 
-    public static function processCommentform( $page, $path ) {
+    public static function spamcheck( $data, $get = null ) {
 
-		$spamfilters = option( 'sgkirby.commentions.spamprotection' );
+		$settings = option( 'sgkirby.commentions.spamprotection' );
 
-		// honeypot: if field has been filed, it is very likely a robot
-        if ( in_array( 'honeypot', $spamfilters ) && empty( get('website') ) === false ) {
-            go( $page->url() );
-            exit;
-        }
+		// spam rules applicable when form input is provided
+		if ( !empty( $get ) ) :
 
-		// time measuring spam filter only active if no cache active and values are not impossible
-		if ( (int) get('commentions') > 0 && (int) option( 'sgkirby.commentions.spamtimemin' ) < (int) option( 'sgkirby.commentions.spamtimemax' ) ) :
+			// honeypot: if field has been filed, it is very likely a robot
+			if ( in_array( 'honeypot', $settings ) && empty( $get['website'] ) === false )
+				return false;
 
-			// spam timeout min: if less than n seconds between form creation and submission, it is most likely a bot
-			if ( in_array( 'timemin', $spamfilters ) && (int) get('commentions') > ( time() - (int) option( 'sgkirby.commentions.spamtimemin' ) ) ) {
-				go( $page->url() );
-				exit;
-			}
+			// time measuring spam filter only active if no cache active and values are not impossible
+			if ( (int) $get['commentions'] > 0 && (int) option( 'sgkirby.commentions.spamtimemin' ) < (int) option( 'sgkirby.commentions.spamtimemax' ) ) :
 
-			// spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
-			if ( in_array( 'timemax', $spamfilters ) && (int) get('commentions') < ( time() - (int) option( 'sgkirby.commentions.spamtimemax' ) ) ) {
-				go( $page->url() );
-				exit;
-			}
+				// spam timeout min: if less than n seconds between form creation and submission, it is most likely a bot
+				if ( in_array( 'timemin', $settings ) && (int) $get['commentions'] > ( time() - (int) option( 'sgkirby.commentions.spamtimemin' ) ) )
+					return false;
 
-		endif;
-
-        $data = array(
-            'name' => get('name'),
-            'email' => get('email'),
-            'website' => get('realwebsite'),
-            'text' => get('message'),
-            'timestamp' => date( date('Y-m-d H:i'), time() ),
-            'language' => Commentions::determineLanguage( $path, $page ),
-            'type' => 'comment',
-            'status' => static::defaultstatus( 'comment' ),
-        );
-        $rules = array(
-            'text' => array('required', 'min' => 4, 'max' => 4096),
-        );
-        $messages = array(
-            'text' => 'Please enter a text between 4 and 4096 characters'
-        );
-
-        // some of the data is invalid
-        if ( $invalid = invalid( $data, $rules, $messages ) ) {
-
-			Commentions::$feedback = $invalid;
-			return [
-				'alert' => $invalid,
-			];
-
-        }
-
-		// save comment to the according txt file
-		return Commentions::add( $page, $data );
-
-    }
-
-
-    /**
-     * Parses webmention from the queue, based on given source and target
-     *
-     * @param string $source
-     * @param string $target
-     * @return $array
-     */
-
-	public static function processWebmention( $request ) {
-
-		$source = $request['source'];
-		$target = $request['target'];
-
-		// retrieve the source HTML
-		$sourcecontent = F::read( $source );
-
-		// parse for microformats
-		require_once( dirname(__DIR__) . DS . 'vendor' . DS . 'Mf2/Parser.php' );
-		require_once( dirname(__DIR__) . DS . 'vendor' . DS . 'IndieWeb/comments.php' );
-		$mf2   = \Mf2\parse( $sourcecontent, $source );
-
-		// process microformat data
-		if( isset( $mf2['items'][0] ) ) :
-
-			// parse the Mf2 array to a comment array
-			$result = \IndieWeb\comments\parse( $mf2['items'][0], $target, 1000, 20 );
-
-			// php-comments does not do rel=author
-			if ( $result['author']['url'] === false && array_key_exists( 'rels', $mf2 ) && array_key_exists( 'author', $mf2['rels'] ) && array_key_exists( 0, $mf2['rels']['author'] ) && is_string( $mf2['rels']['author'][0] ) )
-				$result['author']['url'] = $mf2['rels']['author'][0];
-
-			// if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
-			// TODO: align with algorithm outlined in https://indieweb.org/authorship
-			foreach ( $mf2['items'] as $mf2item ) {
-				if ( $mf2item['type'][0] == 'h-card' ) {
-					if ( $result['author']['name'] == ''  && isset( $mf2item['properties']['name'][0] ) )
-						$result['author']['name'] = $mf2item['properties']['name'][0];
-					if ( $result['author']['photo'] == '' && isset( $mf2item['properties']['photo'][0] ) )
-						$result['author']['photo'] = $mf2item['properties']['photo'][0];
-					if ( $result['author']['url'] == ''  && isset( $mf2item['properties']['url'][0] ) )
-						$result['author']['url'] = $mf2item['properties']['url'][0];
-				}
-			}
-
-			// do not keep author avatar URL unless activated in config option
-			if ( isset( $result['author']['photo'] ) && (bool) option( 'sgkirby.commentions.avatarurls' ) )
-				unset( $result['author']['photo'] );
-
-			// timestamp the webmention
-			if( !empty( $result['published'] ) ) :
-				// use date of source, if available
-				if ( is_numeric( $result['published'] ) )
-					$result['timestamp'] = $result['published'];
-				else
-					$result['timestamp'] = strtotime( $result['published'] );
-			else :
-				// otherwise use date the request received
-				$result['timestamp'] = $request['timestamp'];
-			endif;
-
-		// neither microformats nor backlink = no processing possible
-		elseif( ! Str::contains( $sourcecontent, $target ) ) :
-
-			return 'Could not verify link to target.';
-
-		// case: no microformats, but links back to target URL
-		else :
-
-			$result['timestamp'] = time();
-
-		endif;
-
-		// find the Kirby page the target URL refers to
-		$path = Url::path( $target );
-		if ( $path == '' )
-			$page = page('home');
-		else
-			$page = page( kirby()->call( trim( $target, '/' ) ) );
-
-		if( !$page->isErrorPage() ) {
-
-			// if there is no link to this site in the source...
-			if( ! Str::contains( $sourcecontent, $target ) ) :
-
-				$found = false;
-
-				if ( isset( $mf2['items'][0] ) ) :
-
-					// ...maybe they instead linked to a syndicated copy?
-					if ( $page->syndication()->isNotEmpty() ) {
-						foreach ( $page->syndication()->split() as $syndication ) {
-							if ( Str::contains( $sourcecontent, $syndication ) ) {
-								$result = \IndieWeb\comments\parse( $data['items'][0], $syndication );
-								$found = true;
-								break;
-							}
-						}
-					}
-
-				endif;
-
-				// if no backlink can be found, just give up
-				if ( !$found )
-					return 'Could not verify link to target.';
+				// spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
+				if ( in_array( 'timemax', $settings ) && (int) $get['commentions'] < ( time() - (int) option( 'sgkirby.commentions.spamtimemax' ) ) )
+					return false;
 
 			endif;
 
-			// set comment type, if not given or deprecated 'mention' given
-			if ( !isset( $result['type'] ) || $result['type'] == '' || $result['type'] == 'mention' )
-				$result['type'] = 'webmention';
+		endif;
 
-			// save as new webmention
-			$finaldata = [
-				'status' => static::defaultstatus( $result['type'] ),
-				'name' => $result['author']['name'],
-				'website' => $result['author']['url'],
-				'avatar' => $result['author']['photo'],
-				'text' => $result['text'],
-				'timestamp' => date( date('Y-m-d H:i'), $result['timestamp'] ),
-				'source' => $source,
-				'type' => $result['type'],
-				'language' => Commentions::determineLanguage( $path, $page ),
-			];
+		// TODO: verifications based on the data array's values (below is just a placeholder)
+		if ( isset($data['name']) && $data['name'] == 'I am a spammer' )
+			return false;
 
-			// save webmention to the according txt file
-			return Commentions::add( $page, $finaldata );
-
-		} else {
-		
-			throw new Exception('Invalid page');
-		
-		}
+		// not identified as spam
+		return true;
 
 	}
 

@@ -108,4 +108,51 @@ class Frontend {
 	}
 
 
+    /**
+     * Processes the comment form data and stores the comment
+     *
+     * @param string $path
+     */
+
+    public static function processCommentform( $page, $path ) {
+
+		// assemble the commention data
+        $data = array(
+            'name' => get('name'),
+            'email' => get('email'),
+            'website' => get('realwebsite'),
+            'text' => get('message'),
+            'timestamp' => date( date('Y-m-d H:i'), time() ),
+            'language' => Commentions::determineLanguage( $path, $page ),
+            'type' => 'comment',
+            'status' => Commentions::defaultstatus( 'comment' ),
+        );
+
+		// run a spam check
+		$spam = Commentions::spamcheck( $data, kirby()->request()->get() );
+		if ( $spam === false ) :
+			go( $page->url() );
+			exit;
+		endif;
+
+		// verify field rules
+        $rules = array(
+            'text' => array('required', 'min' => 4, 'max' => 4096),
+        );
+        $messages = array(
+            'text' => 'Please enter a text between 4 and 4096 characters'
+        );
+        if ( $invalid = invalid( $data, $rules, $messages ) ) {
+			Commentions::$feedback = $invalid;
+			return [
+				'alert' => $invalid,
+			];
+        }
+
+		// save comment to the according txt file
+		return Commentions::add( $page, $data );
+
+    }
+
+
 }
