@@ -18,6 +18,36 @@ class Commentions {
 
 
     /**
+     * Checks the settings to assign the correct status to new comment submissions
+     *
+     * @param string $type
+     * @return string
+     */
+
+    public static function defaultstatus( $type ) {
+
+		// array of valid status strings, for validation
+		$valid = [ 'approved', 'unapproved', 'pending' ];
+
+		// fetch the setting string/array from options
+		$setting = option( 'sgkirby.commentions.defaultstatus' );
+
+		// array: retrieve the applicable setting for this type
+		if ( is_array( $setting ) && isset( $setting[ $type ] ) && in_array( $setting[ $type ], $valid ) )
+			return $setting[ $type ];
+
+		// string: use the preset value
+		elseif ( is_string( $setting ) && in_array( $setting[ $type ], $valid ) )
+			return $setting;
+
+		// fallback is always 'pending'
+		else
+			return 'pending';
+
+	}
+
+
+    /**
      * Generates a random 10-character string to be used as comment UID
      *
      * @return string
@@ -268,7 +298,7 @@ class Commentions {
             'timestamp' => date( date('Y-m-d H:i'), time() ),
             'language' => Commentions::determineLanguage( $path, $page ),
             'type' => 'comment',
-            'status' => 'pending',
+            'status' => static::defaultstatus( 'comment' ),
         );
         $rules = array(
             'text' => array('required', 'min' => 4, 'max' => 4096),
@@ -409,7 +439,7 @@ class Commentions {
 
 			// save as new webmention
 			$finaldata = [
-				'status' => 'pending',
+				'status' => static::defaultstatus( $result['type'] ),
 				'name' => $result['author']['name'],
 				'website' => $result['author']['url'],
 				'avatar' => $result['author']['photo'],

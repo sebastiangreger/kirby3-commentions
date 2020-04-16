@@ -9,7 +9,7 @@ return [
 		// create the feedback message
 		if ( get('thx') ) {
 
-			if ( option( 'sgkirby.commentions.autoapprovecomments' ) != 'true' )
+			if ( Commentions::defaultstatus( 'comment' ) != 'approved' )
 				Commentions::$feedback = [ 'success' => 'Thank you! Please be patient, your comment has has to be approved by the editor.' ];
 
 			else

@@ -33,7 +33,7 @@ require( __DIR__ . DS . 'helpers.php' );
 	'options' 		=> array(
 
 		'secret'				=> '',
-		'autoapprovecomments' 	=> 'false',
+		'defaultstatus'			=> 'pending',
 		'endpoint' 				=> 'webmention-endpoint',
 		'spamprotection' 		=> [ 'honeypot', 'timemin', 'timemax' ],
 		'spamtimemin' 			=> 5,

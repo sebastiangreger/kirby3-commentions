@@ -473,7 +473,7 @@ These are the fields that can be used, including information on which are compul
 |-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
 | timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
 | type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
-| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'all'                                                                               | approved                              |
+| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                               | approved                              |
 | uid       | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text      | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source    |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
@@ -486,6 +486,27 @@ These are the fields that can be used, including information on which are compul
 ## Config options
 
 The plugin can be configured with optional settings in your `site/config/config.php`.
+
+### Default status
+
+By default, all new comments and webmentions are set to status 'pending', i.e. awaiting confirmation by the admin.
+
+To change this global default, add this setting to your config:
+
+```php
+'sgkirby.commentions.defaultstatus' => 'approved',
+```
+
+To change the default for a specific comment type, you may configure an array as follows (the key being the comment type):
+
+```php
+'sgkirby.commentions.defaultstatus' => [
+	'comment'   => 'pending',
+	'like'      => 'approved',
+],
+```
+
+Any comment types not defined in such array inherit the original default of 'pending'. Possible values are 'pending', 'approved' and 'unapproved' (the latter won't show up in the Panel inbox, as this state is designed for comments that have been seen but not/un- published).
 
 ### Webmention endpoint
 
