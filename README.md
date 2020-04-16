@@ -21,7 +21,7 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 * [Pages methods](#pages-methods)
 * [API endpoints](#api-endpoints)
 * [Hooks](#hooks)
-* [Data structure](#data-structure)
+* [Data structure and storage](#data-structure-and-storage)
 * [Config options](#config-options)
 * [Requirements, credits, license](#requirements)
 
@@ -461,9 +461,9 @@ Since the parsing of a received webmention also manifests the addition of a new 
 
 _NB. Incoming webmentions are parsed asynchronously; this hook is not triggered when the request is submitted, but once the cronjob has successfully parsed and processed the request._
 
-## Data structure
+## Data structure and storage
 
-The commentions are stored in a `_commentions.txt` file in the according page's folder. For virtual pages, the storage location is `_commentions-<PAGE-SLUG>.txt` in the parent page's folder.
+The commentions are stored in a `_commentions.txt` file in the according page's folder. For virtual pages, that file is stored in a folder structure attached to the nearest ancestor that is not a virtual page (e.g. the page's parent or grandparent).
 
 ### Comments
 

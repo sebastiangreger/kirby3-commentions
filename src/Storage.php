@@ -19,18 +19,23 @@ class Storage {
      
     public static function file( $page ) {
 
-		// name convention
-		$filename = '_commentions';
+		// name conventions
+		$path = '';
+		$name = '_commentions';
 
-		// for real pages, commentions are stored in _commentions.txt in the same folder
-		if ( is_dir( $page->root() ) )
-			$filepath = $page->root() . DS . $filename . '.txt';
+		// create a path for virtual pages
+		while ( ! is_dir( $page->root() ) ):
 
-		// for virtual pages, commentions are stored in _commentions-<slug>.txt in the parent folder
-		else
-			$filepath = $page->parent()->root() . DS . $filename . '-' . $page->slug() . '.txt';
+			// prepend the slug of the current virtual page to the path variable
+			$path = DS . $page->slug() . $path;
 
-		return $filepath;
+			// move up one level and repeat
+			$page = $page->parent();
+
+		endwhile;
+
+		// commentions are stored in _commentions.txt file (in a subfolder, if virtual page)
+		return $page->root() . ( $path != '' ? DS . $name . $path : '' ) . DS . $name . '.txt';
 
 	}
 
