@@ -412,6 +412,44 @@ True if successful, false if failed.
 
 Hooks provide various ways to modify the behaviour of the plugin and "hook into" the processing happening in the background.
 
+### commentions.add:before
+
+This hook is triggered before a comment/webmention is added. It can be used for validation.
+
+#### Variables
+
+| Name  | Type   | Description                                                 |
+|-------|--------|-------------------------------------------------------------|
+| $page | object | The Kirby page object the comment was added to              |
+| $data | string | The complete data array about to be saved to the text file. |
+
+#### Example
+
+Adding the following code to `site/config.php` or in a plugin would stop the addition of any comment where the name field is "John Doe".
+
+```php
+'hooks' => [
+	'commentions.add:before' => function ( $page, $data ) {
+		if( $data['name'] == 'John Doe' ) {
+			 throw new Exception( "John Doe is not allowed to comment." );
+		}
+	}
+],
+```
+
+_NB. A hook cannot modify the variables used in the further processing. To manipulate the content of a field, use `commentions.add:after` or `commentions.update:after` instead.
+
+### commentions.update:before
+
+This hook is triggered before a comment/webmention is updated. It can be used for validation.
+
+#### Variables
+
+| Name  | Type   | Description                                                                                                                    |
+|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| $page | object | The Kirby page object the comment was added to                                                                                 |
+| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+
 ### commentions.add:after
 
 This hook is triggered after a comment/webmention is added.

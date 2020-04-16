@@ -89,6 +89,9 @@ class Commentions {
 		// add a uid field
 		$data['uid'] = static::uid();
 
+		// trigger a hook that would allow to stop processing by throwing an exception
+		kirby()->trigger( "commentions.add:before", $page, $data );
+
 		// save commention to the according txt file
 		$saved = Storage::add( $page, $data );
 
@@ -114,6 +117,10 @@ class Commentions {
 		if ( !empty( $data['uid'] ) )
 			unset( $data['uid'] );
 
+		// trigger a hook that would allow to stop processing by throwing an exception
+		kirby()->trigger( "commentions.add:before", $page, $data );
+
+		// update commention in the according txt file
 		$saved = Storage::update( $page, $uid, $data, 'comments' );
 
 		// trigger a hook that allows further processing of the data
