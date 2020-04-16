@@ -7,6 +7,7 @@ debug.txt
 
 # temp stuff
 *.bak
+*.cache
 
 # local stuff
 .screenshots
