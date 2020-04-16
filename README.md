@@ -437,7 +437,7 @@ Adding the following code to `site/config.php` or in a plugin would stop the add
 ],
 ```
 
-_NB. A hook cannot modify the variables used in the further processing. To manipulate the content of a field, use `commentions.add:after` or `commentions.update:after` instead.
+_NB. A hook cannot modify the variables used in the further processing. To manipulate the content of a field, use `commentions.add:after` or `commentions.update:after` instead._
 
 ### commentions.update:before
 
