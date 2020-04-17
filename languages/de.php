@@ -41,8 +41,8 @@ return [
     'commentions.section.option.unapprove'		=> 'Ablehnen',
     'commentions.section.option.approve'		=> 'Akzteptieren',
     'commentions.section.option.delete'			=> 'Löschen',
-    'commentions.section.option.viewsource'		=>'Quelle ansehen',
-    'commentions.section.option.viewwebsite'	=>'Website ansehen',
-    'commentions.section.option.sendemail'		=>'E-Mail senden',
+    'commentions.section.option.viewsource'		=> 'Quelle ansehen',
+    'commentions.section.option.viewwebsite'	=> 'Website ansehen',
+    'commentions.section.option.sendemail'		=> 'E-Mail senden',
 
 ];

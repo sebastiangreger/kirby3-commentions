@@ -116,6 +116,7 @@ require __DIR__ . DS . 'helpers.php';
     'translations' => [
 
         'en' 					=> require_once __DIR__ . '/languages/en.php',
+        'de' 					=> require_once __DIR__ . '/languages/de.php',
 
     ],
 
