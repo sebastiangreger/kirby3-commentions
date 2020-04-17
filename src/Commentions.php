@@ -236,7 +236,9 @@ class Commentions
 
                 // try to get current language if auto is set
                 if ($language == 'auto') {
-                    $language = kirby()->language()->code() ?? null;
+                    $language = kirby()->language() ?? null;
+                    if (!empty($language))
+						$language = $language->code() ?? null;
 
                 // invalid language code in call = show all
                 } elseif (strlen($language) == 2) {
@@ -286,13 +288,14 @@ class Commentions
     public static function determineLanguage($path, $page)
     {
 
-        // find the language where the configured URI matches the given URI
-        foreach (kirby()->languages() as $language) :
-            if ($page->uri($language->code()) == $path) {
+		// find the language where the configured URI matches the given URI
+		foreach (kirby()->languages() as $language) {
+			$pathInLanguage = (!empty(kirby()->language($language->code())->path()) ? kirby()->language($language->code())->path() . '/' : '' ) . $page->uri($language->code());
+            if ($pathInLanguage == $path) {
                 // return (two-letter) language code
                 return $language->code();
             }
-        endforeach;
+        }
 
         // return null if no match (default on single-language sites)
         return null;
