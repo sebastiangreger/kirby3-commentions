@@ -214,36 +214,65 @@ class Commentions
      * @param \Kirby\Cms\Page $page
      * @param string $query
      * @param string $sort
+     * @param string $language
      * @return array
      */
-    public static function retrieve($page, string $query = 'approved', string $sort = 'asc')
+    public static function retrieve($page, string $query = 'approved', string $sort = 'asc', string $language = null)
     {
 
         // if the query is a comment UID, return only that comment
-        if (!in_array($query, ['approved', 'unapproved', 'pending']) && strlen($query) == 10) :
+        if (!in_array($query, ['approved', 'unapproved', 'pending']) && strlen($query) == 10) {
+            foreach (Storage::read($page) as $comment) {
 
-            foreach (Storage::read($page) as $comment) :
+                // comment with matching uid is returned, regardless of language
                 if ($comment['uid'] == $query) {
                     return $comment;
                 }
-        endforeach; else:
+            }
+        } else {
+
+            // skip if no language has been specified in the call
+            if ($language != null) {
+
+                // try to get current language if auto is set
+                if ($language == 'auto') {
+                    $language = kirby()->language()->code() ?? null;
+
+                // invalid language code in call = show all
+                } elseif (strlen($language) == 2) {
+                    foreach (kirby()->languages() as $lang) {
+                        $languages[] = $lang;
+                    }
+                    if (!in_array($language, $languages)) {
+                        $language = null;
+                    }
+
+                    // fallback = show all
+                } else {
+                    $language = null;
+                }
+            }
 
             $output = [];
-        foreach (Storage::read($page) as $comment) :
-                if (($query == $comment['status']) || $query == 'all') :
-                    $comment['pageid'] = $page->id();
-        $output[] = $comment;
-        endif;
-        endforeach;
+            foreach (Storage::read($page) as $comment) {
 
-        // default sorting is chronological
-        if ($sort == 'desc') {
-            return array_reverse($output);
-        } else {
-            return $output;
+                // return comments with matching status...
+                if ($query == 'all' || $query == $comment['status']) {
+                    // ...where the language matches, no language is stored or no language is specified in the request
+                    if (empty($language) || empty($comment['language']) || $comment['language'] == $language) {
+                        $comment['pageid'] = $page->id();
+                        $output[] = $comment;
+                    }
+                }
+            }
+
+            // default sorting is chronological
+            if ($sort == 'desc') {
+                return array_reverse($output);
+            } else {
+                return $output;
+            }
         }
-
-        endif;
     }
 
 

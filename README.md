@@ -6,6 +6,7 @@ A minimalist, yet powerful and extendable, comment system and Webmention endpoin
 * Incoming webmentions are stored in a queue and processed asynchronously.
 * Comments can be approved/deleted in the Kirby Panel using the built-in panel sections
 * A range of page(s) methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
+* Supports multi-language sites and virtual pages
 
 Versions 1.x (April 2020 and later) are no longer compatible with the exploratory 0.x versions. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); to go back to an old version, the last release of the old branch was [0.3.0](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v0.3.0).
 

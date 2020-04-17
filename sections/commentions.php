@@ -79,8 +79,9 @@ return [
                 $meta = $data['type'];
 
                 $content =
-                    strtoupper($meta) . ': '
-                    . $name . ' ('
+                    strtoupper($meta)
+                    . (!empty($data['language']) ? ' [' . $data['language'] . ']')
+                    . ': '. $name . ' ('
                     . date($data['timestamp']) . ")\n"
                     . (!empty($data['source']) ? $data['source'] . "\n" : '')
                     . (empty($data['source']) && !empty($data['website']) ? $data['website'] . "\n" : '')

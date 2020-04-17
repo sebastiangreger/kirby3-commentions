@@ -52,7 +52,7 @@ class Frontend
             case 'raw':
 
                 // retrieve all approved comments for this page
-                $comments = page()->commentions('approved');
+                $comments = page()->commentions('approved', 'asc', 'auto');
                 $reactions = [];
 
                 // DEPRECATED as of 1.0.0: use $page->comments() instead

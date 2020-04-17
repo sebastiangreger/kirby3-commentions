@@ -83,8 +83,8 @@ require __DIR__ . DS . 'helpers.php';
 
     'pageMethods' => [
 
-        'commentions' 			=> function (string $status = 'approved', string $sort = 'asc') {
-            return Commentions::retrieve($this, $status, $sort);
+        'commentions' 			=> function (string $status = 'approved', string $sort = 'asc', $language = null) {
+            return Commentions::retrieve($this, $status, $sort, $language);
         },
 
         'addCommention' 		=> function (array $data) {
@@ -103,11 +103,11 @@ require __DIR__ . DS . 'helpers.php';
 
     'pagesMethods' => [
 
-        'commentions'			=> function ($status = 'approved', $sort = 'asc') {
+        'commentions'			=> function ($status = 'approved', $sort = 'asc', $language = null) {
             $return = [];
-            foreach ($this as $page) :
-                                        $return = \Kirby\Toolkit\A::merge($return, Commentions::retrieve($page, $status));
-            endforeach;
+            foreach ($this as $page) {
+                $return = \Kirby\Toolkit\A::merge($return, Commentions::retrieve($page, $status, $sort, $language));
+            }
             return \Kirby\Toolkit\A::sort($return, 'timestamp', $sort);
         },
 
