@@ -71,7 +71,7 @@ class Commentions {
 		// save the updated comment array to the text file
 		$targetpage->update(array(
 			'comments' => yaml::encode($comments),
-		), $data['language']);
+		), $data['language'] ?? null);
 
 		// delete the processed inbox file
 		F::remove( $inboxfile );
