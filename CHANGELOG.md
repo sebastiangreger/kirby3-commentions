@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2]
+
+### Changed
+- Fixed bug with language detection on multi-language sites
+- Fixed bug on monolingual sites (thx @fabianmichael)
+
+### Added
+- Querying Kirby API to deal with nonstandard folder structure (thx @fabianmichael)
+
 ## [0.3.0]
 
 ### Added
