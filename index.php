@@ -13,15 +13,15 @@ namespace sgkirby\Commentions;
 
 load([
 
-    'sgkirby\\Commentions\\Commentions'	=> 'src/Commentions.php',
-    'sgkirby\\Commentions\\Storage'		=> 'src/Storage.php',
+    'sgkirby\\Commentions\\Commentions'	=> 'classes/Commentions.php',
+    'sgkirby\\Commentions\\Storage'		=> 'classes/Storage.php',
 
-    'sgkirby\\Commentions\\Frontend'	=> 'src/Frontend.php',
+    'sgkirby\\Commentions\\Frontend'	=> 'classes/Frontend.php',
 
-    'sgkirby\\Commentions\\Endpoint'	=> 'src/Endpoint.php',
-    'sgkirby\\Commentions\\Cron'		=> 'src/Cron.php',
+    'sgkirby\\Commentions\\Endpoint'	=> 'classes/Endpoint.php',
+    'sgkirby\\Commentions\\Cron'		=> 'classes/Cron.php',
 
-    'sgkirby\\Commentions\\Migration' 	=> 'src/Migration.php'
+    'sgkirby\\Commentions\\Migration' 	=> 'classes/Migration.php'
 
 ], __DIR__);
 
