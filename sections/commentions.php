@@ -80,7 +80,7 @@ return [
 
                 $content =
                     strtoupper($meta)
-                    . (!empty($data['language']) ? ' [' . $data['language'] . ']')
+                    . (!empty($data['language']) ? ' [' . $data['language'] . ']' : '')
                     . ': '. $name . ' ('
                     . date($data['timestamp']) . ")\n"
                     . (!empty($data['source']) ? $data['source'] . "\n" : '')
