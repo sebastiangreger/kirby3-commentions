@@ -14,6 +14,7 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 
 ## Table of contents
 
+* [Privacy notice](#privacy-notice)
 * [Installation](#installation)
 * [Setup](#setup)
 * [Frontend helper](#frontend-helper)
@@ -25,6 +26,12 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 * [Data structure and storage](#data-structure-and-storage)
 * [Config options](#config-options)
 * [Requirements, credits, license](#requirements)
+
+## Privacy notice
+
+By enabling users to post comments and/or webmentions, a website deals with what is considered personal data in most jurisdictions. Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical assessment.
+
+The processing of personal data is subject to often very strict privacy laws, coming with a wide range of obligations. While this plugin aims to provide the means for its responsible and legally compliant use, the responsibility to comply with applicable laws always rests with the operator of the website (the data controller). "GDPR compliance" is not created by software, but by the way it is used; if in doubt, always ask a qualified lawyer - and if you feel that this plugin does not meet your requirements, don't use it or adapt it to your needs (it's free and open software).
 
 ## Installation
 
