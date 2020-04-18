@@ -92,7 +92,7 @@ class Commentions
         kirby()->trigger('commentions.add:before', $page, $data);
 
         // save commention to the according txt file
-        $saved = Storage::add($page, $data);
+        $saved = Storage::add($page, $data, 'commentions');
 
         // trigger a hook that allows further processing of the data
         kirby()->trigger('commentions.add:after', $page, $saved);
@@ -120,7 +120,7 @@ class Commentions
         kirby()->trigger('commentions.add:before', $page, $data);
 
         // update commention in the according txt file
-        $saved = Storage::update($page, $uid, $data, 'comments');
+        $saved = Storage::update($page, $uid, $data, 'commentions');
 
         // trigger a hook that allows further processing of the data
         kirby()->trigger('commentions.update:after', $page, $saved);
@@ -140,44 +140,42 @@ class Commentions
     {
 
         // validations on missing required fields only apply when creating new entries
-        if (! $update) :
+        if (! $update) {
 
             // users may not send 'uid' as part of the data payload
             if (! empty($data['uid'])) {
                 unset($data['uid']);
             }
 
-        // timestamp is required; use current time if missing
-        if (empty($data['timestamp'])) {
-            $data['timestamp'] = date(date('Y-m-d H:i'), time());
-        }
+            // timestamp is required; use current time if missing
+            if (empty($data['timestamp'])) {
+                $data['timestamp'] = date(date('Y-m-d H:i'), time());
+            }
 
-        // status is required; set to 'pending' by default if missing
-        if (empty($data['status'])) {
-            $data['status'] = 'pending';
-        }
+            // status is required; set to 'pending' by default if missing
+            if (empty($data['status'])) {
+                $data['status'] = 'pending';
+            }
 
-        // type is required; set to 'comment' default if missing
-        if (empty($data['type'])) {
-            $data['type'] = 'comment';
-        }
+            // type is required; set to 'comment' default if missing
+            if (empty($data['type'])) {
+                $data['type'] = 'comment';
+            }
 
-        // validations based on type
-        if ($data['type'] == 'comment') :
+            // validations based on type
+            if ($data['type'] == 'comment') {
 
                 // text is required for comments
                 if (empty($data['text'])) {
                     $data['text'] = '';
                 }
 
-        // 'source' only used for webmentions
-        if (!empty($data['source'])) {
-            unset($data['source']);
+                // 'source' only used for webmentions
+                if (!empty($data['source'])) {
+                    unset($data['source']);
+                }
+            }
         }
-
-        endif;
-
-        endif;
 
         // timestamp is required; use current time if missing or not a unix epoch
         if (! empty($data['timestamp']) && ! is_numeric($data['timestamp'])) {
@@ -189,20 +187,19 @@ class Commentions
             $data['status'] = 'pending';
         }
 
-        foreach ($data as $key => $value) :
+        foreach ($data as $key => $value) {
 
             // remove fields that are not allowed
             $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid' ];
-        if (!in_array($key, $allowlist)) {
-            unset($data[ $key ]);
-        }
+            if (!in_array($key, $allowlist)) {
+                unset($data[ $key ]);
+            }
 
-        // remove empty fields
-        if ($value == null) {
-            unset($data[ $key ]);
+            // remove empty fields
+            if ($value == null) {
+                unset($data[ $key ]);
+            }
         }
-
-        endforeach;
 
         return $data;
     }
@@ -237,10 +234,11 @@ class Commentions
                 // try to get current language if auto is set
                 if ($language == 'auto') {
                     $language = kirby()->language() ?? null;
-                    if (!empty($language))
-						$language = $language->code() ?? null;
+                    if (!empty($language)) {
+                        $language = $language->code() ?? null;
+                    }
 
-                // invalid language code in call = show all
+                    // invalid language code in call = show all
                 } elseif (strlen($language) == 2) {
                     foreach (kirby()->languages() as $lang) {
                         $languages[] = $lang;
@@ -256,7 +254,7 @@ class Commentions
             }
 
             $output = [];
-            foreach (Storage::read($page) as $comment) {
+            foreach (Storage::read($page, 'commentions') as $comment) {
 
                 // return comments with matching status...
                 if ($query == 'all' || $query == $comment['status']) {
@@ -288,9 +286,9 @@ class Commentions
     public static function determineLanguage($path, $page)
     {
 
-		// find the language where the configured URI matches the given URI
-		foreach (kirby()->languages() as $language) {
-			$pathInLanguage = (!empty(kirby()->language($language->code())->path()) ? kirby()->language($language->code())->path() . '/' : '' ) . $page->uri($language->code());
+        // find the language where the configured URI matches the given URI
+        foreach (kirby()->languages() as $language) {
+            $pathInLanguage = (!empty(kirby()->language($language->code())->path()) ? kirby()->language($language->code())->path() . '/' : '') . $page->uri($language->code());
             if ($pathInLanguage == $path) {
                 // return (two-letter) language code
                 return $language->code();

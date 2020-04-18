@@ -12,7 +12,7 @@ class Endpoint
 {
     public static function route()
     {
-        if (kirby()->request()->is('POST')) :
+        if (kirby()->request()->is('POST')) {
         
             // for POST requests, queue the incoming webmention
             try {
@@ -24,7 +24,8 @@ class Endpoint
                 }
             } catch (Exception $e) {
                 return new Response('<p>Error: ' . $e->getMessage() . '</p>', 'text/html', 400);
-            } else :
+            }
+        } else {
 
             // for GET requests, provide a submission form instead
             return new Response('
@@ -42,8 +43,7 @@ class Endpoint
 					</form>
 				</body></html>
 			', 'text/html', 404);
-
-        endif;
+        }
     }
 
     public static function queueWebmention()
@@ -88,11 +88,11 @@ class Endpoint
 
         // if the target resolves to an existing Kirby page, add to the queue in the according commention file
         if ($page != null) {
-            Storage::add($page, $data, 'queue');
+            Storage::add($page, $data, 'webmentionqueue');
         }
         // all other requests are enqueued in the home page commention file
         else {
-            Storage::add(page('home'), $data, 'queue');
+            Storage::add(page('home'), $data, 'webmentionqueue');
         }
     }
 }

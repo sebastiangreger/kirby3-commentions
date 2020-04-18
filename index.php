@@ -88,7 +88,7 @@ require __DIR__ . DS . 'helpers.php';
         },
 
         'addCommention' 		=> function (array $data) {
-            return Commentions::add($this, $data);
+            return Commentions::add($this, $data, 'commentions');
         },
 
         'deleteCommention' 		=> function (string $uid) {

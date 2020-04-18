@@ -50,43 +50,38 @@ class Cron
     {
 
         // loop through all pages in the index
-        foreach (site()->index() as $page) :
+        foreach (site()->index() as $page) {
 
             // loop through every webmention request in the queue of every page
-            foreach (Storage::read($page, 'queue') as $queueitem) :
+            foreach (Storage::read($page, 'webmentionqueue') as $queueitem) {
 
                 // skip requests already marked as failed
-                if (! isset($queueitem['failed'])) :
-
-                    if ($result = static::processWebmention($queueitem)) :
+                if (! isset($queueitem['failed'])) {
+                    if ($result = static::processWebmention($queueitem)) {
 
                         // if parsing was successful, $result is the array with the saved data
-                        if (is_array($result)) :
+                        if (is_array($result)) {
 
                             // delete webmention from queue after successful parsing
-                            Storage::update($page, $queueitem['uid'], 'delete', 'queue');
+                            Storage::update($page, $queueitem['uid'], 'delete', 'webmentionqueue');
 
-        // trigger a hook that allows further processing of the data
-        kirby()->trigger('commentions.webmention:after', $page, $result);
+                            // trigger a hook that allows further processing of the data
+                            kirby()->trigger('commentions.webmention:after', $page, $result);
 
-        return true;
+                            return true;
 
-        // if parsing led to an error, $result is a string with the error message
-        else :
+                        // if parsing led to an error, $result is a string with the error message
+                        } else {
 
                             // mark failed requests as failed
-                            Storage::update($page, $queueitem['uid'], [ 'failed' => $result ], 'queue');
-
-        endif; else :
-                
+                            Storage::update($page, $queueitem['uid'], [ 'failed' => $result ], 'webmentionqueue');
+                        }
+                    } else {
                         throw new Exception('Problem processing queue file.');
-
-        endif;
-
-        endif;
-
-        endforeach;
-        endforeach;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -111,60 +106,58 @@ class Cron
         $mf2   = \Mf2\parse($sourcecontent, $source);
 
         // process microformat data
-        if (isset($mf2['items'][0])) :
+        if (isset($mf2['items'][0])) {
 
             // parse the Mf2 array to a comment array
             $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
 
-        // php-comments does not do rel=author
-        if ($result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
-            $result['author']['url'] = $mf2['rels']['author'][0];
-        }
+            // php-comments does not do rel=author
+            if ($result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
+                $result['author']['url'] = $mf2['rels']['author'][0];
+            }
 
-        // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
-        // TODO: align with algorithm outlined in https://indieweb.org/authorship
-        foreach ($mf2['items'] as $mf2item) {
-            if ($mf2item['type'][0] == 'h-card') {
-                if ($result['author']['name'] == ''  && isset($mf2item['properties']['name'][0])) {
-                    $result['author']['name'] = $mf2item['properties']['name'][0];
-                }
-                if ($result['author']['photo'] == '' && isset($mf2item['properties']['photo'][0])) {
-                    $result['author']['photo'] = $mf2item['properties']['photo'][0];
-                }
-                if ($result['author']['url'] == ''  && isset($mf2item['properties']['url'][0])) {
-                    $result['author']['url'] = $mf2item['properties']['url'][0];
+            // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
+            // TODO: align with algorithm outlined in https://indieweb.org/authorship
+            foreach ($mf2['items'] as $mf2item) {
+                if ($mf2item['type'][0] == 'h-card') {
+                    if ($result['author']['name'] == ''  && isset($mf2item['properties']['name'][0])) {
+                        $result['author']['name'] = $mf2item['properties']['name'][0];
+                    }
+                    if ($result['author']['photo'] == '' && isset($mf2item['properties']['photo'][0])) {
+                        $result['author']['photo'] = $mf2item['properties']['photo'][0];
+                    }
+                    if ($result['author']['url'] == ''  && isset($mf2item['properties']['url'][0])) {
+                        $result['author']['url'] = $mf2item['properties']['url'][0];
+                    }
                 }
             }
-        }
 
-        // do not keep author avatar URL unless activated in config option
-        if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
-            unset($result['author']['photo']);
-        }
+            // do not keep author avatar URL unless activated in config option
+            if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
+                unset($result['author']['photo']);
+            }
 
-        // timestamp the webmention
-        if (!empty($result['published'])) :
+            // timestamp the webmention
+            if (!empty($result['published'])) {
                 // use date of source, if available
                 if (is_numeric($result['published'])) {
                     $result['timestamp'] = $result['published'];
                 } else {
                     $result['timestamp'] = strtotime($result['published']);
-                } else :
+                }
+            } else {
                 // otherwise use date the request received
                 $result['timestamp'] = $request['timestamp'];
-        endif;
+            }
 
-        // neither microformats nor backlink = no processing possible
-        elseif (! Str::contains($sourcecontent, $target)) :
-
+            // neither microformats nor backlink = no processing possible
+        } elseif (! Str::contains($sourcecontent, $target)) {
             return 'Could not verify link to target.';
 
         // case: no microformats, but links back to target URL
-        else :
-
+        } else {
             $result['timestamp'] = time();
-
-        endif;
+        }
 
         // find the Kirby page the target URL refers to
         $path = Url::path($target);
@@ -177,13 +170,12 @@ class Cron
         if (!$page->isErrorPage()) {
 
             // if there is no link to this site in the source...
-            if (! Str::contains($sourcecontent, $target)) :
-
+            if (! Str::contains($sourcecontent, $target)) {
                 $found = false;
 
-            if (isset($mf2['items'][0])) :
+                if (isset($mf2['items'][0])) {
 
-                    // ...maybe they instead linked to a syndicated copy?
+                        // ...maybe they instead linked to a syndicated copy?
                     if ($page->syndication()->isNotEmpty()) {
                         foreach ($page->syndication()->split() as $syndication) {
                             if (Str::contains($sourcecontent, $syndication)) {
@@ -193,15 +185,13 @@ class Cron
                             }
                         }
                     }
+                }
 
-            endif;
-
-            // if no backlink can be found, just give up
-            if (!$found) {
-                return 'Could not verify link to target.';
+                // if no backlink can be found, just give up
+                if (!$found) {
+                    return 'Could not verify link to target.';
+                }
             }
-
-            endif;
 
             // set comment type, if not given or deprecated 'mention' given
             if (!isset($result['type']) || $result['type'] == '' || $result['type'] == 'mention') {

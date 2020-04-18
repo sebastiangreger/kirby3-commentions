@@ -15,92 +15,65 @@ class Storage
      * @param \Kirby\Cms\Page $page
      * @return string
      */
-    public static function file($page)
+    public static function file($page, string $filename)
     {
 
         // name conventions
         $path = '';
-        $name = '_commentions';
+        $foldername = '_commentions';
 
         // create a path for virtual pages
-        while (! is_dir($page->root())):
+        while (! is_dir($page->root())) {
 
             // prepend the slug of the current virtual page to the path variable
             $path = DS . $page->slug() . $path;
 
-        // move up one level and repeat
-        $page = $page->parent();
-
-        endwhile;
+            // move up one level and repeat
+            $page = $page->parent();
+        }
 
         // commentions are stored in _commentions.txt file (in a subfolder, if virtual page)
-        return $page->root() . DS . $name . $path . DS . $name . '.txt';
+        return $page->root() . DS . $foldername . $path . DS . $filename . '.yml';
     }
 
 
     /**
-     * Reads data from the commentions file; by default from the comments field
+     * Reads data from the commentions folder
      *
      * @param \Kirby\Cms\Page $page
-     * @param string $field
+     * @param string $filename
      * @return array
      */
-    public static function read($page, string $field = 'comments')
+    public static function read($page, string $filename)
     {
 
         // read the data and return decoded yaml
-        $file = static::file($page);
-        if (F::exists($file)) :
-            $data = Data::read($file);
-        if (isset($data[$field])) {
-            return Data::decode($data[$field], 'yaml');
+        $file = static::file($page, $filename);
+        if (F::exists($file)) {
+            return Data::read($file);
         } else {
             return [];
-        } else :
-            return [];
-        endif;
+        }
     }
 
 
     /**
-     * Writes data to the commentions file; by default to the comments field
+     * Writes data to the commentions folder
      *
      * @param \Kirby\Cms\Page $page
      * @param array $data
-     * @param string $field
+     * @param string $filename
      * @return array
      */
-    public static function write($page, array $data, string $field = 'comments')
+    public static function write($page, array $data, string $filename)
     {
 
         // get the file path
-        $file = static::file($page);
-
-        if (F::exists($file)) :
-
-            // read all the fields stored in the text file (e.g. 'comments' and 'queue')
-            $fields = Data::read($file);
-
-        // if the targeted field already exists, replace its data with the new array
-        foreach ($fields as $key => $value) :
-                if ($key == $field) {
-                    $fields[$key] = Data::encode($data, 'yaml');
-                }
-        endforeach;
-
-        // if the targeted field does not yet exist, add it to the $fields array
-        if (!isset($fields[$field])) :
-                $fields[$field] = Data::encode($data, 'yaml');
-        endif; else :
-
-            // create a fields array from scratch
-            $fields[$field] = Data::encode($data, 'yaml');
-
-        endif;
+        $file = static::file($page, $filename);
 
         // write the fields array to the text file
         try {
-            Data::write($file, $fields);
+            Data::write($file, $data);
             return true;
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -110,87 +83,85 @@ class Storage
 
 
     /**
-     * Adds new entry to the commentions file; by default to the comments field
+     * Adds new entry to the commentions file
      *
      * @param \Kirby\Cms\Page $page
      * @param array $data
-     * @param string $field
+     * @param string $filename
      * @return array
      */
-    public static function add($page, $entry = [], $field = 'comments')
+    public static function add($page, $entry = [], string $filename)
     {
 
         // attach new data set to array of existing comments
-        $data = static::read($page, $field);
+        $data = static::read($page, $filename);
         ksort($entry);
         $data[] = $entry;
 
         // replace the old comments in the yaml data and write it back to the file
-        static::write($page, $data, $field);
+        static::write($page, $data, $filename);
 
         return $entry;
     }
 
 
     /**
-     * Updates or deletes a single entry in the commentions file; by default in the comments field
+     * Updates or deletes a single entry in the commentions file; by default in the comments file
      *
      * @param \Kirby\Cms\Page $page
      * @param string $commentid
      * @param string|array $data
      * @return array
      */
-    public static function update($page, $uid, $data = [], $field = 'comments')
+    public static function update($page, $uid, $data = [], $filename = 'commentions')
     {
 
         // clean up the data if it is an array (skip for string, which would be a command like 'delete')
-        if ($field == 'comments' && is_array($data) && !empty($data)) :
+        if ($filename == 'comments' && is_array($data) && !empty($data)) {
 
             // sanitize data array, but keep the uid
             $data = Commentions::sanitize($data, true);
-
-        endif;
+        }
 
         // loop through array of all comments
         $output = [];
-        foreach (static::read($page, $field) as $entry) :
+        foreach (static::read($page, $filename) as $entry) {
 
             // find the entry with matching ID
-            if ($entry['uid'] == $uid) :
+            if ($entry['uid'] == $uid) {
 
                 // if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
                 if (is_array($data)) :
                     // loop through all new data submitted in array and update accordingly
                     foreach ($data as $key => $value) :
                         $entry[ $key ] = $value;
-        endforeach;
-        endif;
+                endforeach;
+                endif;
 
-        if ($data == 'delete') :
+                if ($data == 'delete') {
 
                     // on deletion, simply return true on success
-                    $return = true; else:
+                    $return = true;
+                } else {
 
                     // sort fields alphabetically for consistency
                     ksort($entry);
 
-        // add this field to the array to be written to the file
-        $output[] = $entry;
+                    // add this field to the array to be written to the file
+                    $output[] = $entry;
 
-        // keep the values of the changed entry for returning
-        $return = $entry;
-
-        endif; else :
+                    // keep the values of the changed entry for returning
+                    $return = $entry;
+                }
+            } else {
 
                 // add the unchanged comment to the output array
                 $output[] = $entry;
-
-        endif;
-
-        endforeach;
+            }
+        }
 
         // replace the old comments in the yaml data and write it back to the file
-        static::write($page, $output, $field);
+        static::write($page, $output, $filename);
 
         return $return ?? false;
     }

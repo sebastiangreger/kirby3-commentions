@@ -293,6 +293,8 @@ Array (
 )
 ```
 
+The field `pageid` does not come from the data storage; it is added by the parser to the output of the page(s) method by default.
+
 ### $page->addCommention()
 
 Adds a comment entry to the page.
@@ -511,9 +513,11 @@ _NB. Incoming webmentions are parsed asynchronously; this hook is not triggered 
 
 ## Data structure and storage
 
-The commentions are stored in a `_commentions.txt` file in a `_commentions` subfolder of the according page's folder. For virtual pages, that file is stored in a folder structure attached to the nearest ancestor that is not a virtual page (e.g. the page's parent or grandparent).
+The plugin's data is stored in YAML files in a `_commentions` subfolder of the according page's folder. For virtual pages, a folder structure is attached within a `_commentions` folder under the nearest ancestor that is not a virtual page (e.g. the page's parent or grandparent).
 
 ### Comments
+
+The file `commentions.yml` contains the comment data.
 
 These are the fields that can be used, including information on which are compulsory for what type of comment:
 
@@ -521,7 +525,7 @@ These are the fields that can be used, including information on which are compul
 |-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
 | timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
 | type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
-| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                               | approved                              |
+| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                        | approved                              |
 | uid       | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text      | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source    |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
@@ -529,7 +533,18 @@ These are the fields that can be used, including information on which are compul
 | avatar    |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website   | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
 | language  | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
-| pageid    | default  | default  | The page ID of the Kirby page is added to the output of the page(s) method by default. It is not stored in the text file.                          | notes/exploring-the-universe          |
+
+### Queue
+
+The file `webmentionqueue.yml` contains the data of yet unprocessed, incoming webmentions.
+
+| Field     | Description                                                                                                                        | Example                                    |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
+| timestamp | Time of the submission, as UNIX epoch timestamp.                                                                                   | 1587220838                                 |
+| source    | The URL containing the mention of the page on this website, as submitted in the webmention request.                                | https://example.com/a-webmention-post      |
+| target    | The URL of the page the webmention claims to mention, as submitted in the webmention request.                                      | https://thisdomain.com/a-mentioned-article |
+| uid       | Randomly generated unique ID, used internally for processing. 10 alphanumeric characters (lower-case letters and numbers).         | h96k730lij                                 |
+| failed    | A string with an error message, in case the parsing failed. This preserves failed requests, but bans them from being parsed again. | Could not verify link to target.           |
 
 ## Config options
 
