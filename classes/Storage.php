@@ -34,7 +34,7 @@ class Storage
         endwhile;
 
         // commentions are stored in _commentions.txt file (in a subfolder, if virtual page)
-        return $page->root() . ($path != '' ? DS . $name . $path : '') . DS . $name . '.txt';
+        return $page->root() . DS . $name . $path . DS . $name . '.txt';
     }
 
 

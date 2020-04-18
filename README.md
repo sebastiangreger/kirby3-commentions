@@ -89,7 +89,7 @@ To show comments on pages and display a form to leave new comments, there are th
 
 In order to add everything at once, add helper `<?php commentions(); ?>` to the according templates in `site/templates` - a shorthand for the three helpers described in alternative B:
 
-This is your one-stop-shop, and it should sit rather nicely at the bottom of your content. But it might be too limited for your needs, hence there is Option B...
+This is your one-stop-shop, and it should sit rather nicely at the bottom of your content (in the Starterkit theme, add it before the `</article>` tag in `site/templates/note.php` for best results).
 
 If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add `<?php commentions('css'); ?>` to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag:
 
@@ -101,15 +101,17 @@ Alternatively, you can add the form feedback snippet (error or success message),
 * To render the comment form, include `<?php commentions('form'); ?>` in your template.
 * Finally, `<?php commentions('list'); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentions('grouped')` instead (check options further below for additional control).
 
+(If your are using the Starterkit, place the feedback helper just before the opening `<article>` tag, and the form and list helpers just after the closing `</article>` tag in `site/templates/note.php` for best results.)
+
 As with option A, you may want to include the `<?php commentions('css'); ?>` to your HTML &lt;head&gt; template.
 
 #### Option C. Create your own frontend presentation
 
 Since above snippets are mainly provided to enable a quick start, you may of course run your own frontend code entirely. If you'd like to build on the templates, you can find them in the `site/plugins/kirby3-commentions/snippets` folder.
 
-While it may be advisable to use the `commentions('feedback')` and `commentions('form')` helpers, as their markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting your list of comments and webmentions.
+While it may be advisable to use the `commentions('form')` helper, as its markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting the feedback box and your list of comments and webmentions.
 
-The page method `$page->commentions()` on a page object returns an array with all approved comments for that page. This is the preferred API if you want to control how your comments and webmentions are displayed (the `commentions('raw')` from Commentions 0.x is deprecated and no longer recommended). Use that array to build your presentation logic to taste. To include unapproved comments in that array, use `$page->commentions('all')` (handle with care!).
+The page method `$page->commentions()` on a page object returns an array with all approved comments for that page. This is the preferred API if you want to control how your comments and webmentions are displayed (the `commentions('raw')` from Commentions 0.x is deprecated and no longer recommended). Use that array to build your presentation logic to taste; details are presented further below. To include unapproved comments in that array, use `$page->commentions('all')` (handle with care!).
 
 _NB. The raw data array returned by this page method may contain e-mail addresses etc., so make sure to carefully limit what data is being displayed publicly._
 
@@ -272,19 +274,19 @@ The following example shows the most minimal comment and webmentions possible (d
 Array (
     [0] => Array
         (
-            [timestamp] => 2020-04-01 11:30
-            [text] => Most minimal comment possible
-            [type] => comment
             [status] => approved
+            [text] => Most minimal comment possible
+            [timestamp] => 2020-04-01 11:30
+            [type] => comment
             [uid] => 1m6los473p
             [pageid] => notes/exploring-the-universe
         )
     [1] => Array
         (
+            [source] => https://example.com
+            [status] => approved
             [timestamp] => 2020-04-01 11:32
             [type] => like
-            [status] => approved
-            [source] => https://example.com
             [uid] => 126los473p
             [pageid] => notes/exploring-the-universe
         )
@@ -509,7 +511,7 @@ _NB. Incoming webmentions are parsed asynchronously; this hook is not triggered 
 
 ## Data structure and storage
 
-The commentions are stored in a `_commentions.txt` file in the according page's folder. For virtual pages, that file is stored in a folder structure attached to the nearest ancestor that is not a virtual page (e.g. the page's parent or grandparent).
+The commentions are stored in a `_commentions.txt` file in a `_commentions` subfolder of the according page's folder. For virtual pages, that file is stored in a folder structure attached to the nearest ancestor that is not a virtual page (e.g. the page's parent or grandparent).
 
 ### Comments
 
