@@ -149,7 +149,7 @@ class Commentions
 
             // timestamp is required; use current time if missing
             if (empty($data['timestamp'])) {
-                $data['timestamp'] = date(date('Y-m-d H:i'), time());
+                $data['timestamp'] = date('Y-m-d H:i');
             }
 
             // status is required; set to 'pending' by default if missing
