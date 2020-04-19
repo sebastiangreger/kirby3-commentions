@@ -21,11 +21,25 @@ class Migration
             $log = '';
         
             // loop through all pages
+            // TODO: index(true) would include drafts, but does this lead to issues further down?
             foreach (site()->index() as $page) {
                 
-                // extract the 'comments' field
-                $data = $page->comments()->toArray();
-                $comments = Data::decode($data['comments'], 'yaml');
+				// extract the 'comments' field
+				if (sizeof(kirby()->languages()) > 1) {
+					$comments = [];
+					foreach (kirby()->languages() as $language) {
+						if ($page->translation($language->code())->exists()) {
+							$data = $page->content($language->code())->comments()->toArray();
+							$tmp = Data::decode($data['comments'], 'yaml');
+							foreach ($tmp as $k => $v)
+								$tmp[$k]['language'] = $language->code();
+							$comments = A::merge($comments, $tmp);
+						}
+					}
+				} else {
+					$data = $page->comments()->toArray();
+					$comments = Data::decode($data['comments'], 'yaml');
+				}
 
                 $oldcount = sizeof($comments);
                 $currentcount = sizeof(Commentions::retrieve($page, 'all'));
@@ -133,7 +147,6 @@ class Migration
             // check for any content files that contain a comments field with a data pattern as used in Commentions
             $pageswithcomments = 0;
             foreach (site()->index()->pluck('comments') as $probe) {
-                print_r($probe);
                 $probe = Data::decode($probe->comments(), 'yaml');
                 // type, timestamp, and approved are the smallest common denominator of v0.x comments
                 if (sizeof($probe) > 0 && isset($probe[0]['type'], $probe[0]['timestamp'], $probe[0]['approved'])) {
@@ -160,8 +173,7 @@ class Migration
                 if ($inboxfiles > 0 || $queuefiles > 0) {
                     $html .= '<p style="color:red;">You cannot proceed with the automated migration while unapproved/undeleted comments are in your inbox; please empty the queue first, by using the tools in your panel (or deleting the JSON files in folder <code>' . kirby()->root('content') . '/.commentions/inbox/</code> if you prefer)!</p>';
                 }
-                
-                // only provide the form if inbox and queue are empty
+
                 if ($inboxfiles == 0 && $queuefiles == 0) {
                     $html .= '
 						<p>This tool attempts to carry out the migration in an automated manner. It may not work in all circumstances, so it is <strong>absolutely required to create a backup before using this</strong>.</p>

@@ -8,7 +8,7 @@ A minimalist, yet powerful and extendable, comment system and Webmention endpoin
 * A range of page(s) methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
 * Supports multi-language sites and virtual pages
 
-> Versions 1.x (April 2020 and later) are no longer compatible with the experimental 0.x versions. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); to go back to an old version, the last release of the old branch was [0.3.2](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v0.3.2).
+Versions 1.x (April 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); to go back to an old version, the last release of the old branch was [0.3.2](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v0.3.2).
 
 _NB. The plugin only covers incoming webmentions (i.e. receiving notifications from other websites who link to a page). Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
@@ -29,13 +29,11 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 
 ## Ethics and privacy
 
-Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical and legal assessment.
+**Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical and legal assessment.**
 
 By enabling users to post comments and/or webmentions, a website deals with what is considered personal data in most jurisdictions. The processing of personal data is subject to often very strict privacy laws, coming with a wide range of obligations.
 
-While this plugin aims to provide means for its responsible and legally compliant use, the responsibility for ethical conduct and compliance with applicable laws always rests with the operator of the website (the data controller).
-
-"GDPR compliance" is never created by software, but by the way it is used. If in doubt, always ask a qualified lawyer - and if you feel that this plugin does not meet your requirements, don't use it or adapt it to your needs.
+"GDPR compliance" is never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, the responsibility for ethical conduct and compliance with applicable laws always rests with the operator of the website (the data controller). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
 
 ## Installation
 
@@ -682,7 +680,6 @@ Inspiration and code snippets from:
 - https://github.com/bastianallgeier/kirby-webmentions
 - https://github.com/sebsel/seblog-kirby-webmentions
 - https://github.com/fabianmichael/kirby-pluginstorage
-- https://github.com/bnomei/kirby3-autoid
 
 Included vendor libraries:
 
