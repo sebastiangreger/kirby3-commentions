@@ -16,14 +16,14 @@ Various APIs and practices have changed with the introduction of version 1.0. In
 
 The names of most of the "helpers" used for rendering the plugin's HTML output have changed as well:
 
-| If your templates/snippets use...     | ...replace with                   |
-|---------------------------------------|-----------------------------------|
-| `<?php commentionsCss() ?>            | <?php commentions('css') ?>       |
-| `<?php commentionsList() ?>           | <?php commentions('list') ?>      |
-| `<?php commentionsList('grouped') ?>  | <?php commentions('grouped') ?>   |
-| `<?php commentionsForm() ?>           | <?php commentions('form') ?>      |
-| `<?php commentionsEndpoints() ?>      | <?php commentions('endpoints') ?> |
-| `<?php commentionsFeedback() ?>       | <?php commentions('feedback') ?>  |
+| If your templates/snippets use...      | ...replace with                    |
+|----------------------------------------|-------------------------------------|
+| `<?php commentionsCss() ?>`            | `<?php commentions('css') ?>`       |
+| `<?php commentionsList() ?>`           | `<?php commentions('list') ?>`      |
+| `<?php commentionsList('grouped') ?>`  | `<?php commentions('grouped') ?>`   |
+| `<?php commentionsForm() ?>`           | `<?php commentions('form') ?>`      |
+| `<?php commentionsEndpoints() ?>`      | `<?php commentions('endpoints') ?>` |
+| `<?php commentionsFeedback() ?>`       | `<?php commentions('feedback') ?>`  |
 
 ### Retrieving comments as an array
 
@@ -45,7 +45,7 @@ The following details should only be relevant if the automated migration fails o
 
 While the experimental version stored comments within the text file of each page's content, they are now stored in separate files in a dedicated `_commentions` folder within each page's folder.
 
-#### Old version 0
+#### Old version 0.x
 
 In content file, e.g. `content/2_notes/20181031_exploring-the-universe/note.txt`:
 
@@ -78,7 +78,7 @@ Comments:
   uid: a50vylqwl5
 ```
 
-#### Old version 1
+#### New version 1.x
 
 For example in file `content/2_notes/20181031_exploring-the-universe/_commentions/commentions.yml`:
 
@@ -99,26 +99,26 @@ For example in file `content/2_notes/20181031_exploring-the-universe/_commention
 
 The experimental version stored a centralized queue of webmentions waiting for the asynchronous processing in JSON files in the folder `content/.commentions/queue`. From Version 1.0, these are stored in a separate YAML file in the `_commentions` subfolder for each page.
 
-#### Old version 0
+#### Old version 0.x
 
 In JSON file `content/.commentions/queue/webmention-1587221857-d0be2dc421be4fcd0172e5afceea3970e2f3d940.json` (timestamp + sha1 hash of source URL):
 
 ```
 {
-	"target": "https://yourblog.com/article-slug",
-	"source": "https://example.com/the-blog-post-linking-to-this"
+	"target": "https://yourblog.com/notes/exploring-the-universe",
+	"source": "https://example.com/the-blog-post-linking-to-yours"
 }
 ```
 
-#### New version 1
+#### New version 1.x
 
 In the YAML file inside the page's folder, e.g. `content/2_notes/20181031_exploring-the-universe/_commentions/webmentionsqueue.yml`:
 
 ```
 - 
-  source: https://example.com/blog/the-blog-post-linking-to-this
+  source: https://example.com/the-blog-post-linking-to-yours
   target: >
-    https://yourblog.com/article-slug
+    https://yourblog.com/notes/exploring-the-universe
   timestamp: 1587221857
   uid: ty4lp1f1k6
 ```
@@ -127,7 +127,7 @@ In the YAML file inside the page's folder, e.g. `content/2_notes/20181031_explor
 
 The experimental version stored unapproved comments (and webmentions after successful processing from the queue) centrally in the folder `content/.commentions/inbox`.
 
-#### Old version 0
+#### Old version 0.x
 
 In JSON file `content/.commentions/inbox/1234456735.json`:
 
@@ -138,13 +138,13 @@ In JSON file `content/.commentions/inbox/1234456735.json`:
 	"website":null,
 	"message":"Test",
 	"timestamp":1584109391,
-	"target":"writings\/2020-02-speaking-at-think-about-2020",
+	"target":"notes/exploring-the-universe",
 	"language":null,
 	"type":"comment"
 }
 ```
 
-#### New version 1
+#### New version 1.x
 
 In the YAML file inside the page's folder, e.g. `content/2_notes/20181031_exploring-the-universe/_commentions/commentions.yml` (the same folder where all approved comments are stored, only difference being `status: pending` rather than `status: approved`):
 
