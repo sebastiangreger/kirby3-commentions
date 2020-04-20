@@ -36,7 +36,7 @@ panel.plugin('sgkirby/commentions', {
 					</header>
 					<k-box theme="negative" v-if="error">
 						<k-text size="small" v-if="error == 'version'">
-							<strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/" target="_blank">Migration assistant</a> to get things running again!
+							<strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/commentions-migrationassistant" target="_blank">Migration assistant</a> to get things running again!
 						</k-text>
 						<k-text size="small" v-else>
 							{{ error }}
