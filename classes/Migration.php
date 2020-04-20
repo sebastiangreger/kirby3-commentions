@@ -68,13 +68,13 @@ class Migration
                         unset($comment['approved']);
 
                         // add it using the new API
-                        //Commentions::add($page, $comment);
+                        Commentions::add($page, $comment);
                         $newcount++;
                     }
 
                     if ($newcount == $oldcount) {
                         // delete the 'comments' field from the page
-                        //$page->update([ 'comments' => null ]);
+                        $page->update([ 'comments' => null ]);
                         $log .= 'OK';
                     } else {
                         $log .= 'ERROR';
