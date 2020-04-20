@@ -124,7 +124,7 @@ class Commentions
 
         // trigger a hook that allows further processing of the data
         kirby()->trigger('commentions.update:after', $page, $saved);
-        
+
         return $saved;
     }
 
@@ -237,18 +237,20 @@ class Commentions
                     if (!empty($language)) {
                         $language = $language->code() ?? null;
                     }
+                }
 
-                    // invalid language code in call = show all
-                } elseif (strlen($language) == 2) {
+                // invalid language code in call = show all
+                elseif (strlen($language) == 2) {
                     foreach (kirby()->languages() as $lang) {
                         $languages[] = $lang;
                     }
                     if (!in_array($language, $languages)) {
                         $language = null;
                     }
+                }
 
-                    // fallback = show all
-                } else {
+                // fallback = show all
+                else {
                     $language = null;
                 }
             }
@@ -312,29 +314,27 @@ class Commentions
         $settings = option('sgkirby.commentions.spamprotection');
 
         // spam rules applicable when form input is provided
-        if (!empty($get)) :
+        if (!empty($get)) {
 
             // honeypot: if field has been filed, it is very likely a robot
             if (in_array('honeypot', $settings) && empty($get['website']) === false) {
                 return false;
             }
 
-        // time measuring spam filter only active if no cache active and values are not impossible
-        if ((int)$get['commentions'] > 0 && (int)option('sgkirby.commentions.spamtimemin') < (int)option('sgkirby.commentions.spamtimemax')) :
+            // time measuring spam filter only active if no cache active and values are not impossible
+            if ((int)$get['commentions'] > 0 && (int)option('sgkirby.commentions.spamtimemin') < (int)option('sgkirby.commentions.spamtimemax')) {
 
                 // spam timeout min: if less than n seconds between form creation and submission, it is most likely a bot
                 if (in_array('timemin', $settings) && (int)$get['commentions'] > (time() - (int)option('sgkirby.commentions.spamtimemin'))) {
                     return false;
                 }
 
-        // spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
-        if (in_array('timemax', $settings) && (int)$get['commentions'] < (time() - (int)option('sgkirby.commentions.spamtimemax'))) {
-            return false;
+                // spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
+                if (in_array('timemax', $settings) && (int)$get['commentions'] < (time() - (int)option('sgkirby.commentions.spamtimemax'))) {
+                    return false;
+                }
+            }
         }
-
-        endif;
-
-        endif;
 
         // TODO: verifications based on the data array's values (below is just a placeholder)
         if (isset($data['name']) && $data['name'] == 'I am a spammer') {

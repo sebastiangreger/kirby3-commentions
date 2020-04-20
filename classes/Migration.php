@@ -24,22 +24,23 @@ class Migration
             // TODO: index(true) would include drafts, but does this lead to issues further down?
             foreach (site()->index() as $page) {
                 
-				// extract the 'comments' field
-				if (sizeof(kirby()->languages()) > 1) {
-					$comments = [];
-					foreach (kirby()->languages() as $language) {
-						if ($page->translation($language->code())->exists()) {
-							$data = $page->content($language->code())->comments()->toArray();
-							$tmp = Data::decode($data['comments'], 'yaml');
-							foreach ($tmp as $k => $v)
-								$tmp[$k]['language'] = $language->code();
-							$comments = A::merge($comments, $tmp);
-						}
-					}
-				} else {
-					$data = $page->comments()->toArray();
-					$comments = Data::decode($data['comments'], 'yaml');
-				}
+                // extract the 'comments' field
+                if (sizeof(kirby()->languages()) > 1) {
+                    $comments = [];
+                    foreach (kirby()->languages() as $language) {
+                        if ($page->translation($language->code())->exists()) {
+                            $data = $page->content($language->code())->comments()->toArray();
+                            $tmp = Data::decode($data['comments'], 'yaml');
+                            foreach ($tmp as $k => $v) {
+                                $tmp[$k]['language'] = $language->code();
+                            }
+                            $comments = A::merge($comments, $tmp);
+                        }
+                    }
+                } else {
+                    $data = $page->comments()->toArray();
+                    $comments = Data::decode($data['comments'], 'yaml');
+                }
 
                 $oldcount = sizeof($comments);
                 $currentcount = sizeof(Commentions::retrieve($page, 'all'));

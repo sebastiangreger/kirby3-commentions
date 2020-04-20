@@ -11,4 +11,5 @@ debug.txt
 
 # local stuff
 .screenshots
+*.geany
 

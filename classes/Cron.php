@@ -49,16 +49,16 @@ class Cron
     public static function processQueue()
     {
 
-		// limit to one process by only proceeding if no (or an expired left over) lockfile exists
-		$lockfile = kirby()->root('content') . DS . '.commentions_queuelock';
-		if ( F::exists( $lockfile ) && F::modified( $lockfile ) > ( time() - 120 ) ) {
-			throw new Exception('A queue process is already running.');
-		} elseif ( F::exists( $lockfile ) ) {
-			F::remove( $lockfile );
-		}
+        // limit to one process by only proceeding if no (or an expired left over) lockfile exists
+        $lockfile = kirby()->root('content') . DS . '.commentions_queuelock';
+        if (F::exists($lockfile) && F::modified($lockfile) > (time() - 120)) {
+            throw new Exception('A queue process is already running.');
+        } elseif (F::exists($lockfile)) {
+            F::remove($lockfile);
+        }
 
-		// an array keeps track of what domains have been pinged for throttling
-		$pingeddomains = [];
+        // an array keeps track of what domains have been pinged for throttling
+        $pingeddomains = [];
 
         // loop through all pages in the index
         foreach (site()->index() as $page) {
@@ -69,16 +69,16 @@ class Cron
                 // skip requests already marked as failed
                 if (! isset($queueitem['failed'])) {
 
-					// create/update the lockfile, as this is where actual DoS harm can be done
-					F::write( $lockfile, '' );
+                    // create/update the lockfile, as this is where actual DoS harm can be done
+                    F::write($lockfile, '');
 
-					// ensure that the same domain is pinged max. every n seconds
-					$pinglimit = 5;
-					$sourcedomain = parse_url($queueitem['source'], PHP_URL_HOST);
-					if (isset($pingeddomains[$sourcedomain]) && $pingeddomains[$sourcedomain] > (time() - $pinglimit) ) {
-						sleep($pinglimit);
-					}
-					$pingeddomains[$sourcedomain] = time();
+                    // ensure that the same domain is pinged max. every n seconds
+                    $pinglimit = 5;
+                    $sourcedomain = parse_url($queueitem['source'], PHP_URL_HOST);
+                    if (isset($pingeddomains[$sourcedomain]) && $pingeddomains[$sourcedomain] > (time() - $pinglimit)) {
+                        sleep($pinglimit);
+                    }
+                    $pingeddomains[$sourcedomain] = time();
 
                     // parse the request
                     if ($result = static::parseWebmention($queueitem)) {
@@ -95,15 +95,14 @@ class Cron
                         // if parsing led to an error, $result is a string with the error message
                         } else {
 
-							// default is to keep failed queue items for later review
-							if ( option('sgkirby.commentions.keepfailed') == true ) {
-								// mark failed request as failed
-								Storage::update($page, $queueitem['uid'], [ 'failed' => $result ], 'webmentionqueue');
-							} else {
-								// delete failed request
-								Storage::update($page, $queueitem['uid'], 'delete', 'webmentionqueue');
-							}
-
+                            // default is to keep failed queue items for later review
+                            if (option('sgkirby.commentions.keepfailed') == true) {
+                                // mark failed request as failed
+                                Storage::update($page, $queueitem['uid'], [ 'failed' => $result ], 'webmentionqueue');
+                            } else {
+                                // delete failed request
+                                Storage::update($page, $queueitem['uid'], 'delete', 'webmentionqueue');
+                            }
                         }
                     } else {
                         throw new Exception('Problem processing queue item.');
@@ -111,10 +110,10 @@ class Cron
                 }
             }
         }
-		if ( F::exists( $lockfile ) ) {
-			F::remove( $lockfile );
-		}
-		return true;
+        if (F::exists($lockfile)) {
+            F::remove($lockfile);
+        }
+        return true;
     }
 
 
@@ -182,13 +181,15 @@ class Cron
                 // otherwise use date the request received
                 $result['timestamp'] = $request['timestamp'];
             }
+        }
 
-            // neither microformats nor backlink = no processing possible
-        } elseif (! Str::contains($sourcecontent, $target)) {
+        // neither microformats nor backlink = no processing possible
+        elseif (! Str::contains($sourcecontent, $target)) {
             return 'Could not verify link to target.';
+        }
 
         // case: no microformats, but links back to target URL
-        } else {
+        else {
             $result['timestamp'] = time();
         }
 
@@ -208,7 +209,7 @@ class Cron
 
                 if (isset($mf2['items'][0])) {
 
-                        // ...maybe they instead linked to a syndicated copy?
+                    // ...maybe they instead linked to a syndicated copy?
                     if ($page->syndication()->isNotEmpty()) {
                         foreach ($page->syndication()->split() as $syndication) {
                             if (Str::contains($sourcecontent, $syndication)) {

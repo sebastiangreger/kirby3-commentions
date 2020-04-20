@@ -20,20 +20,15 @@ return [
         }
 
         // process form submission
-        if (get('commentions') && get('submit')) :
-
+        if (get('commentions') && get('submit')) {
             $return = Frontend::processCommentform($page, $path);
-
-        if (isset($return['uid'])) :
-            
+            if (isset($return['uid'])) {
                 // return to the post page and display success message
-                go($page->url() . '?thx=queued'); else :
-        
+                go($page->url() . '?thx=queued');
+            } else {
                 throw new Exception('Could not process comment.');
-
-        endif;
-
-        endif;
+            }
+        }
     }
 
 ];
