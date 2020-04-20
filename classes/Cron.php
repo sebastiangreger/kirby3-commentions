@@ -164,10 +164,10 @@ class Cron
         if ($path == '') {
             $page = page('home');
         } else {
-            $page = page(kirby()->call(trim($target, '/')));
+            $page = page(kirby()->call(trim($path, '/')));
         }
 
-        if (!$page->isErrorPage()) {
+        if (!empty($page) && !$page->isErrorPage()) {
 
             // if there is no link to this site in the source...
             if (! Str::contains($sourcecontent, $target)) {
@@ -214,7 +214,7 @@ class Cron
             // save webmention to the according txt file
             return Commentions::add($page, $finaldata);
         } else {
-            throw new Exception('Invalid page');
+            return 'Could not resolve target URL to Kirby page';
         }
     }
 }
