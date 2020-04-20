@@ -49,6 +49,17 @@ class Cron
     public static function processQueue()
     {
 
+		// limit to one process by only proceeding if no (or an expired left over) lockfile exists
+		$lockfile = kirby()->root('content') . DS . '.commentions_queuelock';
+		if ( F::exists( $lockfile ) && F::modified( $lockfile ) > ( time() - 120 ) ) {
+			throw new Exception('A queue process is already running.');
+		} elseif ( F::exists( $lockfile ) ) {
+			F::remove( $lockfile );
+		}
+
+		// an array keeps track of what domains have been pinged for throttling
+		$pingeddomains = [];
+
         // loop through all pages in the index
         foreach (site()->index() as $page) {
 
@@ -57,7 +68,20 @@ class Cron
 
                 // skip requests already marked as failed
                 if (! isset($queueitem['failed'])) {
-                    if ($result = static::processWebmention($queueitem)) {
+
+					// create/update the lockfile, as this is where actual DoS harm can be done
+					F::write( $lockfile, '' );
+
+					// ensure that the same domain is pinged max. every n seconds
+					$pinglimit = 5;
+					$sourcedomain = parse_url($queueitem['source'], PHP_URL_HOST);
+					if (isset($pingeddomains[$sourcedomain]) && $pingeddomains[$sourcedomain] > (time() - $pinglimit) ) {
+						sleep($pinglimit);
+					}
+					$pingeddomains[$sourcedomain] = time();
+
+                    // parse the request
+                    if ($result = static::parseWebmention($queueitem)) {
 
                         // if parsing was successful, $result is the array with the saved data
                         if (is_array($result)) {
@@ -67,8 +91,6 @@ class Cron
 
                             // trigger a hook that allows further processing of the data
                             kirby()->trigger('commentions.webmention:after', $page, $result);
-
-                            return true;
 
                         // if parsing led to an error, $result is a string with the error message
                         } else {
@@ -84,11 +106,12 @@ class Cron
 
                         }
                     } else {
-                        throw new Exception('Problem processing queue file.');
+                        throw new Exception('Problem processing queue item.');
                     }
                 }
             }
         }
+		return true;
     }
 
 
@@ -99,7 +122,7 @@ class Cron
      * @param string $target
      * @return $array
      */
-    public static function processWebmention($request)
+    public static function parseWebmention($request)
     {
         $source = $request['source'];
         $target = $request['target'];
