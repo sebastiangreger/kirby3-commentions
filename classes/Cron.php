@@ -111,6 +111,9 @@ class Cron
                 }
             }
         }
+		if ( F::exists( $lockfile ) ) {
+			F::remove( $lockfile );
+		}
 		return true;
     }
 
