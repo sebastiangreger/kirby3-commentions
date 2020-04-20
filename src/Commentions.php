@@ -348,9 +348,9 @@ class Commentions {
 		if ( $path == '' )
 			$page = page('home');
 		else
-			$page = page( kirby()->call( trim( $target, '/' ) ) );
+			$page = page( kirby()->call( trim( $path, '/' ) ) );
 
-		if( !$page->isErrorPage() ) {
+		if( !empty($page) && !$page->isErrorPage() ) {
 
 			// if there is no link to this site in the source...
 			if( ! Str::contains( $sourcecontent, $target ) ) :
