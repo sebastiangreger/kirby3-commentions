@@ -90,29 +90,36 @@ return [
                 $options = [];
 
                 // appearance and dropdown options depend on comment status
-                if ($data['status'] == 'approved') :
+                if ($data['status'] == 'approved') {
                     $class = 'k-list-item-commention-approved';
-                $icon = [ 'type' => 'chat', 'back' => 'transparent' ];
-                $options[] = [
-                    'icon' => 'remove',
-                    'text' => t('commentions.section.option.unapprove'),
-                    'click' => 'unapprove-' . $data['uid'] . '|' . $data['pageid']
-                ]; elseif ($data['status'] == 'unapproved') :
+					$icon = [ 'type' => 'chat', 'back' => 'transparent' ];
+					$options[] = [
+						'icon' => 'remove',
+						'text' => t('commentions.section.option.unapprove'),
+						'click' => 'unapprove-' . $data['uid'] . '|' . $data['pageid']
+					];
+				} elseif ($data['status'] == 'unapproved') {
+                    $class = 'k-list-item-commention-unapproved';
+					$icon = [ 'type' => 'protected', 'back' => 'transparent' ];
+					$options[] = [
+						'icon' => 'check',
+						'text' => t('commentions.section.option.approve'),
+						'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
+					];
+				} else {
                     $class = 'k-list-item-commention-pending';
-                $icon = [ 'type' => 'protected', 'back' => 'transparent' ];
-                $options[] = [
-                    'icon' => 'check',
-                    'text' => t('commentions.section.option.approve'),
-                    'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
-                ]; else :
-                    $class = 'k-list-item-commention-pending';
-                $icon = [ 'type' => 'protected', 'back' => 'transparent' ];
-                $options[] = [
-                    'icon' => 'check',
-                    'text' => t('commentions.section.option.approve'),
-                    'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
-                ];
-                endif;
+					$icon = [ 'type' => 'circle-outline', 'back' => 'transparent' ];
+					$options[] = [
+						'icon' => 'check',
+						'text' => t('commentions.section.option.approve'),
+						'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
+					];
+					$options[] = [
+						'icon' => 'protected',
+						'text' => t('commentions.section.option.unapprove'),
+						'click' => 'unapprove-' . $data['uid'] . '|' . $data['pageid']
+					];
+				}
 
                 // second option is always 'delete'
                 $options[] = [
@@ -122,28 +129,29 @@ return [
                 ];
 
                 // third option is link to source
-                if (! empty($data['source'])) :
+                if (! empty($data['source'])) {
                     $options[] = '-';
-                $options[] = [
-                    'icon' => 'open',
-                    'text' => t('commentions.section.option.viewsource'),
-                    'click' => 'open-' . $data['uid'] . '|' . $data['source']
-                ]; elseif (! empty($data['website'])) :
+					$options[] = [
+						'icon' => 'open',
+						'text' => t('commentions.section.option.viewsource'),
+						'click' => 'open-' . $data['uid'] . '|' . $data['source']
+					];
+				} elseif (! empty($data['website'])) {
                     $options[] = '-';
-                $options[] = [
-                    'icon' => 'open',
-                    'text' => t('commentions.section.option.viewwebsite'),
-                    'click' => 'open-' . $data['uid'] . '|' . $data['website']
-                ];
-                endif;
-                if (! empty($data['email'])) :
+					$options[] = [
+						'icon' => 'open',
+						'text' => t('commentions.section.option.viewwebsite'),
+						'click' => 'open-' . $data['uid'] . '|' . $data['website']
+					];
+				}
+                if (! empty($data['email'])) {
                     $options[] = '-';
-                $options[] = [
-                    'icon' => 'open',
-                    'text' => t('commentions.section.option.sendemail'),
-                    'click' => 'open-' . $data['uid'] . '|mailto:' . $data['email']
-                ];
-                endif;
+					$options[] = [
+						'icon' => 'open',
+						'text' => t('commentions.section.option.sendemail'),
+						'click' => 'open-' . $data['uid'] . '|mailto:' . $data['email']
+					];
+                }
 
                 $return[] = [ $content, $options, $class, $icon ];
             }
