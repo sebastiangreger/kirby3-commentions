@@ -68,9 +68,9 @@
                                 case 'mention':
                                 case 'trackback':
                                 case 'pingback':
-                                    echo t('commentions.snippet.list.at');
+                                    echo t('commentions.snippet.list.mentioned');
                                     if (isset($domain)) {
-                                        echo ' ' . t('commentions.snippet.list.mentioned') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
+                                        echo ' ' . t('commentions.snippet.list.at') . ' <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
                                     }
                                     break;
                                 case 'like':
