@@ -73,8 +73,15 @@ class Cron
                         // if parsing led to an error, $result is a string with the error message
                         } else {
 
-                            // mark failed requests as failed
-                            Storage::update($page, $queueitem['uid'], [ 'failed' => $result ], 'webmentionqueue');
+							// default is to keep failed queue items for later review
+							if ( option('sgkirby.commentions.keepfailed') == true ) {
+								// mark failed request as failed
+								Storage::update($page, $queueitem['uid'], [ 'failed' => $result ], 'webmentionqueue');
+							} else {
+								// delete failed request
+								Storage::update($page, $queueitem['uid'], 'delete', 'webmentionqueue');
+							}
+
                         }
                     } else {
                         throw new Exception('Problem processing queue file.');

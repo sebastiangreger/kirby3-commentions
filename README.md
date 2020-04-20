@@ -593,6 +593,14 @@ A valid secret key must be at least 10 characters long and may NOT include any o
 
 _NB. Without this setting, the cronjob will always fail._
 
+### Failed webmentions
+
+By default, failed webmention requests are kept in the queue, marked as "failed" with an error message. This allows later review and debugging. If desired, failed webmentions can be deleted instantly by adding this config setting:
+
+```php
+'sgkirby.commentions.keepfailed' => false,
+```
+
 ### Comment form fields
 
 By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):

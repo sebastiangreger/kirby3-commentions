@@ -32,6 +32,7 @@ require __DIR__ . DS . 'helpers.php';
     'options' 		=> [
 
         'secret'				=> '',
+        'keepfailed'			=> true,
         'defaultstatus'			=> 'pending',
         'endpoint' 				=> 'webmention-endpoint',
         'spamprotection' 		=> [ 'honeypot', 'timemin', 'timemax' ],
