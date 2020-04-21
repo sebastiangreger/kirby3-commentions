@@ -3,6 +3,7 @@
 namespace sgkirby\Commentions;
 
 use Exception;
+use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
@@ -197,76 +198,71 @@ class Commentions
     }
 
     /**
-     * Retrieves an array of comments for a given page
+     * Retrieves an array of commentions for a given page
      *
-     * @param \Kirby\Cms\Page $page The parent page object
+     *
+     * @param Page $page The parent page object
      * @param string $query One of the three valid comment states
      *                      - 'approved' A comment that has been manually/automatically approved
      *                      - 'unapproved' A comment that has been reviewed and manually unapproved by the site owner
      *                      - 'pending' A comment not yet reviewed by the site owner
-     * @param string $sort Sorting order by date:
-     *                     - 'asc' chronological
-     *                     - 'desc' newest first
      * @param string $language Two-letter language code, if only comments for one language are requested
-     * @return array
+     * @return Structure
      */
-    public static function retrieve($page, string $query = 'approved', string $sort = 'asc', string $language = null)
+    public static function get(Page $page, string $query = 'approved', string $language = null): Structure
     {
-        // if the query is a comment UID, return only that comment
-        if (!in_array($query, ['approved', 'unapproved', 'pending']) && strlen($query) == 10) {
-            foreach (Storage::read($page) as $comment) {
-                // comment with matching uid is returned, regardless of language
-                if ($comment['uid'] == $query) {
-                    return $comment;
-                }
+        if (!in_array($query, ['approved', 'unapproved', 'pending']) && strlen($query) === 10) {
+            // Retrieve a single commention by its UID
+            return static::get($page, 'all')->filterBy('uid', $query)->first();
+        }
+
+        $data = Storage::read($page, 'commentions');
+        $pageid = $page->id();
+        $data = array_map(function($item) use ($pageid) {
+            $item['pageid'] = $pageid;
+            return $item;
+        }, $data);
+
+        $commentions = new Structure($data, $page);
+
+        if ($language == 'auto') {
+            // try to get current language if auto is set
+            $language = kirby()->language();
+            if (!empty($language)) {
+                $language = $language->code() ?? null;
+            }
+        } else if (is_string($language) && strlen($language) === 2) {
+            // invalid language code in call = show all
+            if (!in_array($language, kirby()->languages()->codes())) {
+                $language = null;
             }
         } else {
-            // skip if no language has been specified in the call
-            if ($language != null) {
-
-                // try to get current language if auto is set
-                if ($language == 'auto') {
-                    $language = kirby()->language() ?? null;
-                    if (!empty($language)) {
-                        $language = $language->code() ?? null;
-                    }
-                }
-
-                // invalid language code in call = show all
-                elseif (strlen($language) == 2) {
-                    foreach (kirby()->languages() as $lang) {
-                        $languages[] = $lang;
-                    }
-                    if (!in_array($language, $languages)) {
-                        $language = null;
-                    }
-                }
-
-                // fallback = show all
-                else {
-                    $language = null;
-                }
-            }
-
-            $output = [];
-            foreach (Storage::read($page, 'commentions') as $comment) {
-                // return comments with matching status...
-                if ($query == 'all' || $query == $comment['status']) {
-                    // ...where the language matches, no language is stored or no language is specified in the request
-                    if (empty($language) || empty($comment['language']) || $comment['language'] == $language) {
-                        $comment['pageid'] = $page->id();
-                        $output[] = $comment;
-                    }
-                }
-            }
-
-            // default sorting is chronological
-            if ($sort == 'desc') {
-                return array_reverse($output);
-            } else {
-                return $output;
-            }
+            // fallback = show all
+            $language = null;
         }
+
+        if ($language !== null) {
+            // Filter by language, if given
+            $commentions = $commentions->filter(function($item) use ($language) {
+                if ($item->language()->isEmpty()) {
+                    // Commentions without a language are always included in the array
+                    return true;
+                }
+
+                if ($item->language()->toString() === $language) {
+                    // Commention has the desired language attribute.
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
+        if ($query !== 'all') {
+            $commentions = $commentions->filterBy('status', $query);
+        }
+
+        return $commentions;
     }
 
     /**

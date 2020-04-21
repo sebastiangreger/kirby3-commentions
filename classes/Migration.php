@@ -47,7 +47,7 @@ class Migration
                 }
 
                 $oldcount = sizeof($comments);
-                $currentcount = sizeof(Commentions::retrieve($page, 'all'));
+                $currentcount = Commentions::get($page, 'all')->count();
 
                 if ($oldcount > 0 && $currentcount == 0) {
 
