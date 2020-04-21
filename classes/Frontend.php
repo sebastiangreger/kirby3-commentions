@@ -69,7 +69,7 @@ class Frontend
 
                         foreach ($groups as $type => $label) {
                             $groupReactions = $commentions->filterBy('type', $type);
-                            if ($groups->count() === 0) {
+                            if ($groupReactions->count() === 0) {
                                 // skip empty groups
                                 continue;
                             }
