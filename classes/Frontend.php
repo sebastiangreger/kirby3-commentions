@@ -64,7 +64,8 @@ class Frontend
                     // restructure the data if grouped view
                     if ($template == 'grouped') {
 
-                        // array of all groups to be pulled out from content list, in presentation order
+                        // array of all groups to be pulled out from content list,
+                        // in presentation order
                         $groups = option('sgkirby.commentions.grouped');
 
                         foreach ($groups as $type => $label) {
@@ -81,8 +82,10 @@ class Frontend
                             ]));
                         }
 
-                        // replace the original comments array with that only containing reactions
-                        $comments = $commentions->filterBy('type', 'comment');
+                        // replace the original comments array with a filtered one, that
+                        // does only contain everything, that has been excluded from
+                        // the grouped view
+                        $comments = $commentions->filterBy('type', 'not in', array_keys($groups));
                     }
 
                     // return selected markup
