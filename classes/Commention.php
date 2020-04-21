@@ -114,7 +114,7 @@ class Commention extends StructureObject
 
         // Use single brackets (instead of double) to match the behavior
         // of Kirby’s `tt()` helper function.
-        return Str::template($translation, $replace, '{', '}');
+        return Str::template($translation, $replace, null, '{', '}');
     }
 
     /**
