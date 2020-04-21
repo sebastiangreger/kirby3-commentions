@@ -4,6 +4,9 @@ namespace sgkirby\Commentions;
 
 class Frontend
 {
+    /**
+     * Called by the frontend helper, echoes the HTML output
+     */
     public static function render($template = null)
     {
         switch ($template) {
@@ -93,19 +96,20 @@ class Frontend
                 commentions('feedback');
                 commentions('form');
                 commentions('list');
-
         }
     }
-
 
     /**
      * Processes the comment form data and stores the comment
      *
-     * @param string $path
+     * @param \Kirby\Cms\Page $page The parent page object
+     * @param string $path The path from the Kirby router (needed to determine language)
+     * @return array Content depends on success
+     *               - On success: The complete comment data (incl. UID) as returned by the Storage class after saving
+     *               - On error: array with single 'alert' field contains the error message
      */
     public static function processCommentform($page, $path)
     {
-
         // assemble the commention data
         $data = [
             'name' => get('name'),
@@ -113,14 +117,14 @@ class Frontend
             'website' => get('realwebsite'),
             'text' => get('message'),
             'timestamp' => date(date('Y-m-d H:i'), time()),
-            'language' => Commentions::determineLanguage($path, $page),
+            'language' => Commentions::determineLanguage($page, $path),
             'type' => 'comment',
             'status' => Commentions::defaultstatus('comment'),
         ];
 
         // run a spam check
         $spam = Commentions::spamcheck($data, kirby()->request()->get());
-        if ($spam === false) {
+        if ($spam === true) {
             go($page->url());
             exit;
         }

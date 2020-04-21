@@ -11,16 +11,14 @@ class Commentions
 {
     public static $feedback = null;
 
-
     /**
      * Checks the settings to assign the correct status to new comment submissions
      *
-     * @param string $type
-     * @return string
+     * @param string $type The name of the comment type ('comment' or any string used for webmentions)
+     * @return string The string value for the comment's status field
      */
     public static function defaultstatus($type)
     {
-
         // array of valid status strings, for validation
         $valid = [ 'approved', 'unapproved', 'pending' ];
 
@@ -43,15 +41,13 @@ class Commentions
         }
     }
 
-
     /**
-     * Generates a random 10-character string to be used as comment UID
+     * Generates random comment UID
      *
-     * @return string
+     * @return string A random alpahnumeric string (10 characters)
      */
     public static function uid()
     {
-
         // generate uid
         $uidchars = 'abcdefghijklmnopqrstuvwxyz0123456789';
         $uid = '';
@@ -62,16 +58,15 @@ class Commentions
         return $uid;
     }
 
-
     /**
      * Adds a new comment to the page, incl. some cleanup and adding a UID
      *
-     * @param \Kirby\Cms\Page $page
-     * @param array $data
+     * @param \Kirby\Cms\Page $page The parent page object
+     * @param array $data The comment data
+     * @return array $data The data that has been sent to the Storage class
      */
     public static function add($page, $data)
     {
-
         // a regular comment has to at least feature a text
         if ((empty($data['type']) || $data['type'] == 'comment') && empty($data['text'])) {
             return false;
@@ -100,17 +95,16 @@ class Commentions
         return $saved;
     }
 
-
     /**
      * Updates a comment on the page, incl. some cleanup
      *
-     * @param \Kirby\Cms\Page $page
-     * @param string $uid
-     * @param array $data
+     * @param \Kirby\Cms\Page $page The parent page object
+     * @param string $uid The UID of the comment to be updated
+     * @param array $data The fields to be updated in the comment data
+     * @return array $data The data that has been sent to the Storage class
      */
     public static function update($page, $uid, $data)
     {
-
         // UID cannot be updated externally
         if (!empty($data['uid'])) {
             unset($data['uid']);
@@ -128,17 +122,16 @@ class Commentions
         return $saved;
     }
 
-
     /**
      * Verifies and cleans up commentions data for saving
      *
-     * @param array $data
-     * @param book $keepuid
+     * @param array $data The data about to be stored as a comment
+     * @param bool $keepuid - false for new comments (checks for additional rules)
+     *                      - true for updates (less strict sanitization)
      * @return array
      */
     public static function sanitize($data, $update = false)
     {
-
         // validations on missing required fields only apply when creating new entries
         if (! $update) {
 
@@ -188,7 +181,6 @@ class Commentions
         }
 
         foreach ($data as $key => $value) {
-
             // remove fields that are not allowed
             $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid' ];
             if (!in_array($key, $allowlist)) {
@@ -204,30 +196,31 @@ class Commentions
         return $data;
     }
 
-
     /**
      * Retrieves an array of comments for a given page
      *
-     * @param \Kirby\Cms\Page $page
-     * @param string $query
-     * @param string $sort
-     * @param string $language
+     * @param \Kirby\Cms\Page $page The parent page object
+     * @param string $query One of the three valid comment states
+     *                      - 'approved' A comment that has been manually/automatically approved
+     *                      - 'unapproved' A comment that has been reviewed and manually unapproved by the site owner
+     *                      - 'pending' A comment not yet reviewed by the site owner
+     * @param string $sort Sorting order by date:
+     *                     - 'asc' chronological
+     *                     - 'desc' newest first
+     * @param string $language Two-letter language code, if only comments for one language are requested
      * @return array
      */
     public static function retrieve($page, string $query = 'approved', string $sort = 'asc', string $language = null)
     {
-
         // if the query is a comment UID, return only that comment
         if (!in_array($query, ['approved', 'unapproved', 'pending']) && strlen($query) == 10) {
             foreach (Storage::read($page) as $comment) {
-
                 // comment with matching uid is returned, regardless of language
                 if ($comment['uid'] == $query) {
                     return $comment;
                 }
             }
         } else {
-
             // skip if no language has been specified in the call
             if ($language != null) {
 
@@ -257,7 +250,6 @@ class Commentions
 
             $output = [];
             foreach (Storage::read($page, 'commentions') as $comment) {
-
                 // return comments with matching status...
                 if ($query == 'all' || $query == $comment['status']) {
                     // ...where the language matches, no language is stored or no language is specified in the request
@@ -277,17 +269,15 @@ class Commentions
         }
     }
 
-
     /**
-     * Returns the two-letter language code for a given path and page
+     * Determines the language of a URL by comparing it with the path
      *
-     * @param string $path
-     * @param \Kirby\Cms\Page $page
-     * @return array
+     * @param \Kirby\Cms\Page $page The page object
+     * @param string $path The path of the request from the Kirby router
+     * @return array|null Two-letter language code or null if monolingual site
      */
-    public static function determineLanguage($path, $page)
+    public static function determineLanguage($page, $path)
     {
-
         // find the language where the configured URI matches the given URI
         foreach (kirby()->languages() as $language) {
             $pathInLanguage = (!empty(kirby()->language($language->code())->path()) ? kirby()->language($language->code())->path() . '/' : '') . $page->uri($language->code());
@@ -301,13 +291,12 @@ class Commentions
         return null;
     }
 
-
     /**
      * Runs spam checks on submitted data
      *
-     * @param string $data
-     * @param array $get
-     * @return bool
+     * @param string $data The data to be submitted as new comment
+     * @param array $get The request's GET attributes when dealing with a direct submission
+     * @return bool true if spam, false if not identified as spam
      */
     public static function spamcheck($data, $get = null)
     {
@@ -318,7 +307,7 @@ class Commentions
 
             // honeypot: if field has been filed, it is very likely a robot
             if (in_array('honeypot', $settings) && empty($get['website']) === false) {
-                return false;
+                return true;
             }
 
             // time measuring spam filter only active if no cache active and values are not impossible
@@ -326,22 +315,22 @@ class Commentions
 
                 // spam timeout min: if less than n seconds between form creation and submission, it is most likely a bot
                 if (in_array('timemin', $settings) && (int)$get['commentions'] > (time() - (int)option('sgkirby.commentions.spamtimemin'))) {
-                    return false;
+                    return true;
                 }
 
                 // spam timeout max: if more than n seconds between form creation and submission, it is most likely a bot
                 if (in_array('timemax', $settings) && (int)$get['commentions'] < (time() - (int)option('sgkirby.commentions.spamtimemax'))) {
-                    return false;
+                    return true;
                 }
             }
         }
 
         // TODO: verifications based on the data array's values (below is just a placeholder)
         if (isset($data['name']) && $data['name'] == 'I am a spammer') {
-            return false;
+            return true;
         }
 
         // not identified as spam
-        return true;
+        return false;
     }
 }
