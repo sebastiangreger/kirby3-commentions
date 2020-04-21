@@ -65,7 +65,7 @@ class Frontend
                     if ($template == 'grouped') {
 
                         // array of all groups to be pulled out from content list, in presentation order
-                        $groups = option('sgkirby.commentions.grouped', []);
+                        $groups = option('sgkirby.commentions.grouped');
 
                         foreach ($groups as $type => $label) {
                             $groupReactions = $commentions->filterBy('type', $type);
