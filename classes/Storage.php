@@ -10,14 +10,14 @@ use Kirby\Toolkit\F;
 class Storage
 {
     /**
-     * Returns the path to the commentions file for a page
+     * Returns the path to the appropriate file for plugin data (incl. for virtual pages)
      *
      * @param \Kirby\Cms\Page $page
-     * @return string
+     * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
+     * @return string The full path to the YAML file
      */
     public static function file($page, string $filename)
     {
-
         // name conventions
         $path = '';
         $foldername = '_commentions';
@@ -36,17 +36,15 @@ class Storage
         return $page->root() . DS . $foldername . $path . DS . $filename . '.yml';
     }
 
-
     /**
-     * Reads data from the commentions folder
+     * Reads data from the plugin data file
      *
      * @param \Kirby\Cms\Page $page
-     * @param string $filename
-     * @return array
+     * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
+     * @return array Multidimensional array, containing all data entries with their fields from the file
      */
     public static function read($page, string $filename)
     {
-
         // read the data and return decoded yaml
         $file = static::file($page, $filename);
         if (F::exists($file)) {
@@ -56,18 +54,16 @@ class Storage
         }
     }
 
-
     /**
-     * Writes data to the commentions folder
+     * Writes data to the plugin data file (replacing the current data in the file)
      *
      * @param \Kirby\Cms\Page $page
-     * @param array $data
-     * @param string $filename
+     * @param array $data The complete data array to be written into the file
+     * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
      * @return array
      */
     public static function write($page, array $data, string $filename)
     {
-
         // get the file path
         $file = static::file($page, $filename);
 
@@ -81,18 +77,16 @@ class Storage
         }
     }
 
-
     /**
-     * Adds new entry to the commentions file
+     * Adds a new entry to the plugin data file
      *
      * @param \Kirby\Cms\Page $page
-     * @param array $data
-     * @param string $filename
+     * @param array $data The array with the fields for the new entry
+     * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
      * @return array
      */
     public static function add($page, $entry = [], string $filename)
     {
-
         // attach new data set to array of existing comments
         $data = static::read($page, $filename);
         ksort($entry);
@@ -104,21 +98,21 @@ class Storage
         return $entry;
     }
 
-
     /**
      * Updates or deletes a single entry in the commentions file; by default in the comments file
      *
      * @param \Kirby\Cms\Page $page
-     * @param string $commentid
-     * @param string|array $data
-     * @return array
+     * @param string $commentid The UID for the entry to be replaced
+     * @param array|string $data Depending on the action to be carried out:
+     *                           - Array: The fields of the entry that are to be replaced
+     *                           - String: A predefined action (currently only valid: 'delete', to delete the complete entry)
+     * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
+     * @return bool True on success, false on failure
      */
-    public static function update($page, $uid, $data = [], $filename = 'commentions')
+    public static function update($page, $uid, $data = [], $filename)
     {
-
         // clean up the data if it is an array (skip for string, which would be a command like 'delete')
         if ($filename == 'comments' && is_array($data) && !empty($data)) {
-
             // sanitize data array, but keep the uid
             $data = Commentions::sanitize($data, true);
         }
@@ -131,19 +125,18 @@ class Storage
             if ($entry['uid'] == $uid) {
 
                 // if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
-                if (is_array($data)) :
+                if (is_array($data)) {
                     // loop through all new data submitted in array and update accordingly
-                    foreach ($data as $key => $value) :
+                    foreach ($data as $key => $value) {
+                        // TODO: if $value is empty, this field should be deleted (if exists)
                         $entry[ $key ] = $value;
-                endforeach;
-                endif;
+                    }
+                }
 
                 if ($data == 'delete') {
-
                     // on deletion, simply return true on success
                     $return = true;
                 } else {
-
                     // sort fields alphabetically for consistency
                     ksort($entry);
 
@@ -154,7 +147,6 @@ class Storage
                     $return = $entry;
                 }
             } else {
-
                 // add the unchanged comment to the output array
                 $output[] = $entry;
             }

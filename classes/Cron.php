@@ -11,6 +11,11 @@ use Kirby\Toolkit\Str;
 
 class Cron
 {
+    /**
+     * Called by the router, verifies the validity of the cron request and triggers the processing
+     *
+     * @return \Kirby\Http\Response
+     */
     public static function route()
     {
         $secret = option('sgkirby.commentions.secret');
@@ -32,6 +37,7 @@ class Cron
             return new Response('<p>Error: Incorrect token in URL attribute.</p>', 'text/html', 403);
         }
 
+        // trigger the processing
         try {
             Cron::processQueue();
             return new Response('<p>Success.</p>', 'text/html', 200);
@@ -40,15 +46,13 @@ class Cron
         }
     }
 
-
     /**
      * Handles the asynchronous processing of webmentions from the queue
      *
-     * @return bool
+     * @return bool True if successful
      */
     public static function processQueue()
     {
-
         // limit to one process by only proceeding if no (or an expired left over) lockfile exists
         $lockfile = kirby()->root('content') . DS . '.commentions_queuelock';
         if (F::exists($lockfile) && F::modified($lockfile) > (time() - 120)) {
@@ -116,13 +120,13 @@ class Cron
         return true;
     }
 
-
     /**
      * Parses webmention from the queue, based on given source and target
      *
-     * @param string $source
-     * @param string $target
-     * @return $array
+     * @param string $source The URL of the website that claims to be linking to this site
+     * @param string $target The URL of the page on this website that is claimed to be linked to
+     * @return array|string - Array: The complete comment data (incl. UID) as returned by the Storage class after saving
+     *                      - String: Human-readable error message in case of failure
      */
     public static function parseWebmention($request)
     {
@@ -139,7 +143,6 @@ class Cron
 
         // process microformat data
         if (isset($mf2['items'][0])) {
-
             // parse the Mf2 array to a comment array
             $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
 
@@ -202,13 +205,11 @@ class Cron
         }
 
         if (!empty($page) && !$page->isErrorPage()) {
-
             // if there is no link to this site in the source...
             if (! Str::contains($sourcecontent, $target)) {
                 $found = false;
 
                 if (isset($mf2['items'][0])) {
-
                     // ...maybe they instead linked to a syndicated copy?
                     if ($page->syndication()->isNotEmpty()) {
                         foreach ($page->syndication()->split() as $syndication) {
@@ -242,7 +243,7 @@ class Cron
                 'timestamp' => date(date('Y-m-d H:i'), $result['timestamp']),
                 'source' => $source,
                 'type' => $result['type'],
-                'language' => Commentions::determineLanguage($path, $page),
+                'language' => Commentions::determineLanguage($page, $path),
             ];
 
             // save webmention to the according txt file

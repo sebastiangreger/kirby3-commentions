@@ -10,15 +10,22 @@ use Kirby\Toolkit\V;
 
 class Endpoint
 {
+    /**
+     * Called by the router, triggers the storage of the request on POST submission or deals out the default form for GET requests
+     *
+     * @return \Kirby\Http\Response
+     */
     public static function route()
     {
         if (kirby()->request()->is('POST')) {
-        
             // for POST requests, queue the incoming webmention
             try {
                 Endpoint::queueWebmention();
+
+                // if submitted from the pretty frontend form, redirect to the page with according feedback message
                 if (get('manualmention')) {
                     go(get('target') . '?thx=accepted');
+                // other submissions (incl. from the default form shown under the endpoint URL) simply return a string
                 } else {
                     return new Response('<p>Accepted.</p>', 'text/html', 202);
                 }
@@ -26,32 +33,35 @@ class Endpoint
                 return new Response('<p>Error: ' . $e->getMessage() . '</p>', 'text/html', 400);
             }
         } else {
-
-            // for GET requests, provide a submission form instead
+            // for GET requests, provide a submission form as error fallback
             return new Response('
-				<html><body>
-					<form action="' . site()->url() . '/' . option('sgkirby.commentions.endpoint') . '" method="post">
-						<div>
-							<label for="target">The URL on ' . site()->url() . ' you linked to</label>
-							<input type="url" name="target" value="' . get('target') . '" pattern=".*' . str_replace('.', '\.', site()->url()) . '.*" required>
-						</div>
-						<div>
-							<label for="source">The URL of your response (full URL incl https://)</label>
-							<input type="url" name="source" value="' . get('source') . '" pattern=".*http.*" required>
-						</div>
-						<input type="submit" name="submit" value="Submit">
-					</form>
-				</body></html>
-			', 'text/html', 404);
+                <html><body>
+                    <form action="' . site()->url() . '/' . option('sgkirby.commentions.endpoint') . '" method="post">
+                        <div>
+                            <label for="target">The URL on ' . site()->url() . ' you linked to</label>
+                            <input type="url" name="target" value="' . get('target') . '" pattern=".*' . str_replace('.', '\.', site()->url()) . '.*" required>
+                        </div>
+                        <div>
+                            <label for="source">The URL of your response (full URL incl https://)</label>
+                            <input type="url" name="source" value="' . get('source') . '" pattern=".*http.*" required>
+                        </div>
+                        <input type="submit" name="submit" value="Submit">
+                    </form>
+                </body></html>
+            ', 'text/html', 404);
         }
     }
 
+    /**
+     * Validates the submitted URLs and stores them into the queue file
+     *
+     * @return array The complete comment data (incl. UID) as returned by the Storage class after saving
+     */
     public static function queueWebmention()
     {
-
         // source is the external site sending the webmention;
         $source = get('source');
-        
+
         // target is the local URL, claimed to be mentioned in the source
         $target = get('target');
 
@@ -88,11 +98,11 @@ class Endpoint
 
         // if the target resolves to an existing Kirby page, add to the queue in the according commention file
         if ($page != null) {
-            Storage::add($page, $data, 'webmentionqueue');
+            return Storage::add($page, $data, 'webmentionqueue');
         }
         // all other requests are enqueued in the home page commention file
         else {
-            Storage::add(page('home'), $data, 'webmentionqueue');
+            return Storage::add(page('home'), $data, 'webmentionqueue');
         }
     }
 }
