@@ -76,7 +76,7 @@ class Frontend
                             }
 
                             $reactions->add(new Obj([
-                                'type' => $type,
+                                'id' => $type,
                                 'label' => $label,
                                 'items' => $groupReactions,
                             ]));
