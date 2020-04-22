@@ -147,7 +147,7 @@ class Cron
             $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
 
             // php-comments does not do rel=author
-            if ($result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
+            if (array_key_exists('url', $result['author']) && $result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
                 $result['author']['url'] = $mf2['rels']['author'][0];
             }
 
@@ -155,13 +155,13 @@ class Cron
             // TODO: align with algorithm outlined in https://indieweb.org/authorship
             foreach ($mf2['items'] as $mf2item) {
                 if ($mf2item['type'][0] == 'h-card') {
-                    if ($result['author']['name'] == ''  && isset($mf2item['properties']['name'][0])) {
+                    if (array_key_exists('name', $result['author']) && $result['author']['name'] == ''  && isset($mf2item['properties']['name'][0])) {
                         $result['author']['name'] = $mf2item['properties']['name'][0];
                     }
-                    if ($result['author']['photo'] == '' && isset($mf2item['properties']['photo'][0])) {
+                    if (array_key_exists('photo', $result['author']) && $result['author']['photo'] == '' && isset($mf2item['properties']['photo'][0])) {
                         $result['author']['photo'] = $mf2item['properties']['photo'][0];
                     }
-                    if ($result['author']['url'] == ''  && isset($mf2item['properties']['url'][0])) {
+                    if (array_key_exists('url', $result['author']) && $result['author']['url'] == ''  && isset($mf2item['properties']['url'][0])) {
                         $result['author']['url'] = $mf2item['properties']['url'][0];
                     }
                 }
@@ -236,9 +236,9 @@ class Cron
             // create the commention data
             $finaldata = [
                 'status' => Commentions::defaultstatus($result['type']),
-                'name' => $result['author']['name'],
-                'website' => $result['author']['url'],
-                'avatar' => $result['author']['photo'],
+                'name' => $result['author']['name'] ?? null,
+                'website' => $result['author']['url'] ?? null,
+                'avatar' => $result['author']['photo'] ?? null,
                 'text' => $result['text'],
                 'timestamp' => date(date('Y-m-d H:i'), $result['timestamp']),
                 'source' => $source,
