@@ -74,7 +74,7 @@ class Cron
                 if (! isset($queueitem['failed'])) {
 
                     // create/update the lockfile, as this is where actual DoS harm can be done
-//                    F::write($lockfile, '');
+                    F::write($lockfile, '');
 
                     // ensure that the same domain is pinged max. every n seconds
                     $pinglimit = 5;
