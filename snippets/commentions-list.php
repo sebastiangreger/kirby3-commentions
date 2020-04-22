@@ -3,7 +3,7 @@
   <?php foreach ($reactions as $type => $group) : ?>
     <h3><?= $group->label() ?></h3>
 
-    <ul class="commentions-list-reactions">
+    <ul class="commentions-list-reactions commentions-list-reactions-<?= $type ?>">
       <?php foreach ($group->items() as $comment) : ?>
 
         <li>
@@ -20,7 +20,7 @@
     <ul>
         <?php foreach ($comments as $comment) : ?>
 
-        <li class="commentions-list-type-<?= $comment->type() ?><?= r($comment->isAuthenticated(), ' authenticated') ?>">
+        <li class="commentions-list-item commentions-list-item-<?= $comment->type() ?><?= r($comment->isAuthenticated(), ' commentions-list-item-authenticated') ?>">
           <h4>
             <?php if ($comment->website()->isNotEmpty()): ?>
               <a href="<?= $comment->website() ?>" rel="noopener"><?= $comment->name()->html() ?></a>
