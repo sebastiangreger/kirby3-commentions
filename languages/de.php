@@ -6,11 +6,11 @@ return [
     // - form
     'commentions.snippet.form.headline'             => 'Kommentare und Webmentions',
     'commentions.snippet.form.ctacomment'           => 'Hinterlasse einen Kommentar',
-    'commentions.snippet.form.ctawebmention'        => 'Auf der eigenen Website geantwortet? Senden Sie eine Webmention!',
-    'commentions.snippet.form.responseurl'          => 'URL der Antwort auf Ihrer Website (stellen Sie sicher, dass Ihre Seite einen Link auf diese Seite enthält)',
+    'commentions.snippet.form.ctawebmention'        => 'Auf der eigenen Website geantwortet? Sende eine Webmention!',
+    'commentions.snippet.form.responseurl'          => 'URL der Antwort auf deiner Website (stelle sicher, dass die Seite einen Link auf diese URL enthält)',
     'commentions.snippet.form.name'                 => 'Name (optional)',
-    'commentions.snippet.form.email'                => 'E-Mail (optional; falls Sie eine persönliche Antwort wünschen)',
-    'commentions.snippet.form.honeypot'             => 'Bitte lassen Sie dieses Feld leer!',
+    'commentions.snippet.form.email'                => 'E-Mail (optional; falls du eine persönliche Antwort wünschst)',
+    'commentions.snippet.form.honeypot'             => 'Bitte lasse dieses Feld leer!',
     'commentions.snippet.form.website'              => 'Website (optional; wird öffentlich verlinkt, falls angegeben)',
     'commentions.snippet.form.comment'              => 'Kommentar',
 
