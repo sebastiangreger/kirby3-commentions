@@ -172,12 +172,20 @@ class Commentions
 
         // timestamp is required; use current time if missing or not a unix epoch
         if (! empty($data['timestamp']) && ! is_numeric($data['timestamp'])) {
-            $data['timestamp'] = date(date('Y-m-d H:i'), time());
+            if ($update) {
+                unset($data['timestamp']);
+            } else {
+                $data['timestamp'] = date(date('Y-m-d H:i'), time());
+            }
         }
 
         // status is required; set to 'pending' by default if missing or invalid value
         if (! empty($data['status']) && !in_array($data['status'], [ 'approved', 'unapproved', 'pending' ])) {
-            $data['status'] = 'pending';
+            if ($update) {
+                unset($data['status']);
+            } else {
+                $data['status'] = 'pending';
+            }
         }
 
         foreach ($data as $key => $value) {

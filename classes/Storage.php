@@ -126,10 +126,22 @@ class Storage
 
                 // if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
                 if (is_array($data)) {
+                    // depending on the entry type, certain fields can not be deleted
+                    if ($entry['type'] == 'comment') {
+                        $required = ['uid','timestamp','status','type','text'];
+                    } else {
+                        $required = ['uid','timestamp','status','type','source'];
+                    }
+
                     // loop through all new data submitted in array and update accordingly
                     foreach ($data as $key => $value) {
-                        // TODO: if $value is empty, this field should be deleted (if exists)
-                        $entry[ $key ] = $value;
+                        // if $value is empty, this means a deletion; some fields cannot be deleted (partially depending on the entry type)
+                        if (empty($value) && array_key_exists($key, $entry) && !in_array($key, $required)) {
+                            unset($entry[$key]);
+                        // update the existing value with the new value
+                        } else {
+                            $entry[$key] = $value;
+                        }
                     }
                 }
 
