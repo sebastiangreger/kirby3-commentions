@@ -9,6 +9,7 @@ use Kirby\Cms\Model;
 use Kirby\Cms\StructureObject;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Parsedown;
 
 /**
  * The Commention reprents each item
@@ -50,11 +51,12 @@ class Commention extends StructureObject
      * Returns the name as field object if given or the translated
      * version of "Anonymous" as fallback.
      *
-     * @return Field
+     * @return string
      */
-    public function name(): Field
+    public function nameFormatted(?string $anonymous = null): string
     {
-        return $this->content()->get('name')->or(t('commentions.snippet.list.anonymous'));
+        $anonymous = $anonymous ?? t('commentions.name.anonymous');
+        return $this->name()->or($anonymous)->html()->toString();
     }
 
     /**
@@ -73,8 +75,17 @@ class Commention extends StructureObject
      *
      * @return string
      */
-    public function sourceFormatted(): ?string
+    public function sourceFormatted(?string $anonymous = null): ?string
     {
+        // Format author name
+        $author = $this->nameFormatted($anonymous);
+
+        if ($this->website()->isNotEmpty()) {
+            $author = '<a href="' . $this->website() . '" rel="noopener">' . $author . '</a>';
+        }
+
+        // Format domain of source URL
+
         $domain = $this->source()->isNotEmpty()
             ? preg_replace('/^www\./i', '', parse_url($this->source(), PHP_URL_HOST))
             : null;
@@ -101,12 +112,16 @@ class Commention extends StructureObject
             case 'reply':
                 $translation = t('commentions.snippet.list.replies');
                 break;
+            case 'comment':
+                $translation = t('commentions.snippet.list.comment');
+                break;
             default:
                 // Unknown type
                 return null;
         }
 
         $replace = [
+            'author' => $author,
             'link' => $this->source()->isNotEmpty() ? '<a href="' . $this->source() . '" rel="noopener">' . $domain . '</a>' : '',
             'source' => $this->source()->toString(),
             'domain' => $domain,
@@ -131,8 +146,13 @@ class Commention extends StructureObject
             return $text;
         }
 
-        $html = $text->markdown()->toString();
-        $html = strip_tags($html, '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>');
+        // $html = $text->markdown()->toString();
+        // $html = strip_tags($html, '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>');
+        // User Markdown component directly to avoid usage of old
+        $parser = new Parsedown();
+        // $parser->setSafeMode(true);
+        $parser->setBreaksEnabled(true);
+        $html = smartypants($parser->text($text));
 
         // Wrap computed value in Field object, to make chaining for
         // enabling the chain-syntax in the frontend.

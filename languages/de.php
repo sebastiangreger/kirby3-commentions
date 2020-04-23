@@ -1,6 +1,11 @@
 <?php
 
 return [
+    // general
+
+    'commentions.name.anonymous'                    => 'Anonym',
+
+
     // snippets
 
     // - form
@@ -16,12 +21,12 @@ return [
 
     // - list
     'commentions.snippet.list.comments'             => 'Kommentare',
-    'commentions.snippet.list.anonymous'            => 'Anonym',
-    'commentions.snippet.list.mentioned'            => 'erwähnte dies',
-    'commentions.snippet.list.mentionedAt'          => 'erwähnte dies auf { link }',
-    'commentions.snippet.list.liked'                => 'gab diesem Beitrag ein „Gefällt mir« auf { link }',
-    'commentions.snippet.list.bookmarked'           => 'fügte ein Lesezeichen hinzu auf { link }',
-    'commentions.snippet.list.replies'              => 'antwortete auf { link }',
+    'commentions.snippet.list.comment'              => '{ author }',
+    'commentions.snippet.list.mentioned'            => '{ author } erwähnte dies',
+    'commentions.snippet.list.mentionedAt'          => '{ author } erwähnte dies auf { link }',
+    'commentions.snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir« auf { link }',
+    'commentions.snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
+    'commentions.snippet.list.replies'              => '{ author } antwortete auf { link }',
     'commentsions.snippet.list.dateFormat.date'     => 'd.m.Y H:i Uhr',
     'commentsions.snippet.list.dateFormat.strftime' => '%d.%m.%Y %H:%M Uhr',
 

@@ -22,12 +22,6 @@
 
         <li class="commentions-list-item commentions-list-item-<?= $comment->type() ?><?= r($comment->isAuthenticated(), ' commentions-list-item-authenticated') ?>">
           <h4>
-            <?php if ($comment->website()->isNotEmpty()): ?>
-              <a href="<?= $comment->website() ?>" rel="noopener"><?= $comment->name()->html() ?></a>
-            <?php else: ?>
-              <?= $comment->name()->html() ?>
-            <?php endif ?>
-
             <?= $comment->sourceFormatted() ?>
           </h4>
 
