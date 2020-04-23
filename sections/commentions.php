@@ -78,7 +78,7 @@ return [
             // transpose all comments into an array
             foreach ($comments as $data) {
                 $text = isset($data['text']) ? htmlspecialchars($data['text']) : '';
-                $name = isset($data['name']) ? htmlspecialchars($data['name']) : '';
+                $name = isset($data['name']) ? htmlspecialchars($data['name']) : t('commentions.name.anonymous');
                 $meta = $data['type'];
 
                 // avoid returning empty array entries when no commentions exist
