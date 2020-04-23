@@ -84,6 +84,11 @@ class Commentions
         // add a uid field
         $data['uid'] = static::uid();
 
+        // flag comment posted by a logged-in user
+        if ($data['type'] == 'comment' && kirby()->user()) {
+            $data['authenticated'] = true;
+        }
+
         // trigger a hook that would allow to stop processing by throwing an exception
         kirby()->trigger('commentions.add:before', $page, $data);
 
@@ -183,7 +188,7 @@ class Commentions
 
         foreach ($data as $key => $value) {
             // remove fields that are not allowed
-            $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid' ];
+            $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid', 'authenticated' ];
             if (!in_array($key, $allowlist)) {
                 unset($data[ $key ]);
             }
