@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Data\Data;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 class Commentions
 {
@@ -170,14 +171,27 @@ class Commentions
             }
         }
 
-        // timestamp is required; use current time if missing or not a unix epoch
-        if (! empty($data['timestamp']) && ! is_numeric($data['timestamp'])) {
-            $data['timestamp'] = date(date('Y-m-d H:i'), time());
+        // timestamp is required and has to be of format 'Y-m-d H:i'
+        if (! empty($data['timestamp']) && ! V::match($data['timestamp'], '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/')) {
+            if (V::date($data['timestamp']) || V::date(date('Y-m-d H:i',intval($data['timestamp'])))) {
+                // if the variable validates as date (epoch/string) use this
+                $data['timestamp'] = date('Y-m-d H:i', is_int($data['timestamp']) ? $data['timestamp'] : strtotime($data['timestamp']));
+            } elseif ($update) {
+                // in case of an update, remove variable if not a valid date
+                unset($data['timestamp']);
+            } else {
+                // in case of a new submission, use current date instead
+                $data['timestamp'] = date('Y-m-d H:i');
+            }
         }
 
         // status is required; set to 'pending' by default if missing or invalid value
         if (! empty($data['status']) && !in_array($data['status'], [ 'approved', 'unapproved', 'pending' ])) {
-            $data['status'] = 'pending';
+            if ($update) {
+                unset($data['status']);
+            } else {
+                $data['status'] = 'pending';
+            }
         }
 
         foreach ($data as $key => $value) {
