@@ -112,7 +112,7 @@ class Storage
     public static function update($page, $uid, $data = [], $filename)
     {
         // clean up the data if it is an array (skip for string, which would be a command like 'delete')
-        if ($filename == 'comments' && is_array($data) && !empty($data)) {
+        if ($filename === 'commentions' && is_array($data) && !empty($data)) {
             // sanitize data array, but keep the uid
             $data = Commentions::sanitize($data, true);
         }
@@ -127,7 +127,7 @@ class Storage
                 // if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
                 if (is_array($data)) {
                     // depending on the entry type, certain fields can not be deleted
-                    if ($entry['type'] == 'comment') {
+                    if ($entry['type'] === 'comment') {
                         $required = ['uid','timestamp','status','type','text'];
                     } else {
                         $required = ['uid','timestamp','status','type','source'];
