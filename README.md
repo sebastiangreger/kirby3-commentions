@@ -254,48 +254,40 @@ sections:
 
 ### $page->commentions()
 
-Returns an array with comments for the page object.
+Returns a structure object of comments for the page.
 
-`$page->commentions( $query, $sort )`
+`$page->commentions( $query, $language )`
 
 #### Parameters
 
-| Name    | Type   | Default    | Description                                                                                                                                        |
-|---------|--------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| $query  | string | 'approved' | Selects the comments to be included in the array; possible values are either a valid status('approved', 'pending', 'all') or a single comment UID. |
-| $sort   | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically                                                          |
+| Name      | Type   | Default    | Description                                                                                                                                            |
+|-----------|--------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| $query    | string | 'approved' | Selects the comments to be included in the structure; possible values are either a valid status('approved', 'pending', 'all') or a single comment UID. |
+| $language | string | null       | `null` for all languages or a two-letter language code (e.g. `en`); comments saved with no language information are returned for all languages         |
 
 #### Return
 
-* When requesting with a status: array with all comments for the requested object (see "Data structure" chapter below for details); empty array if none. A field `'pageid'` is added to each comment's array, indicating the Kirby page ID the comment belongs to.
-* When requesting with a UID: array with the data of the comment; boolean `false` if UID is not valid.
+Structure with all comments for the requested object that meet the criteria; empty structure if no matches.
 
-The following example shows the most minimal comment and webmentions possible (displayed fields are compulsory):
+#### Usage
+
+When looping through the returned structure object, the comment data can be retrieved in various ways:
 
 ```
-Array (
-    [0] => Array
-        (
-            [status] => approved
-            [text] => Most minimal comment possible
-            [timestamp] => 2020-04-01 11:30
-            [type] => comment
-            [uid] => 1m6los473p
-            [pageid] => notes/exploring-the-universe
-        )
-    [1] => Array
-        (
-            [source] => https://example.com
-            [status] => approved
-            [timestamp] => 2020-04-01 11:32
-            [type] => like
-            [uid] => 126los473p
-            [pageid] => notes/exploring-the-universe
-        )
-)
+foreach ( $testpage->commentions('all') as $item ) {
+    print_r($item->content());
+}
 ```
 
-The field `pageid` does not come from the data storage; it is added by the parser to the output of the page(s) method by default.
+`$item->content()` returns a content object with all the fields stored for the comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->text_unsafe()`.
+
+If preferred, `$item->content()->toArray()` transforms the return object into an array.
+
+For use in frontend templates, the method `$item->content()->nameFormatted($anonymous)` returns the stored name as an HTML-safe string; if no name is available, it returns either "Anonymous" or whatever string is given as `$anonymous`.
+
+For use in frontend templates, the method `$item->content()->sourceFormatted($anonymous)` creates a nicely formatted title string for the item, such as "John Doe replied at example.com" in case of a reply webmention; if no name is available, it returns either "Anonymous" or whatever string is given as `$anonymous` (this method internally calls `nameFormatted()`).
+
+`$item->dateFormatted()` returns a nicely formatted string for the timestamp of the item.
 
 ### $page->addCommention()
 
@@ -350,20 +342,20 @@ Boolean `true` on success, `false` if failed.
 
 ### $pages->commentions()
 
-Returns an array with comments for the page collection.
+Returns a structure object with all comments for the page collection.
 
-`$pages->commentions( string $status = 'approved', string $sort = 'asc' )`
+`$pages->commentions( string $status = 'approved', string $languages )`
 
 #### Parameters
 
-| Name     | Type   | Default    | Description                                                                                     |
-|----------|--------|------------|-------------------------------------------------------------------------------------------------|
-| $status  | string | 'approved' | Selects the comments to be included in the array; possible values: 'approved', 'pending', 'all' |
-| $sort    | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically       |
+| Name      | Type   | Default    | Description                                                                                                                                    |
+|-----------|--------|------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| $status   | string | 'approved' | Selects the comments to be included in the array; possible values: 'approved', 'pending', 'all'                                                |
+| $language | string | null       | `null` for all languages or a two-letter language code (e.g. `en`); comments saved with no language information are returned for all languages |
 
-#### Return
+#### Return and usage
 
-Same as for page method `$page->commentions()`.
+Same as for page method `$page->commentions()`. The method `$item->pageid()` provides the id of the Kirby page each item belongs to.
 
 ## API endpoints
 
@@ -484,7 +476,7 @@ Adding the following code to `site/config.php` or in a plugin would replace ever
 	'commentions.add:after' => function ( $page, $data ) {
 		$page->updateCommention( $data['uid'], [ 'text' => print_r( $data, true ) ] );
 	}
-], 
+],
 ```
 
 ### commentions.update:after
@@ -523,18 +515,19 @@ The file `commentions.yml` contains the comment data.
 
 These are the fields that can be used, including information on which are compulsory for what type of comment:
 
-| Field     | Comment  | Webment. | Description                                                                                                                                        | Example                               |
-|-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
-| timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
-| type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
-| status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                        | approved                              |
-| uid       | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
-| text      | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
-| source    |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
-| email     | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
-| avatar    |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
-| website   | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
-| language  | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
+| Field      | Comment  | Webment. | Description                                                                                                                                        | Example                               |
+|------------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
+| timestamp  | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
+| type       | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
+| status     | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                        | approved                              |
+| uid        | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
+| text       | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
+| source     |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
+| email      | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
+| avatar     |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
+| website    | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
+| language   | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
+| authorized | optional |          | This boolean value is set to true if the comment was submitted by a logged-in user                                                           | true                             |
 
 ### Queue
 
@@ -676,6 +669,14 @@ When comments are displayed using the `commentions('grouped')` helper, adding th
 ```
 
 _NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
+
+### Translations
+
+To override the translation strings of the Plugin UI, any string from `languages/*.php` can be replaced with a config variable. For example, the bundled translation of the string `sgkirby.commentions.t.en.snippet.list.comments` (in English, as indicated by the `en` part), can be replaced by adding this config variable:
+
+```php
+'sgkirby.commentions.t.XX.snippet.list.comments' => 'Comments',
+```
 
 ## Requirements
 
