@@ -3,7 +3,6 @@
 namespace sgkirby\Commentions;
 
 use Exception;
-use Kirby\Data\Data;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Kirby\Toolkit\F;
