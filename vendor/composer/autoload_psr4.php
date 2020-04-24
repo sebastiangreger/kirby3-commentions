@@ -6,5 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+<<<<<<< HEAD
+=======
+    'sgkirby\\Commentions\\' => array($baseDir . '/classes'),
+    'Masterminds\\' => array($vendorDir . '/masterminds/html5/src'),
+>>>>>>> dev
     'Kirby\\' => array($vendorDir . '/getkirby/composer-installer/src'),
 );

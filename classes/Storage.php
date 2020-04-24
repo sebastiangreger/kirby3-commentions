@@ -4,7 +4,6 @@ namespace sgkirby\Commentions;
 
 use Exception;
 use Kirby\Data\Data;
-use Kirby\Data\Yaml;
 use Kirby\Toolkit\F;
 
 class Storage
@@ -126,11 +125,15 @@ class Storage
 
                 // if the data variable is an array, update the fields contained within (default is an empty array, hence no updates)
                 if (is_array($data)) {
-                    // depending on the entry type, certain fields can not be deleted
-                    if ($entry['type'] === 'comment') {
-                        $required = ['uid','timestamp','status','type','text'];
-                    } else {
-                        $required = ['uid','timestamp','status','type','source'];
+                    if ($filename === 'commentions') {
+                        // depending on the entry type, certain fields can not be deleted
+                        if ($entry['type'] === 'comment') {
+                            $required = ['uid', 'timestamp', 'status', 'type', 'text'];
+                        } else {
+                            $required = ['uid', 'timestamp', 'status', 'type', 'source'];
+                        }
+                    } elseif ($filename === 'webmentionqueue') {
+                        $required = ['uid', 'timestamp', 'target', 'source'];
                     }
 
                     // loop through all new data submitted in array and update accordingly

@@ -3,7 +3,6 @@
 namespace sgkirby\Commentions;
 
 use Kirby\Cms\Collection;
-use Kirby\Cms\Structure;
 use Kirby\Toolkit\Obj;
 
 class Frontend

@@ -9,101 +9,80 @@
  * @link      https://github.com/sebastiangreger/kirby3-sendmentions
  * @license   MIT
  */
-namespace sgkirby\Commentions;
 
+use sgkirby\Commentions\Commentions;
+use sgkirby\Commentions\Structure;
 use Kirby\Cms\App as Kirby;
 
-load([
-    'sgkirby\\Commentions\\Commention'  => 'classes/Commention.php',
-    'sgkirby\\Commentions\\Commentions' => 'classes/Commentions.php',
-    'sgkirby\\Commentions\\Cron'        => 'classes/Cron.php',
-    'sgkirby\\Commentions\\Endpoint'    => 'classes/Endpoint.php',
-    'sgkirby\\Commentions\\Frontend'    => 'classes/Frontend.php',
-    'sgkirby\\Commentions\\Migration'   => 'classes/Migration.php',
-    'sgkirby\\Commentions\\Storage'     => 'classes/Storage.php',
-    'sgkirby\\Commentions\\Structure'   => 'classes/Structure.php',
-], __DIR__);
-
-require_once __DIR__ . DS . 'helpers.php';
+@include_once __DIR__ . '/vendor/autoload.php';
 
 Kirby::plugin('sgkirby/commentions', [
 
-    'options'       => [
-
-        'secret'                => '',
-        'keepfailed'            => true,
-        'defaultstatus'         => 'pending',
-        'endpoint'              => 'webmention-endpoint',
-        'spamprotection'        => [ 'honeypot', 'timemin', 'timemax' ],
-        'spamtimemin'           => 5,
-        'spamtimemax'           => 86400,
-        'avatarurls'            => false,
-        'hideforms'             => false,
-        'expand'                => false,
-        'formfields'            => ['name'],
-        'grouped'               => [
-            'read'              => 'Read by',
-            'like'              => 'Likes',
-            'repost'            => 'Reposts',
-            'bookmark'          => 'Bookmarks',
-            'rsvp:yes'          => 'RSVP: yes',
-            'rsvp:maybe'        => 'RSVP: maybe',
-            'rsvp:interested'   => 'RSVP: interested',
-            'rsvp:no'           => 'RSVP: no',
+    'options' => [
+        'secret'              => '',
+        'keepfailed'          => true,
+        'defaultstatus'       => 'pending',
+        'endpoint'            => 'webmention-endpoint',
+        'spamprotection'      => [ 'honeypot', 'timemin', 'timemax' ],
+        'spamtimemin'         => 5,
+        'spamtimemax'         => 86400,
+        'avatarurls'          => false,
+        'hideforms'           => false,
+        'expand'              => false,
+        'formfields'          => ['name'],
+        'grouped'             => [
+            'read'            => 'Read by',
+            'like'            => 'Likes',
+            'repost'          => 'Reposts',
+            'bookmark'        => 'Bookmarks',
+            'rsvp:yes'        => 'RSVP: yes',
+            'rsvp:maybe'      => 'RSVP: maybe',
+            'rsvp:interested' => 'RSVP: interested',
+            'rsvp:no'         => 'RSVP: no',
         ],
-
     ],
 
-    'api'           => require __DIR__ . '/config/api.php',
+    'api' => require __DIR__ . '/config/api.php',
 
-    'blueprints'    => [
-
+    'blueprints' => [
         // DEPRECATED as of 1.0.0: replaced with section 'commentions'
-        'fields/commentions'    => __DIR__ . '/blueprints/fields/commentions.yml'
-
+        'fields/commentions' => __DIR__ . '/blueprints/fields/commentions.yml'
     ],
 
-    'hooks'         => require __DIR__ . '/config/hooks.php',
+    'hooks' => require __DIR__ . '/config/hooks.php',
 
-    'sections'      => [
-
-        'commentions'           => require __DIR__ . '/sections/commentions.php',
-
+    'sections' => [
+        'commentions' => require __DIR__ . '/sections/commentions.php',
     ],
 
-    'routes'        => require __DIR__ . '/config/routes.php',
+    'routes' => require __DIR__ . '/config/routes.php',
 
-    'snippets'      => [
-
-        'commentions-list'      => __DIR__ . '/snippets/commentions-list.php',
-        'commentions-form'      => __DIR__ . '/snippets/commentions-form.php',
-        'commentions-feedback'  => __DIR__ . '/snippets/commentions-feedback.php',
-
+    'snippets' => [
+        'commentions-list'     => __DIR__ . '/snippets/commentions-list.php',
+        'commentions-form'     => __DIR__ . '/snippets/commentions-form.php',
+        'commentions-feedback' => __DIR__ . '/snippets/commentions-feedback.php',
     ],
 
     'pageMethods' => [
-
-        'commentions' => function (string $status = 'approved', string $language = null) {
+        'commentions' => function(string $status = 'approved', string $language = null) {
             return Commentions::get($this, $status, $language);
         },
 
-        'addCommention' => function (array $data) {
+        'addCommention' => function(array $data) {
             return Commentions::add($this, $data, 'commentions');
         },
 
-        'deleteCommention' => function (string $uid) {
+        'deleteCommention' => function(string $uid) {
             return Commentions::update($this, $uid, 'delete');
         },
 
-        'updateCommention' => function (string $uid, array $data) {
+        'updateCommention' => function(string $uid, array $data) {
             return Commentions::update($this, $uid, $data);
         },
-
     ],
 
     'pagesMethods' => [
-
-        'commentions' => function (string $status = 'approved', string $language = null) {
+        'commentions' => function(string $status = 'approved', string $language = null): Structure {
             $commentions = new Structure();
 
             foreach ($this as $page) {
@@ -112,14 +91,11 @@ Kirby::plugin('sgkirby/commentions', [
 
             return $commentions->sortBy('timestamp');
         },
-
     ],
 
     'translations' => [
-
         'de' => require __DIR__ . '/languages/de.php',
         'en' => require __DIR__ . '/languages/en.php',
-
     ],
 
 ]);
