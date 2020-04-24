@@ -1,6 +1,8 @@
 <?php
 
-return [
+$translations = [
+
+
     // general
 
     'commentions.name.anonymous'                    => 'Anonym',
@@ -49,4 +51,11 @@ return [
     'commentions.section.option.viewsource'         => 'Quelle ansehen',
     'commentions.section.option.viewwebsite'        => 'Website ansehen',
     'commentions.section.option.sendemail'          => 'E-Mail senden',
+
+
 ];
+
+foreach ($translations as $key => $value) {
+    $return['commentions.' . $key] = option('sgkirby.commentions.t.de.' . $key, $value);
+}
+return $return;
