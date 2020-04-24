@@ -2,6 +2,10 @@
 
 namespace sgkirby\Commentions;
 
+use Kirby\Cms\Collection;
+use Kirby\Cms\Structure;
+use Kirby\Toolkit\Obj;
+
 class Frontend
 {
     /**
@@ -47,41 +51,41 @@ class Frontend
             case 'raw':
 
                 // retrieve all approved comments for this page
-                $comments = page()->commentions('approved', 'asc', 'auto');
-                $reactions = [];
+                $commentions = page()->commentions('approved', 'auto');
+                $comments  = $commentions->clone();
+                $reactions = new Collection();
 
                 // DEPRECATED as of 1.0.0: use $page->comments() instead
                 if ($template == 'raw') {
-
                     // return an array with all comments for this page
-                    return $comments;
-                } elseif (sizeof($comments) > 0) {
+                    return $commentions;
+                } elseif ($commentions->count() > 0) {
 
                     // restructure the data if grouped view
                     if ($template == 'grouped') {
 
-                        // array of all groups to be pulled out from content list, in presentation order
+                        // array of all groups to be pulled out from content list,
+                        // in presentation order
                         $groups = option('sgkirby.commentions.grouped');
 
-                        $commentsonly = [];
-
-                        foreach ($comments as $comment) {
-
-                            // group only those types included in the $groups variable
-                            if (isset($groups[ $comment['type'] ])) {
-                                $reactions[ $groups[ $comment['type'] ] ][] = $comment;
-                            } else {
-                                $commentsonly[] = $comment;
+                        foreach ($groups as $type => $label) {
+                            $groupReactions = $commentions->filterBy('type', $type);
+                            if ($groupReactions->count() === 0) {
+                                // skip empty groups
+                                continue;
                             }
+
+                            $reactions->add(new Obj([
+                                'id' => $type,
+                                'label' => $label,
+                                'items' => $groupReactions,
+                            ]));
                         }
 
-                        // sort reactions by order given in $groups array
-                        if (isset($reactions)) {
-                            $reactions = array_merge(array_flip($groups), $reactions);
-                        }
-
-                        // replace the original comments array with that only containing reactions
-                        $comments = $commentsonly;
+                        // replace the original comments array with a filtered one, that
+                        // does only contain everything, that has been excluded from
+                        // the grouped view
+                        $comments = $commentions->filterBy('type', 'not in', array_keys($groups));
                     }
 
                     // return selected markup
@@ -90,6 +94,7 @@ class Frontend
                         'reactions' => $reactions,
                     ]);
                 }
+
                 break;
 
             default:

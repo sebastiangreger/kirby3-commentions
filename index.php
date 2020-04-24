@@ -11,23 +11,22 @@
  */
 namespace sgkirby\Commentions;
 
+use Kirby\Cms\App as Kirby;
+
 load([
-
+    'sgkirby\\Commentions\\Commention'  => 'classes/Commention.php',
     'sgkirby\\Commentions\\Commentions' => 'classes/Commentions.php',
-    'sgkirby\\Commentions\\Storage'     => 'classes/Storage.php',
-
-    'sgkirby\\Commentions\\Frontend'    => 'classes/Frontend.php',
-
-    'sgkirby\\Commentions\\Endpoint'    => 'classes/Endpoint.php',
     'sgkirby\\Commentions\\Cron'        => 'classes/Cron.php',
-
-    'sgkirby\\Commentions\\Migration'   => 'classes/Migration.php'
-
+    'sgkirby\\Commentions\\Endpoint'    => 'classes/Endpoint.php',
+    'sgkirby\\Commentions\\Frontend'    => 'classes/Frontend.php',
+    'sgkirby\\Commentions\\Migration'   => 'classes/Migration.php',
+    'sgkirby\\Commentions\\Storage'     => 'classes/Storage.php',
+    'sgkirby\\Commentions\\Structure'   => 'classes/Structure.php',
 ], __DIR__);
 
-require __DIR__ . DS . 'helpers.php';
+require_once __DIR__ . DS . 'helpers.php';
 
-\Kirby::plugin('sgkirby/commentions', [
+Kirby::plugin('sgkirby/commentions', [
 
     'options'       => [
 
@@ -84,19 +83,19 @@ require __DIR__ . DS . 'helpers.php';
 
     'pageMethods' => [
 
-        'commentions'           => function (string $status = 'approved', string $sort = 'asc', $language = null) {
-            return Commentions::retrieve($this, $status, $sort, $language);
+        'commentions' => function (string $status = 'approved', string $language = null) {
+            return Commentions::get($this, $status, $language);
         },
 
-        'addCommention'         => function (array $data) {
+        'addCommention' => function (array $data) {
             return Commentions::add($this, $data, 'commentions');
         },
 
-        'deleteCommention'      => function (string $uid) {
+        'deleteCommention' => function (string $uid) {
             return Commentions::update($this, $uid, 'delete');
         },
 
-        'updateCommention'      => function (string $uid, array $data) {
+        'updateCommention' => function (string $uid, array $data) {
             return Commentions::update($this, $uid, $data);
         },
 
@@ -104,20 +103,22 @@ require __DIR__ . DS . 'helpers.php';
 
     'pagesMethods' => [
 
-        'commentions'           => function ($status = 'approved', $sort = 'asc', $language = null) {
-            $return = [];
+        'commentions' => function (string $status = 'approved', string $language = null) {
+            $commentions = new Structure();
+
             foreach ($this as $page) {
-                $return = \Kirby\Toolkit\A::merge($return, Commentions::retrieve($page, $status, $sort, $language));
+                $commentions = $commentions->add($page->commentions($status, $language));
             }
-            return \Kirby\Toolkit\A::sort($return, 'timestamp', $sort);
+
+            return $commentions->sortBy('timestamp');
         },
 
     ],
 
     'translations' => [
 
-        'en'                    => require_once __DIR__ . '/languages/en.php',
-        'de'                    => require_once __DIR__ . '/languages/de.php',
+        'de' => require __DIR__ . '/languages/de.php',
+        'en' => require __DIR__ . '/languages/en.php',
 
     ],
 

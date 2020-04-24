@@ -146,30 +146,51 @@ class Cron
             // parse the Mf2 array to a comment array
             $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
 
+            // sometimes, the author name ends up in the url field
+            if (!empty($result['author']['url']) && !Str::isUrl($result['author']['url'])) {
+                if (empty($result['author']['name'])) {
+                    $result['author']['name'] = $result['author']['url'];
+                }
+                $result['author']['url'] = false;
+            }
+
             // php-comments does not do rel=author
-            if ($result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
+            if (array_key_exists('url', $result['author']) && $result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
                 $result['author']['url'] = $mf2['rels']['author'][0];
             }
 
             // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
-            // TODO: align with algorithm outlined in https://indieweb.org/authorship
             foreach ($mf2['items'] as $mf2item) {
                 if ($mf2item['type'][0] == 'h-card') {
-                    if ($result['author']['name'] == ''  && isset($mf2item['properties']['name'][0])) {
+                    $hcardfound = true;
+                    if (empty($result['author']['name'])  && !empty($mf2item['properties']['name'][0])) {
                         $result['author']['name'] = $mf2item['properties']['name'][0];
                     }
-                    if ($result['author']['photo'] == '' && isset($mf2item['properties']['photo'][0])) {
+                    if (empty($result['author']['photo']) && !empty($mf2item['properties']['photo'][0])) {
                         $result['author']['photo'] = $mf2item['properties']['photo'][0];
                     }
-                    if ($result['author']['url'] == ''  && isset($mf2item['properties']['url'][0])) {
+                    if (empty($result['author']['url']) && !empty($mf2item['properties']['url'][0])) {
                         $result['author']['url'] = $mf2item['properties']['url'][0];
                     }
                 }
             }
 
+            // if no h-card was found, try to use 'author' property of h-entry instead
+            if (!$hcardfound ?? false) {
+                foreach ($mf2['items'] as $mf2item) {
+                    if ($mf2item['type'][0] == 'h-entry') {
+                        if (empty($result['author']['name'])  && !empty($mf2item['properties']['author'][0])) {
+                            $result['author']['name'] = $mf2item['properties']['author'][0];
+                        }
+                    }
+                }
+            }
+
+            // TODO: potentially implement author discovery from rel-author or author-page URLs; https://indieweb.org/authorship-spec
+
             // do not keep author avatar URL unless activated in config option
             if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
-                unset($result['author']['photo']);
+                $result['author']['photo'] = false;
             }
 
             // timestamp the webmention
@@ -236,9 +257,9 @@ class Cron
             // create the commention data
             $finaldata = [
                 'status' => Commentions::defaultstatus($result['type']),
-                'name' => $result['author']['name'],
-                'website' => $result['author']['url'],
-                'avatar' => $result['author']['photo'],
+                'name' => $result['author']['name'] ?? false,
+                'website' => $result['author']['url'] ?? false,
+                'avatar' => $result['author']['photo'] ?? false,
                 'text' => $result['text'],
                 'timestamp' => date(date('Y-m-d H:i'), $result['timestamp']),
                 'source' => $source,

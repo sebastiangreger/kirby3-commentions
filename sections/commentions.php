@@ -61,21 +61,24 @@ return [
             // retrieve the show property
             switch ($this->show()) {
                 case 'all':
-                    $comments = site()->index()->commentions('all', $sort);
-                    break;
                 case 'pending':
-                    $comments = site()->index()->commentions('pending', $sort);
+                    $comments = site()->index()->commentions($this->show());
                     break;
                 default:
-                    $page = $this->model();
-                    $comments = $page->commentions('all', $sort);
+                    $comments = $this->model()->commentions('all');
                     break;
             }
+
+            if ($this->flip()) {
+                $comments = $comments->flip();
+            }
+
+            $comments = $comments->toArray();
 
             // transpose all comments into an array
             foreach ($comments as $data) {
                 $text = isset($data['text']) ? htmlspecialchars($data['text']) : '';
-                $name = isset($data['name']) ? htmlspecialchars($data['name']) : '';
+                $name = isset($data['name']) ? htmlspecialchars($data['name']) : t('commentions.name.anonymous');
                 $meta = $data['type'];
 
                 // avoid returning empty array entries when no commentions exist
