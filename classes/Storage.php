@@ -4,7 +4,6 @@ namespace sgkirby\Commentions;
 
 use Exception;
 use Kirby\Data\Data;
-use Kirby\Data\Yaml;
 use Kirby\Toolkit\F;
 
 class Storage

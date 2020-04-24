@@ -1,10 +1,21 @@
 <?php
 
+/**
+ * This is a modified version of https://github.com/indieweb/php-comments,
+ * that uses Kirby’s `Str::short()` instead of `ellipsize_to_word()` for
+ * truncating text.
+ *
+ * manually included for now, as we cannot load it using composer without
+ * maintaining a separate fork as far as I know.
+ */
+
 namespace IndieWeb\comments;
+
+use Kirby\Toolkit\Str;
 
 function truncateString($text, $length) {
   ob_start();
-  $short = \str::short($text, $length);
+  $short = Str::short($text, $length);
   ob_end_clean();
   return $short;
 }
@@ -262,7 +273,7 @@ function parse($mf, $refURL=false, $maxTextLength=150, $maxLines=2) {
     'type' => $type
   );
 
-  if($type == 'invite') 
+  if($type == 'invite')
     $result['invitee'] = $invitee;
 
   if($rsvp !== null) {

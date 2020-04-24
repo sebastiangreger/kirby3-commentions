@@ -16,6 +16,20 @@
         "kirby3-plugin"
     ],
     "require": {
-        "getkirby/composer-installer": "^1.1"
+        "getkirby/composer-installer": "^1.1",
+        "masterminds/html5": "^2.7",
+        "mf2/mf2": "^0.4.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "sgkirby\\Commentions\\": "classes/"
+        },
+        "files": [
+            "helpers.php",
+            "indieweb-comments.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true
     }
 }

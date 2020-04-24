@@ -2,12 +2,8 @@
 
 namespace sgkirby\Commentions;
 
-use Kirby\Cms\Content;
 use Kirby\Cms\Field;
-use Kirby\Cms\HasSiblings;
-use Kirby\Cms\Model;
 use Kirby\Cms\StructureObject;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Parsedown;
 
