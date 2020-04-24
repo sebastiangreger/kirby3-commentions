@@ -151,7 +151,7 @@ class Cron
                 if (empty($result['author']['name'])) {
                     $result['author']['name'] = $result['author']['url'];
                 }
-                unset($result['author']['url']);
+                $result['author']['url'] = false;
             }
 
             // php-comments does not do rel=author
@@ -190,7 +190,7 @@ class Cron
 
             // do not keep author avatar URL unless activated in config option
             if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
-                unset($result['author']['photo']);
+                $result['author']['photo'] = false;
             }
 
             // timestamp the webmention
@@ -257,9 +257,9 @@ class Cron
             // create the commention data
             $finaldata = [
                 'status' => Commentions::defaultstatus($result['type']),
-                'name' => $result['author']['name'] ?? null,
-                'website' => $result['author']['url'] ?? null,
-                'avatar' => $result['author']['photo'] ?? null,
+                'name' => $result['author']['name'] ?? false,
+                'website' => $result['author']['url'] ?? false,
+                'avatar' => $result['author']['photo'] ?? false,
                 'text' => $result['text'],
                 'timestamp' => date(date('Y-m-d H:i'), $result['timestamp']),
                 'source' => $source,
