@@ -175,7 +175,7 @@ class Commentions
             if ($update) {
                 unset($data['timestamp']);
             } else {
-                $data['timestamp'] = date(date('Y-m-d H:i'), time());
+                $data['timestamp'] = date('Y-m-d H:i');
             }
         }
 
