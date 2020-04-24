@@ -226,9 +226,9 @@ class Commentions
      *                      - 'unapproved' A comment that has been reviewed and manually unapproved by the site owner
      *                      - 'pending' A comment not yet reviewed by the site owner
      * @param string $language Two-letter language code, if only comments for one language are requested
-     * @return Structure
+     * @return Structure|Commention
      */
-    public static function get(Page $page, string $query = 'approved', string $language = null): Structure
+    public static function get(Page $page, string $query = 'approved', string $language = null)
     {
         if (!in_array($query, ['approved', 'unapproved', 'pending']) && strlen($query) === 10) {
             // Retrieve a single commention by its UID
