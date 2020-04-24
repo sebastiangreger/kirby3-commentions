@@ -157,6 +157,7 @@ class Cron
             }
 
             // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
+            $hcardfound = false;
             foreach ($mf2['items'] as $mf2item) {
                 if ($mf2item['type'][0] == 'h-card') {
                     $hcardfound = true;
@@ -173,7 +174,7 @@ class Cron
             }
 
             // if no h-card was found, try to use 'author' property of h-entry instead
-            if (!$hcardfound ?? false) {
+            if (!$hcardfound) {
                 foreach ($mf2['items'] as $mf2item) {
                     if ($mf2item['type'][0] == 'h-entry') {
                         if (empty($result['author']['name'])  && !empty($mf2item['properties']['author'][0])) {
@@ -264,8 +265,18 @@ class Cron
                 'language' => Commentions::determineLanguage($page, $path),
             ];
 
-            // save webmention to the according txt file
-            return Commentions::add($page, $finaldata);
+            if ($page->commentions('all')->filterBy('source', $source)->count() != 0) {
+                // if webmention with this source url exists, this is an update
+                $updateid = $page->commentions('all')->filterBy('source', $source)->first()->uid()->toString();
+                // keep existing timestamp and status
+                unset($finaldata['timestamp']);
+                unset($finaldata['status']);
+                // update the existing webmention
+                return Commentions::update($page, $updateid, $finaldata);
+            } else {
+                // add as new webmention
+                return Commentions::add($page, $finaldata);
+            }
         } else {
             return 'Could not resolve target URL to Kirby page';
         }
