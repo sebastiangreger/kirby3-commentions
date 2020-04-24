@@ -142,17 +142,11 @@ class Commention extends StructureObject
             return $text;
         }
 
-        // $html = $text->markdown()->toString();
-        // $html = strip_tags($html, '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>');
-        // User Markdown component directly to avoid usage of old
-        $parser = new Parsedown();
-        // $parser->setSafeMode(true);
-        $parser->setBreaksEnabled(true);
-        $html = smartypants($parser->text($text));
+        $text = Sanitizer::markdown($text);
 
         // Wrap computed value in Field object, to make chaining for
         // enabling the chain-syntax in the frontend.
-        return new Field($this, 'text', $html);
+        return new Field($this, 'text', $text);
     }
 
     /**
