@@ -4,18 +4,10 @@
 
 namespace Composer\Autoload;
 
-<<<<<<< HEAD
-class ComposerStaticInit0f164f771df4ec06ebb6ea06aa2a11d9
+class ComposerStaticInitae9edd1cc449a9a6eb2b396d9459106f
 {
     public static $files = array (
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
-    );
-
-    public static $prefixLengthsPsr4 = array (
-=======
-class ComposerStaticInite8db02049a7aec9a1869d54a1708a126
-{
-    public static $files = array (
         '757772e28a0943a9afe83def8db95bdf' => __DIR__ . '/..' . '/mf2/mf2/Mf2/Parser.php',
         '4335df9711d861f3f308ec11de42cdef' => __DIR__ . '/../..' . '/helpers.php',
         '405951a153918467dab03f750e5ada40' => __DIR__ . '/../..' . '/indieweb-comments.php',
@@ -30,7 +22,6 @@ class ComposerStaticInite8db02049a7aec9a1869d54a1708a126
         array (
             'Masterminds\\' => 12,
         ),
->>>>>>> dev
         'K' => 
         array (
             'Kirby\\' => 6,
@@ -38,7 +29,14 @@ class ComposerStaticInite8db02049a7aec9a1869d54a1708a126
     );
 
     public static $prefixDirsPsr4 = array (
-<<<<<<< HEAD
+        'sgkirby\\Commentions\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/classes',
+        ),
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
         'Kirby\\' => 
         array (
             0 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
@@ -52,24 +50,10 @@ class ComposerStaticInite8db02049a7aec9a1869d54a1708a126
             array (
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
-=======
-        'sgkirby\\Commentions\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/classes',
-        ),
-        'Masterminds\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/masterminds/html5/src',
-        ),
-        'Kirby\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
->>>>>>> dev
         ),
     );
 
     public static $classMap = array (
-<<<<<<< HEAD
         'HTMLPurifier' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.php',
         'HTMLPurifier_Arborize' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier/Arborize.php',
         'HTMLPurifier_AttrCollections' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier/AttrCollections.php',
@@ -304,14 +288,10 @@ class ComposerStaticInite8db02049a7aec9a1869d54a1708a126
         'HTMLPurifier_VarParser_Flexible' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier/VarParser/Flexible.php',
         'HTMLPurifier_VarParser_Native' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier/VarParser/Native.php',
         'HTMLPurifier_Zipper' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier/Zipper.php',
-=======
->>>>>>> dev
         'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
         'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
         'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
-<<<<<<< HEAD
-=======
         'Masterminds\\HTML5' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5.php',
         'Masterminds\\HTML5\\Elements' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Elements.php',
         'Masterminds\\HTML5\\Entities' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Entities.php',
@@ -338,24 +318,18 @@ class ComposerStaticInite8db02049a7aec9a1869d54a1708a126
         'sgkirby\\Commentions\\Endpoint' => __DIR__ . '/../..' . '/classes/Endpoint.php',
         'sgkirby\\Commentions\\Frontend' => __DIR__ . '/../..' . '/classes/Frontend.php',
         'sgkirby\\Commentions\\Migration' => __DIR__ . '/../..' . '/classes/Migration.php',
+        'sgkirby\\Commentions\\Sanitizer' => __DIR__ . '/../..' . '/classes/Sanitizer.php',
         'sgkirby\\Commentions\\Storage' => __DIR__ . '/../..' . '/classes/Storage.php',
         'sgkirby\\Commentions\\Structure' => __DIR__ . '/../..' . '/classes/Structure.php',
->>>>>>> dev
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-<<<<<<< HEAD
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0f164f771df4ec06ebb6ea06aa2a11d9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0f164f771df4ec06ebb6ea06aa2a11d9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0f164f771df4ec06ebb6ea06aa2a11d9::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0f164f771df4ec06ebb6ea06aa2a11d9::$classMap;
-=======
-            $loader->prefixLengthsPsr4 = ComposerStaticInite8db02049a7aec9a1869d54a1708a126::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite8db02049a7aec9a1869d54a1708a126::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite8db02049a7aec9a1869d54a1708a126::$classMap;
->>>>>>> dev
+            $loader->prefixLengthsPsr4 = ComposerStaticInitae9edd1cc449a9a6eb2b396d9459106f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitae9edd1cc449a9a6eb2b396d9459106f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitae9edd1cc449a9a6eb2b396d9459106f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitae9edd1cc449a9a6eb2b396d9459106f::$classMap;
 
         }, null, ClassLoader::class);
     }

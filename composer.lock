@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "bf91e31a244a3464b19d4bbd858c9e9b",
+    "content-hash": "b024c34517a5b830989aabbffeb374c8",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -54,46 +53,6 @@
             ],
             "time": "2019-10-28T03:44:26+00:00"
         },
-        {
-            "name": "getkirby/composer-installer",
-            "version": "1.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/getkirby/composer-installer.git",
-                "reference": "2d6b8f5601a31caeeea45623e1643fbb437eb94e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/composer-installer/zipball/2d6b8f5601a31caeeea45623e1643fbb437eb94e",
-                "reference": "2d6b8f5601a31caeeea45623e1643fbb437eb94e",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0"
-            },
-            "require-dev": {
-                "composer/composer": "^1.8",
-                "phpunit/phpunit": "^7.0"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Kirby\\ComposerInstaller\\Plugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kirby\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Kirby's custom Composer installer for the Kirby CMS and for Kirby plugins",
-            "homepage": "https://getkirby.com",
-            "time": "2019-02-11T20:27:36+00:00"
-=======
-    "content-hash": "a8ad7688234b042971e436677fcdec81",
-    "packages": [
         {
             "name": "getkirby/composer-installer",
             "version": "1.1.4",
@@ -254,7 +213,6 @@
                 "semantic"
             ],
             "time": "2018-08-24T14:47:04+00:00"
->>>>>>> dev
         }
     ],
     "packages-dev": [],
