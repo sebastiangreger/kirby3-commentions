@@ -127,6 +127,10 @@ class Sanitizer
             $config->set('Output.Newline', "\n"); // Use unix line breaks only 🤘
             $config->set('Cache.SerializerPath', $cacheRoot);
 
+            // Remove empty paragraphs
+            $config->set('AutoFormat.RemoveEmpty.RemoveNbsp', true);
+            $config->set('AutoFormat.RemoveEmpty', true);
+
             // Add HTMl5-only elements to the HTML definition, otherwise
             // the purifier would refuse to accept them.
             $def = $config->getHTMLDefinition(true);
