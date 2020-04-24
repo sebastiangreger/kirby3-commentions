@@ -29,7 +29,7 @@ Kirby::plugin('sgkirby/commentions', [
         'avatarurls'          => false,
         'hideforms'           => false,
         'expand'              => false,
-        'allowlinks'          => false,
+        'allowlinks'          => true,
         'autolinks'           => true,
         'formfields'          => ['name'],
         'grouped'             => [
