@@ -63,14 +63,17 @@ class Cron
         // an array keeps track of what domains have been pinged for throttling
         $pingeddomains = [];
 
+        // an array keeps track of pinged source-target pairs to skip duplicate requests in queue
+        $processedpairs = [];
+
         // loop through all pages in the index
         foreach (site()->index() as $page) {
 
             // loop through every webmention request in the queue of every page
             foreach (Storage::read($page, 'webmentionqueue') as $queueitem) {
 
-                // skip requests already marked as failed
-                if (! isset($queueitem['failed'])) {
+                // skip requests already marked as failed or source-target pairs pinged during this cron run
+                if (!isset($queueitem['failed']) && !in_array(sha1($source . $target), $processedpairs)) {
 
                     // create/update the lockfile, as this is where actual DoS harm can be done
                     F::write($lockfile, '');
@@ -110,6 +113,9 @@ class Cron
                     } else {
                         throw new Exception('Problem processing queue item.');
                     }
+
+                    // add the sha1 hash of this source-target pair to eliminate duplicates during this run
+                    $processedpairs[] = sha1($source . $target);
                 }
             }
         }
