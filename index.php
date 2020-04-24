@@ -13,16 +13,7 @@ namespace sgkirby\Commentions;
 
 use Kirby\Cms\App as Kirby;
 
-load([
-    'sgkirby\\Commentions\\Commention'  => 'classes/Commention.php',
-    'sgkirby\\Commentions\\Commentions' => 'classes/Commentions.php',
-    'sgkirby\\Commentions\\Cron'        => 'classes/Cron.php',
-    'sgkirby\\Commentions\\Endpoint'    => 'classes/Endpoint.php',
-    'sgkirby\\Commentions\\Frontend'    => 'classes/Frontend.php',
-    'sgkirby\\Commentions\\Migration'   => 'classes/Migration.php',
-    'sgkirby\\Commentions\\Storage'     => 'classes/Storage.php',
-    'sgkirby\\Commentions\\Structure'   => 'classes/Structure.php',
-], __DIR__);
+@include_once __DIR__ . '/vendor/autoload.php';
 
 require_once __DIR__ . DS . 'helpers.php';
 

@@ -136,8 +136,6 @@ class Cron
         $sourcecontent = F::read($source);
 
         // parse for microformats
-        require_once dirname(__DIR__) . DS . 'vendor' . DS . 'Mf2/Parser.php';
-        require_once dirname(__DIR__) . DS . 'vendor' . DS . 'IndieWeb/comments.php';
         $mf2   = \Mf2\parse($sourcecontent, $source);
 
         // process microformat data
