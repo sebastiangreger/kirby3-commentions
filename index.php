@@ -29,6 +29,8 @@ Kirby::plugin('sgkirby/commentions', [
         'avatarurls'          => false,
         'hideforms'           => false,
         'expand'              => false,
+        'allowlinks'          => false,
+        'autolinks'           => true,
         'formfields'          => ['name'],
         'grouped'             => [
             'read'            => 'Read by',
