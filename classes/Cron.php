@@ -150,10 +150,9 @@ class Cron
             return 'Could not resolve target URL to Kirby page';
         }
 
-        // retrieve the source
-        $source = $request['source'];
-        // TODO: follow a limited amount of redirects
-        $remote = Remote::get($source);
+        // retrieve the source and use the final URL (after possible redirects) for processing
+        $remote = Remote::get($request['source']);
+        $source = $remote->info()['url'];
 
         // HTTP 410 = deletion
         if ($remote->info()['http_code'] === 410 && $page->commentions('all')->filterBy('source', $source)->count() != 0) {
