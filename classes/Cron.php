@@ -136,8 +136,9 @@ class Cron
      */
     public static function parseWebmention($request)
     {
-        // find the Kirby page the target URL refers to
         $target = $request['target'];
+
+        // find the Kirby page the target URL refers to
         $path = Url::path($target);
         if ($path == '') {
             // empty path means home page
@@ -146,7 +147,7 @@ class Cron
             // run the path through the router to determine real page
             $page = page(kirby()->call(trim($path, '/')));
         }
-        if (empty($page) || $page->isErrorPage()) {
+        if (empty($page)) {
             return 'Could not resolve target URL to Kirby page';
         }
 
