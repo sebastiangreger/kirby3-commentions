@@ -77,7 +77,7 @@ class Commention extends StructureObject
         $author = $this->nameFormatted($anonymous);
 
         if ($this->website()->isNotEmpty()) {
-            $author = '<a href="' . $this->website() . '" rel="noopener">' . $author . '</a>';
+            $author = '<a href="' . $this->website() . '" rel="noopener noreferrer nofollow">' . $author . '</a>';
         }
 
         // Format domain of source URL
@@ -118,7 +118,7 @@ class Commention extends StructureObject
 
         $replace = [
             'author' => $author,
-            'link' => $this->source()->isNotEmpty() ? '<a href="' . $this->source() . '" rel="noopener">' . $domain . '</a>' : '',
+            'link' => $this->source()->isNotEmpty() ? '<a href="' . $this->source() . '" rel="noopener noreferrer nofollow">' . $domain . '</a>' : '',
             'source' => $this->source()->toString(),
             'domain' => $domain,
         ];
@@ -139,7 +139,8 @@ class Commention extends StructureObject
         $text = $this->text();
 
         if ($text->isEmpty() || in_array($this->type()->toString(), ['reply', 'comment']) === false) {
-            return $text;
+            // Always return empty field
+            return new Field($this, 'text', '');
         }
 
         $text = Sanitizer::markdown($text);
