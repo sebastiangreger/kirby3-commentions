@@ -47,7 +47,7 @@
       <div class="commentions-form-message">
         <label for="message"><?= t('commentions.snippet.form.comment') ?> <abbr title="required">*</abbr></label>
         <textarea id="message" name="message" rows="8" required></textarea>
-        <details class="commentions-form-help" open>
+        <details class="commentions-form-help">
           <summary><?= t('commentions.snippet.form.help.title') ?></summary>
           <?php snippet('commentions-form-help') ?>
         </details>
