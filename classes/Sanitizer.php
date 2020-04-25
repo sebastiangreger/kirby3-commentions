@@ -39,29 +39,21 @@ class Sanitizer
             '*[lang|dir]',
             'abbr[title]',
             'b',
-            'blockquote', // [cite]
+            'blockquote',
             'br',
             'cite',
             'code[class]',
-            'del', // [cite|datetime]
-            'kbd',
-            'mark',
+            'del',
             'em',
             'i',
-            'ins',// [cite|datetime]
-            'li', // [value]
-            'ol', // [reversed|start|type] attributes disabled, as they could easily collide with page styles
+            'ins',
+            'kbd',
+            'li',
+            'mark',
+            'ol',
             'p',
             'pre[class]',
-            'q', // [cite]
-            // 'ruby',
-            // 'rb',
-            // 'rp',
-            // 'rt',
-            // 'rtc',
-            // 'u',
-            // 's',
-            // 'strike',
+            'q',
             'strong',
             'sub',
             'sup',
@@ -91,12 +83,14 @@ class Sanitizer
         }
 
         if (static::$purifier === null) {
+            $config = HTMLPurifier_Config::createDefault();
+
             // Create a cache directory, that HTMLPurifier uses
             // for storing serizalized definitions.
             $cacheRoot = kirby()->root('cache') . '/commentions/htmlpurifier';
             Dir::make($cacheRoot);
 
-            $config = HTMLPurifier_Config::createDefault();
+            $config->set('Cache.SerializerPath', $cacheRoot);
 
             // Set default text direction
             if ($direction !== null) {
@@ -126,8 +120,16 @@ class Sanitizer
             $config->set('URI.Host', parse_url(url(), PHP_URL_HOST));
             $config->set('URI.DisableExternalResources', true);
             $config->set('URI.DisableResources', true);
+            $config->set('URI.AllowedSchemes', [
+                'http' => true,
+                'https' => true,
+                'mailto' => true,
+                'xmpp' => true,
+                'irc' => true,
+                'ircs' => true,
+            ]);
+
             $config->set('Output.Newline', "\n"); // Use unix line breaks only 🤘
-            $config->set('Cache.SerializerPath', $cacheRoot);
 
             // Remove empty paragraphs
             $config->set('AutoFormat.RemoveEmpty.RemoveNbsp', true);
