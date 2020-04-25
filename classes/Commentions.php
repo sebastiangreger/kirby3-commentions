@@ -107,7 +107,9 @@ class Commentions
      *
      * @param \Kirby\Cms\Page $page The parent page object
      * @param string $uid The UID of the comment to be updated
-     * @param array $data The fields to be updated in the comment data
+     * @param array|string $data Depending on the action to be carried out:
+     *                           - Array: The fields of the entry that are to be replaced
+     *                           - String: A predefined action (currently only valid: 'delete', to delete the complete entry)
      * @return array $data The data that has been sent to the Storage class
      */
     public static function update($page, $uid, $data)
