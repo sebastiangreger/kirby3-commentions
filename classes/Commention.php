@@ -141,6 +141,12 @@ class Commention extends StructureObject
             return new Field($this, 'text', '');
         }
 
+        if ($this->text_sanitized()->isNotEmpty()) {
+            return $this->text_sanitized();
+        } else {
+            return new Field($this, 'text', 'NOPE');
+        }
+
         $text = Sanitizer::markdown($text);
 
         // Wrap computed value in Field object, to make chaining for

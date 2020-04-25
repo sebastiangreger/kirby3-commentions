@@ -46,11 +46,30 @@ class Storage
     {
         // read the data and return decoded yaml
         $file = static::file($page, $filename);
-        if (F::exists($file)) {
+
+        if (F::exists($file) === true) {
             return Data::read($file);
-        } else {
-            return [];
         }
+
+        return [];
+    }
+
+    /**
+     * Get the modified date of the plugin data file
+     *
+     * @param \Kirby\Cms\Page $page
+     * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
+     * @return int|false Modified date as UNIX timestamp, if the data file exists or boolean `false`, if it does not
+     */
+    public static function modified($page, string $filename)
+    {
+        $file = static::file($page, $filename);
+
+        if (F::exists($file) === true) {
+            return F::modified($file);
+        }
+
+        return false;
     }
 
     /**

@@ -19,6 +19,10 @@ use Kirby\Cms\App as Kirby;
 Kirby::plugin('sgkirby/commentions', [
 
     'options' => [
+        'cache'               => [
+            'sanitizer' => true,
+        ],
+
         'secret'              => '',
         'keepfailed'          => true,
         'defaultstatus'       => 'pending',
