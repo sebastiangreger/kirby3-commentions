@@ -73,9 +73,9 @@ class Cron
             foreach (Storage::read($page, 'webmentionqueue') as $queueitem) {
 
                 // skip requests already marked as failed or source-target pairs pinged during this cron run
-                if (!isset($queueitem['failed']) && !in_array($source . $target, $processedpairs)) {
+                if (!isset($queueitem['failed']) && !in_array($queueitem['source'] . $queueitem['target'], $processedpairs)) {
 
-                    // create/update the lockfile, as this is where actual DoS harm can be done
+                    // create/update the lockfile
                     F::write($lockfile, '');
 
                     // ensure that the same domain is pinged max. every n seconds
@@ -115,7 +115,7 @@ class Cron
                     }
 
                     // add the source-target pair to eliminate duplicates during this run
-                    $processedpairs[] = $source . $target;
+                    $processedpairs[] = $queueitem['source'] . $queueitem['target'];
                 }
             }
         }
