@@ -20,7 +20,7 @@ Kirby::plugin('sgkirby/commentions', [
 
     'options' => [
         'cache'               => [
-            'sanitizer' => true,
+            'sanitized-text' => true,
             'purifier-definitions' => true,
         ],
 

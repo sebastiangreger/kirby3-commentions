@@ -239,14 +239,13 @@ class Commentions
         $dataModified = Storage::modified($page, 'commentions');
         $pageid       = $page->id();
 
-        $cache         = static::getSanitizerCache();
-        $cacheKey      = "{$pageid}/text_sanitized";
-        $cacheModified = $cache->modified($cacheKey);
+        $cache         = static::getSanitizedTextCache();
+        $cacheModified = $cache->modified($pageid);
 
         if ($cacheModified !== false && $cacheModified > $dataModified) {
             // Cache exists and is newer than commentions data file,
             // use the cache as base
-            $cachedText = $cache->get($cacheKey);
+            $cachedText = $cache->get($pageid);
         } else {
             // Drop cache if outdated
             $cachedText = [];
@@ -265,7 +264,7 @@ class Commentions
                 $item['text_sanitized'] = $cachedText[$uid];
             } else if (array_key_exists('text', $item) === true) {
                 // Item has a text field, sanitize it
-                $item['text_sanitized'] = $sanitizedText[$uid] = Sanitizer::markdown($item['text']);
+                $item['text_sanitized'] = $sanitizedText[$uid] = Purifier::purify($item['text']);
             }
 
             return $item;
@@ -275,7 +274,7 @@ class Commentions
             // If at least one commention has been sanitized,
             // update the cache value if needed.
             $cachedText = array_merge($cachedText, $sanitizedText);
-            $cache->set($cacheKey, $cachedText, 0);
+            $cache->set($pageid, $cachedText, 0);
         }
 
         // Wrap in a Structure object to make manipulations, such as
@@ -388,14 +387,14 @@ class Commentions
     }
 
     /**
-     * Gets the cache instance for the HTML sanitizer.
+     * Gets the cache instance for sanitized comment texts
      *
      * @return \Kirby\Cache\Cache The cache instance.
      */
-    protected static function getSanitizerCache(): Cache
+    protected static function getSanitizedTextCache(): Cache
     {
         if (static::$cacheInstance === null) {
-            static::$cacheInstance = kirby()->cache('sgkirby.commentions.sanitizer');
+            static::$cacheInstance = kirby()->cache('sgkirby.commentions.sanitized-text');
         }
 
         return static::$cacheInstance;

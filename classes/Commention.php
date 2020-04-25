@@ -128,30 +128,36 @@ class Commention extends StructureObject
 
     /**
      * Returns the a tidy version of the commention’s text, with malicious
-     * HTML code stripped-out.
+     * HTML code stripped-out. If you rather want to access the raw version,
+     * of the user input, use `$commention->content()->get('text')` instead.
      *
      * @return Field
      */
-    public function safeText(): Field
+    public function text(): Field
     {
-        $text = $this->text();
+        $text = $this->content()->get('text');
 
-        if ($text->isEmpty() || in_array($this->type()->toString(), ['reply', 'comment']) === false) {
-            // Always return empty field
+        if ($text->isEmpty() === true) {
+            // Return text field if empty, hence empty fields cannot
+            // contain malicious HTML.
+            return $text;
+        }
+
+        if (in_array($this->type()->toString(), ['reply', 'comment']) === false) {
+            // Always return empty field if not a reply or comment.
             return new Field($this, 'text', '');
         }
 
         if ($this->text_sanitized()->isNotEmpty()) {
+            // Sanitized text present, return that field instead
+            // or the unsafe raw text field.
             return $this->text_sanitized();
-        } else {
-            return new Field($this, 'text', 'NOPE');
         }
 
-        $text = Sanitizer::markdown($text);
-
-        // Wrap computed value in Field object, to make chaining for
-        // enabling the chain-syntax in the frontend.
-        return new Field($this, 'text', $text);
+        // If somehow the cache failed to load, which should never
+        // happen by default, purify on-the fly to prevent unfiltered
+        // HTML from ever appearing in the comments list.
+        return new Field($this, 'text', Purifier::purify($text));
     }
 
     /**

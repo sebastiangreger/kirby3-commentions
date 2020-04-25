@@ -11,19 +11,19 @@ use HTMLPurifier_TagTransform;
 use Kirby\Cms\Dir;
 use sgkirby\Commentions\Purifier\KirbyCache;
 
-class Sanitizer
+class Purifier
 {
     /**
      * Cached instance of HTML Purifier instance used for processing
      *
-     * @var HTMLPurifier
+     * @var \HTMLPurifier
      */
     protected static $purifier;
 
     /**
      * Cached instance of the Parsedown Markdown parser
      *
-     * @var Parsedown
+     * @var \Parsedown
      */
     protected static $parsedown;
 
@@ -31,10 +31,10 @@ class Sanitizer
      * Generates the config string for HTML Purifiers list of allowed
      * elements, based on the plugin configutation
      *
-     * @return string The configuration string.
+     * @return string The configuration string
      */
 
-    protected static function getPurifierAllowedElements(): string
+    protected static function getAllowedElements(): string
     {
         $allowed = [
             '*[lang|dir]',
@@ -74,7 +74,7 @@ class Sanitizer
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
      * @return string The cleaned-up/"purified" text.
      */
-    public static function markdown(string $text, ?bool $smartypants = null, ?string $direction = null): ?string
+    public static function purify(string $text, ?bool $smartypants = null, ?string $direction = null): ?string
     {
         if (static::$parsedown === null) {
             // Using the raw Parsedown library directly instead of
@@ -110,7 +110,7 @@ class Sanitizer
             }
 
             $config->set('Attr.AllowedRel', ['noopener', 'noreferrer', 'nofollow']);
-            $config->set('HTML.Allowed', static::getPurifierAllowedElements());
+            $config->set('HTML.Allowed', static::getAllowedElements());
 
             if (option('sgkirby.commentions.allowlinks') === true) {
                 // Enable link processing only, if enabled in site config

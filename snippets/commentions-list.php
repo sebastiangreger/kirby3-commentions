@@ -29,9 +29,9 @@
             <?= $comment->dateFormatted() ?>
           </p>
 
-          <?php if ($comment->safeText()->isNotEmpty()): ?>
+          <?php if ($comment->text()->isNotEmpty()): ?>
             <div class="commentions-list-message">
-              <?= $comment->safeText() ?>
+              <?= $comment->text() ?>
             </div>
           <?php endif ?>
           </li>
