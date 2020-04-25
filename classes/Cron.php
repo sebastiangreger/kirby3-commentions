@@ -3,6 +3,7 @@
 namespace sgkirby\Commentions;
 
 use Exception;
+use Kirby\Http\Remote;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Kirby\Toolkit\F;
@@ -135,137 +136,160 @@ class Cron
      */
     public static function parseWebmention($request)
     {
-        $source = $request['source'];
+        // find the Kirby page the target URL refers to
         $target = $request['target'];
+        $path = Url::path($target);
+        if ($path == '') {
+            // empty path means home page
+            $page = page('home');
+        } else {
+            // run the path through the router to determine real page
+            $page = page(kirby()->call(trim($path, '/')));
+        }
+        if (empty($page) || $page->isErrorPage()) {
+            return 'Could not resolve target URL to Kirby page';
+        }
 
-        // retrieve the source HTML
-        $sourcecontent = F::read($source);
+        // retrieve the source
+        $source = $request['source'];
+        // TODO: follow a limited amount of redirects
+        $remote = Remote::get($source);
 
-        // parse for microformats
-        $mf2   = \Mf2\parse($sourcecontent, $source);
+        // HTTP 410 = deletion
+        if ($remote->info()['http_code'] === 410 && $page->commentions('all')->filterBy('source', $source)->count() != 0) {
+            $updateid = $page->commentions('all')->filterBy('source', $source)->first()->uid()->toString();
+            return Commentions::update($page, $updateid, 'delete');
+        }
 
-        // process microformat data
-        if (isset($mf2['items'][0])) {
-            // parse the Mf2 array to a comment array
-            $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
+        // HTTP 200 = valid source
+        elseif ($remote->info()['http_code'] === 200) {
+            $sourcecontent = $remote->content();
+            if (empty($sourcecontent)) {
+                return 'Source content empty.';
+            }
 
-            // sometimes, the author name ends up in the url field
-            if (!empty($result['author']['url']) && !Str::isUrl($result['author']['url'])) {
-                if (empty($result['author']['name'])) {
-                    $result['author']['name'] = $result['author']['url'];
+            // parse for microformats
+            $mf2 = \Mf2\parse($sourcecontent, $source);
+
+            // process microformat data
+            if (isset($mf2['items'][0])) {
+                // parse the Mf2 array to a comment array
+                $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
+
+                // sometimes, the author name ends up in the url field
+                if (!empty($result['author']['url']) && !Str::isUrl($result['author']['url'])) {
+                    if (empty($result['author']['name'])) {
+                        $result['author']['name'] = $result['author']['url'];
+                    }
+                    $result['author']['url'] = false;
                 }
-                $result['author']['url'] = false;
-            }
 
-            // php-comments does not do rel=author
-            if (array_key_exists('url', $result['author']) && $result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
-                $result['author']['url'] = $mf2['rels']['author'][0];
-            }
-
-            // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
-            $hcardfound = false;
-            foreach ($mf2['items'] as $mf2item) {
-                if ($mf2item['type'][0] == 'h-card') {
-                    $hcardfound = true;
-                    if (empty($result['author']['name'])  && !empty($mf2item['properties']['name'][0])) {
-                        $result['author']['name'] = $mf2item['properties']['name'][0];
-                    }
-                    if (empty($result['author']['photo']) && !empty($mf2item['properties']['photo'][0])) {
-                        $result['author']['photo'] = $mf2item['properties']['photo'][0];
-                    }
-                    if (empty($result['author']['url']) && !empty($mf2item['properties']['url'][0])) {
-                        $result['author']['url'] = $mf2item['properties']['url'][0];
-                    }
+                // php-comments does not do rel=author
+                if (array_key_exists('url', $result['author']) && $result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
+                    $result['author']['url'] = $mf2['rels']['author'][0];
                 }
-            }
 
-            // if no h-card was found, try to use 'author' property of h-entry instead
-            if (!$hcardfound) {
+                // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
+                $hcardfound = false;
                 foreach ($mf2['items'] as $mf2item) {
-                    if ($mf2item['type'][0] == 'h-entry') {
-                        if (empty($result['author']['name'])  && !empty($mf2item['properties']['author'][0])) {
-                            $result['author']['name'] = $mf2item['properties']['author'][0];
+                    if ($mf2item['type'][0] == 'h-card') {
+                        $hcardfound = true;
+                        if (empty($result['author']['name'])  && !empty($mf2item['properties']['name'][0])) {
+                            $result['author']['name'] = $mf2item['properties']['name'][0];
+                        }
+                        if (empty($result['author']['photo']) && !empty($mf2item['properties']['photo'][0])) {
+                            $result['author']['photo'] = $mf2item['properties']['photo'][0];
+                        }
+                        if (empty($result['author']['url']) && !empty($mf2item['properties']['url'][0])) {
+                            $result['author']['url'] = $mf2item['properties']['url'][0];
                         }
                     }
                 }
-            }
 
-            // TODO: potentially implement author discovery from rel-author or author-page URLs; https://indieweb.org/authorship-spec
-
-            // do not keep author avatar URL unless activated in config option
-            if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
-                $result['author']['photo'] = false;
-            }
-
-            // timestamp the webmention
-            if (!empty($result['published'])) {
-                // use date of source, if available
-                if (is_numeric($result['published'])) {
-                    $result['timestamp'] = $result['published'];
-                } else {
-                    $result['timestamp'] = strtotime($result['published']);
-                }
-            } else {
-                // otherwise use date the request received
-                $result['timestamp'] = $request['timestamp'];
-            }
-        }
-
-        // neither microformats nor backlink = no processing possible
-        elseif (! Str::contains($sourcecontent, $target)) {
-            return 'Could not verify link to target.';
-        }
-
-        // case: no microformats, but links back to target URL
-        else {
-            $result['timestamp'] = time();
-        }
-
-        // find the Kirby page the target URL refers to
-        $path = Url::path($target);
-        if ($path == '') {
-            $page = page('home');
-        } else {
-            $page = page(kirby()->call(trim($path, '/')));
-        }
-
-        if (!empty($page) && !$page->isErrorPage()) {
-            // if there is no link to this site in the source...
-            if (! Str::contains($sourcecontent, $target)) {
-                $found = false;
-
-                if (isset($mf2['items'][0])) {
-                    // ...maybe they instead linked to a syndicated copy?
-                    if ($page->syndication()->isNotEmpty()) {
-                        foreach ($page->syndication()->split() as $syndication) {
-                            if (Str::contains($sourcecontent, $syndication)) {
-                                $result = \IndieWeb\comments\parse($data['items'][0], $syndication);
-                                $found = true;
-                                break;
+                // if no h-card was found, try to use 'author' property of h-entry instead
+                if (!$hcardfound) {
+                    foreach ($mf2['items'] as $mf2item) {
+                        if ($mf2item['type'][0] == 'h-entry') {
+                            if (empty($result['author']['name'])  && !empty($mf2item['properties']['author'][0])) {
+                                $result['author']['name'] = $mf2item['properties']['author'][0];
                             }
                         }
                     }
                 }
 
-                // if no backlink can be found, just give up
-                if (!$found) {
-                    return 'Could not verify link to target.';
+                // TODO: potentially implement author discovery from rel-author or author-page URLs; https://indieweb.org/authorship-spec
+
+                // do not keep author avatar URL unless activated in config option
+                if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
+                    $result['author']['photo'] = false;
+                }
+
+                // timestamp the webmention
+                if (!empty($result['published'])) {
+                    // use date of source, if available
+                    if (is_numeric($result['published'])) {
+                        $result['timestamp'] = $result['published'];
+                    } else {
+                        $result['timestamp'] = strtotime($result['published']);
+                    }
+                } else {
+                    // otherwise use date the request received
+                    $result['timestamp'] = $request['timestamp'];
+                }
+
+                // if there is no apparent link to this site in the source...
+                if (Str::contains($sourcecontent, $target)) {
+                    $linkfound = true;
+                } else {
+                    $linkfound = false;
+
+                    if (isset($mf2['items'][0])) {
+                        // ...maybe they instead linked to a syndicated copy?
+                        if ($page->syndication()->isNotEmpty()) {
+                            foreach ($page->syndication()->split() as $syndication) {
+                                if (Str::contains($sourcecontent, $syndication)) {
+                                    $result = \IndieWeb\comments\parse($data['items'][0], $syndication);
+                                    $linkfound = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // case: no microformats, but links back to target URL
+            elseif (Str::contains($sourcecontent, $target)) {
+                $result['timestamp'] = time();
+                $linkfound = true;
+            }
+
+            // neither microformats nor backlink, but could still be a deletion
+            else {
+                $linkfound = false;
+            }
+
+            // if source does not contain link to target, it's either deletion or invalid request
+            if (!$linkfound) {
+                if ($page->commentions('all')->filterBy('source', $source)->count() != 0) {
+                    $updateid = $page->commentions('all')->filterBy('source', $source)->first()->uid()->toString();
+                    return Commentions::update($page, $updateid, 'delete');
+                } else {
+                    return 'Source does not contain link to target.';
                 }
             }
 
             // set comment type, if not given or deprecated 'mention' given
-            if (!isset($result['type']) || $result['type'] == '' || $result['type'] == 'mention') {
+            if (empty($result['type']) || $result['type'] == 'mention') {
                 $result['type'] = 'webmention';
             }
 
             // create the commention data
             $finaldata = [
-                'status' => Commentions::defaultstatus($result['type']),
                 'name' => $result['author']['name'] ?? false,
                 'website' => $result['author']['url'] ?? false,
                 'avatar' => $result['author']['photo'] ?? false,
                 'text' => $result['text'],
-                'timestamp' => date(date('Y-m-d H:i'), $result['timestamp']),
                 'source' => $source,
                 'type' => $result['type'],
                 'language' => Commentions::determineLanguage($page, $path),
@@ -274,17 +298,18 @@ class Cron
             if ($page->commentions('all')->filterBy('source', $source)->count() != 0) {
                 // if webmention with this source url exists, this is an update
                 $updateid = $page->commentions('all')->filterBy('source', $source)->first()->uid()->toString();
-                // keep existing timestamp and status
-                unset($finaldata['timestamp']);
-                unset($finaldata['status']);
-                // update the existing webmention
                 return Commentions::update($page, $updateid, $finaldata);
             } else {
                 // add as new webmention
+                $finaldata['timestamp'] = date('Y-m-d H:i', $result['timestamp']);
+                $finaldata['status'] = Commentions::defaultstatus($result['type']);
                 return Commentions::add($page, $finaldata);
             }
-        } else {
-            return 'Could not resolve target URL to Kirby page';
+        }
+
+        // return error for any other HTTP codes
+        else {
+            return 'HTTP return code is neither 200 nor 410.';
         }
     }
 }
