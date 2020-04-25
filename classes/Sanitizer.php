@@ -63,6 +63,8 @@ class Sanitizer
             // 's',
             // 'strike',
             'strong',
+            'sub',
+            'sup',
             'ul',
         ];
 
