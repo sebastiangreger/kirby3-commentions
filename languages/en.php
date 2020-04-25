@@ -25,7 +25,7 @@ $translations = [
         'Use Markdown commands or their HTML equivalents to add simple formatting to your comment:',
     'snippet.form.help.common'         =>
         '<dt>Text markup</dt>' .
-        '<dd><code><em>*italic*</em>, <strong>**bold**</strong>, <del>~~strikethrough~~</del>, <code>`code`</code> and <mark>&lt;mark&gt;marked text&lt;/mark&gt;</mark></code>.</dd>' .
+        '<dd><em>*italic*</em>, <strong>**bold**</strong>, <del>~~strikethrough~~</del>, <code>`code`</code> and <mark>&lt;mark&gt;marked text&lt;/mark&gt;</mark></code>.</dd>' .
         '<dt>Lists</dt>' .
         '<dd><pre class="code"><code class="language-markdown">- Unordered item 1<br>- Unordered list item 2</code></pre>' .
         '<dd><pre class="code"><code class="language-markdown">1. Ordered list item 1<br>2. Ordered list item 2</code></pre></dd>' .

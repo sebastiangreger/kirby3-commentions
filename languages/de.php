@@ -25,7 +25,7 @@ $translations = [
         'Benutze Markdown-Befehle oder ihre HTML-Äquivalente, um deinen Kommentar zu formatieren:',
     'snippet.form.help.common'         =>
         '<dt>Textauszeichnungen</dt>' .
-        '<dd><code><em>*kursiv*</em>, <strong>**fett**</strong>, <del>~~durchgestrichen~~</del>, <code>`Code`</code> und <mark>&lt;mark&gt;markierter Text&lt;/mark&gt;</mark></code>.</dd>' .
+        '<dd><em>*kursiv*</em>, <strong>**fett**</strong>, <del>~~durchgestrichen~~</del>, <code>`Code`</code> und <mark>&lt;mark&gt;markierter Text&lt;/mark&gt;</mark></code>.</dd>' .
         '<dt>Listen</dt>' .
         '<dd><pre class="code"><code class="language-markdown">- Listenpunkt 1<br>- Listenpunkt 1</code></pre>' .
         '<dd><pre class="code"><code class="language-markdown">1. Nummerierte Liste 1<br>2. Nummerierte Liste 2</code></pre></dd>' .
