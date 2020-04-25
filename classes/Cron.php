@@ -73,7 +73,7 @@ class Cron
             foreach (Storage::read($page, 'webmentionqueue') as $queueitem) {
 
                 // skip requests already marked as failed or source-target pairs pinged during this cron run
-                if (!isset($queueitem['failed']) && !in_array(sha1($source . $target), $processedpairs)) {
+                if (!isset($queueitem['failed']) && !in_array($source . $target, $processedpairs)) {
 
                     // create/update the lockfile, as this is where actual DoS harm can be done
                     F::write($lockfile, '');
@@ -114,8 +114,8 @@ class Cron
                         throw new Exception('Problem processing queue item.');
                     }
 
-                    // add the sha1 hash of this source-target pair to eliminate duplicates during this run
-                    $processedpairs[] = sha1($source . $target);
+                    // add the source-target pair to eliminate duplicates during this run
+                    $processedpairs[] = $source . $target;
                 }
             }
         }
