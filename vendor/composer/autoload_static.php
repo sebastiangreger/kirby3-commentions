@@ -318,6 +318,7 @@ class ComposerStaticInitae9edd1cc449a9a6eb2b396d9459106f
         'sgkirby\\Commentions\\Endpoint' => __DIR__ . '/../..' . '/classes/Endpoint.php',
         'sgkirby\\Commentions\\Frontend' => __DIR__ . '/../..' . '/classes/Frontend.php',
         'sgkirby\\Commentions\\Migration' => __DIR__ . '/../..' . '/classes/Migration.php',
+        'sgkirby\\Commentions\\Purifier\\KirbyCache' => __DIR__ . '/../..' . '/classes/Purifier/KirbyCache.php',
         'sgkirby\\Commentions\\Sanitizer' => __DIR__ . '/../..' . '/classes/Sanitizer.php',
         'sgkirby\\Commentions\\Storage' => __DIR__ . '/../..' . '/classes/Storage.php',
         'sgkirby\\Commentions\\Structure' => __DIR__ . '/../..' . '/classes/Structure.php',

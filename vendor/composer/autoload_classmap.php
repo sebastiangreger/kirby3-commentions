@@ -270,6 +270,7 @@ return array(
     'sgkirby\\Commentions\\Endpoint' => $baseDir . '/classes/Endpoint.php',
     'sgkirby\\Commentions\\Frontend' => $baseDir . '/classes/Frontend.php',
     'sgkirby\\Commentions\\Migration' => $baseDir . '/classes/Migration.php',
+    'sgkirby\\Commentions\\Purifier\\KirbyCache' => $baseDir . '/classes/Purifier/KirbyCache.php',
     'sgkirby\\Commentions\\Sanitizer' => $baseDir . '/classes/Sanitizer.php',
     'sgkirby\\Commentions\\Storage' => $baseDir . '/classes/Storage.php',
     'sgkirby\\Commentions\\Structure' => $baseDir . '/classes/Structure.php',

@@ -6,9 +6,10 @@ use Parsedown;
 use HTMLPurifier;
 use HTMLPurifier_AttrDef;
 use HTMLPurifier_Config;
+use HTMLPurifier_DefinitionCacheFactory;
 use HTMLPurifier_TagTransform;
-use HTMLPurifier_TagTransform_Simple;
 use Kirby\Cms\Dir;
+use sgkirby\Commentions\Purifier\KirbyCache;
 
 class Sanitizer
 {
@@ -83,6 +84,14 @@ class Sanitizer
         }
 
         if (static::$purifier === null) {
+
+            $purifierCache = HTMLPurifier_DefinitionCacheFactory::instance();
+            // Workaround for force-loading the class, because HTML Purifier
+            // only checks for classes, that have already been loaded
+            // beforehand.
+            KirbyCache::triggerAutoload();
+            $purifierCache->register('Kirby', KirbyCache::class);
+
             $config = HTMLPurifier_Config::createDefault();
 
             // Create a cache directory, that HTMLPurifier uses
@@ -91,6 +100,7 @@ class Sanitizer
             Dir::make($cacheRoot);
 
             $config->set('Cache.SerializerPath', $cacheRoot);
+            $config->set('Cache.DefinitionImpl', 'Kirby');
 
             // Set default text direction
             if ($direction !== null) {

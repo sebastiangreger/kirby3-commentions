@@ -21,6 +21,7 @@ Kirby::plugin('sgkirby/commentions', [
     'options' => [
         'cache'               => [
             'sanitizer' => true,
+            'purifier-definitions' => true,
         ],
 
         'secret'              => '',
