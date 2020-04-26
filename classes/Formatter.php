@@ -76,8 +76,8 @@ class Formatter
      */
     public static function filter(string $text, ?bool $smartypants = null, ?string $direction = null): string
     {
-        if (class_exists('HTMLPurifier') === false) {
-            return static::stripHtml($text);
+        if (static::purifierAvailable() === false) {
+            return static::escapeAndFormat($text);
         }
 
         $text = static::markdown($text);
@@ -90,7 +90,15 @@ class Formatter
         return static::purifiy($text);
     }
 
-    protected static function stripHtml(string $text): string
+    /**
+     * Escapes HTML characters, normalizes to UNIX-style line breaks (\n),
+     * automatically splits the text into paragraphs and converts
+     * single line breaks into `<br>` tags.
+     *
+     * @param string $text Unsafe test input, possibly containing HTML tags
+     * @return string Escaped and formatted HTML string
+     */
+    protected static function escapeAndFormat(string $text): string
     {
         $text = html($text);
         $text = str_replace(["\r\n", "\r", "\n"], "\n", $text);
@@ -100,6 +108,11 @@ class Formatter
             return '<p>' . nl2br($item, false) . '</p>'; }, $text);
         $text = implode("\n", $text);
         return $text;
+    }
+
+    public static function purifierAvailable(): bool
+    {
+        return class_exists('HTMLPurifier');
     }
 
     protected static function purifiy(string $text, ?string $direction = null): string
