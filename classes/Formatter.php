@@ -74,15 +74,36 @@ class Formatter
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
      * @return string The cleaned-up/"purified" text.
      */
-    public static function format(string $text, ?bool $smartypants = null, ?string $direction = null): ?string
+    public static function filter(string $text, ?bool $smartypants = null, ?string $direction = null): string
     {
-        if (static::$parsedown === null) {
-            // Using the raw Parsedown library directly instead of
-            // Kirby’s Markdown component to have full control over the settings.
-            static::$parsedown = new Parsedown();
-            static::$parsedown->setBreaksEnabled(true);
+        if (class_exists('HTMLPurifier') === false) {
+            return static::stripHtml($text);
         }
 
+        $text = static::markdown($text);
+
+        if ($smartypants ?? option('smartypants')) {
+            // Only apply smartypants filter, if enabled in Kirby
+            $text = smartypants($text);
+        }
+
+        return static::purifiy($text);
+    }
+
+    protected static function stripHtml(string $text): string
+    {
+        $text = html($text);
+        $text = str_replace(["\r\n", "\r", "\n"], "\n", $text);
+        $text = preg_replace('/(\n{3,})/', "\n\n", $text);
+        $text = explode("\n\n", $text);
+        $text = array_map(function($item) {
+            return '<p>' . nl2br($item, false) . '</p>'; }, $text);
+        $text = implode("\n", $text);
+        return $text;
+    }
+
+    protected static function purifiy(string $text, ?string $direction = null): string
+    {
         if (static::$purifier === null) {
 
             $purifierCache = HTMLPurifier_DefinitionCacheFactory::instance();
@@ -93,13 +114,6 @@ class Formatter
             $purifierCache->register('Kirby', HTMLPurifierCacheAdapter::class);
 
             $config = HTMLPurifier_Config::createDefault();
-
-            // Create a cache directory, that HTMLPurifier uses
-            // for storing serizalized definitions.
-            $cacheRoot = kirby()->root('cache') . '/commentions/htmlpurifier';
-            Dir::make($cacheRoot);
-
-            $config->set('Cache.SerializerPath', $cacheRoot);
             $config->set('Cache.DefinitionImpl', 'Kirby');
 
             // Set default text direction
@@ -114,7 +128,6 @@ class Formatter
 
             if (option('sgkirby.commentions.allowlinks') === true) {
                 // Enable link processing only, if enabled in site config
-
                 if (option('sgkirby.commentions.autolinks') === true) {
                     // Recognize URLs in text and turn them into links
                     // automatically.
@@ -193,14 +206,18 @@ class Formatter
             static::$purifier = new HTMLPurifier($config);
         }
 
-        // Parse Markdown first
-        $text = static::$parsedown->text($text);
+        return static::$purifier->purify($text);
+    }
 
-        if ($smartypants ?? option('smartypants')) {
-            // Only apply smartypants filter, if enabled in Kirby
-            $text = smartypants($text);
+    protected static function markdown(string $text): string
+    {
+        if (static::$parsedown === null) {
+            // Using the Parsedown library directly instead of Kirby’s
+            // Markdown component to have full control over the settings.
+            static::$parsedown = new Parsedown();
+            static::$parsedown->setBreaksEnabled(true);
         }
 
-        return static::$purifier->purify($text);
+        return static::$parsedown->text($text);
     }
 }

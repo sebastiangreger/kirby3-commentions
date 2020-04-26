@@ -264,7 +264,7 @@ class Commentions
                 $item['text_sanitized'] = $cachedText[$uid];
             } else if (array_key_exists('text', $item) === true) {
                 // Item has a text field, sanitize it
-                $item['text_sanitized'] = $sanitizedText[$uid] = Formatter::format($item['text']);
+                $item['text_sanitized'] = $sanitizedText[$uid] = Formatter::filter($item['text']);
             }
 
             return $item;
