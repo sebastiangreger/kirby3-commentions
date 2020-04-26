@@ -1,10 +1,10 @@
 <?php
 
-namespace sgkirby\Commentions\Purifier;
+namespace sgkirby\Commentions\Formatter;
 
 use HTMLPurifier_DefinitionCache;
 
-class KirbyCache extends HTMLPurifier_DefinitionCache
+class HTMLPurifierCacheAdapter extends HTMLPurifier_DefinitionCache
 {
     /**
      * @var \Kirby\Cache\Cache

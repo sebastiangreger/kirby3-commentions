@@ -9,9 +9,9 @@ use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
 use HTMLPurifier_TagTransform;
 use Kirby\Cms\Dir;
-use sgkirby\Commentions\Purifier\KirbyCache;
+use sgkirby\Commentions\Formatter\HTMLPurifierCacheAdapter;
 
-class Purifier
+class Formatter
 {
     /**
      * Cached instance of HTML Purifier instance used for processing
@@ -74,7 +74,7 @@ class Purifier
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
      * @return string The cleaned-up/"purified" text.
      */
-    public static function purify(string $text, ?bool $smartypants = null, ?string $direction = null): ?string
+    public static function format(string $text, ?bool $smartypants = null, ?string $direction = null): ?string
     {
         if (static::$parsedown === null) {
             // Using the raw Parsedown library directly instead of
@@ -89,8 +89,8 @@ class Purifier
             // Workaround for force-loading the class, because HTML Purifier
             // only checks for classes, that have already been loaded
             // beforehand.
-            KirbyCache::triggerAutoload();
-            $purifierCache->register('Kirby', KirbyCache::class);
+            HTMLPurifierCacheAdapter::triggerAutoload();
+            $purifierCache->register('Kirby', HTMLPurifierCacheAdapter::class);
 
             $config = HTMLPurifier_Config::createDefault();
 
