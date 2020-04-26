@@ -33,7 +33,6 @@ class Formatter
      *
      * @return string The configuration string
      */
-
     protected static function getAllowedElements(): string
     {
         $allowed = [
@@ -123,6 +122,15 @@ class Formatter
         return class_exists('HTMLPurifier');
     }
 
+    /**
+     * Cleans up a string of dirty HTML from invalid syntax, malicious
+     * code and strips all tags and attributes, except for a few from
+     * a given whitelist.
+     *
+     * @param string $text Untrusted string of HTML
+     * @param string|null $direction Text direction, 'ltr' or 'rtl'
+     * @return string Sanitized HTML string
+     */
     protected static function purifiy(string $text, ?string $direction = null): string
     {
         if (static::$purifier === null) {
@@ -230,6 +238,12 @@ class Formatter
         return static::$purifier->purify($text);
     }
 
+    /**
+     * Converts Markdown formatting on given string into HTML using the
+     * Parsedown library
+     *
+     * @return string The resulting HTML of the conversion
+     */
     protected static function markdown(string $text): string
     {
         if (static::$parsedown === null) {
