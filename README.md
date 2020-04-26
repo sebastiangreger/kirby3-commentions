@@ -469,12 +469,21 @@ This hook is triggered after a comment/webmention is added.
 
 #### Example
 
-Adding the following code to `site/config.php` or in a plugin would replace every incoming comment's text field to contain a dump of the entire comment and its meta data:
+Adding the following code to `site/config.php` or in a plugin would email a summary of every incoming comment:
 
 ```php
 'hooks' => [
 	'commentions.add:after' => function ( $page, $data ) {
-		$page->updateCommention( $data['uid'], [ 'text' => print_r( $data, true ) ] );
+    try {
+      $kirby->email([
+        'from' => 'webserver@example.com',
+        'to' => 'admin@example.com',
+        'subject' => 'New comment/webmention on ' . $page->title(),
+        'body'=> print_r($data, true),
+      ]);
+    } catch (Exception $error) {
+      echo $error;
+    }
 	}
 ],
 ```
