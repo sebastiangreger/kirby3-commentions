@@ -244,7 +244,13 @@ class Formatter
             static::$purifier = new HTMLPurifier($config);
         }
 
-        return static::$purifier->purify($text);
+        // Apply purifier filter
+        $text = static::$purifier->purify($text);
+
+        // Remove links, which got their attribute stripped during sanitation
+        $text = preg_replace('/<a rel="[^"]+">(.*)<\/a>/uU', '$1', $text);
+
+        return $text;
     }
 
     /**
@@ -260,6 +266,7 @@ class Formatter
             // Markdown component to have full control over the settings.
             static::$parsedown = new Parsedown();
             static::$parsedown->setBreaksEnabled(true);
+            static::$parsedown->setUrlsLinked(option('sgkirby.commentions.allowlinks') && option('sgkirby.commentions.autolinks'));
         }
 
         return static::$parsedown->text($text);
