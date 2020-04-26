@@ -71,9 +71,10 @@ class Formatter
      * Converts untrusted HTML/Markdown input into sanitized, safe HTML code.
      *
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
+     * @param string|null $direction Text direction, 'ltr' or 'rtl'
      * @return string The cleaned-up/"purified" text.
      */
-    public static function filter(string $text, ?bool $smartypants = null, ?string $direction = null): string
+    public static function filter(string $text, ?string $direction = null): string
     {
         if (static::advancedFormattingAvailable() === false) {
             return static::escapeAndFormat($text);
@@ -81,12 +82,12 @@ class Formatter
 
         $text = static::markdown($text);
 
-        if ($smartypants ?? option('smartypants')) {
+        if (option('smartypants') === true) {
             // Only apply smartypants filter, if enabled in Kirby
             $text = smartypants($text);
         }
 
-        return static::purifiy($text);
+        return static::purifiy($text, $direction);
     }
 
     /**
@@ -100,12 +101,20 @@ class Formatter
     protected static function escapeAndFormat(string $text): string
     {
         $text = html($text);
+
+        // Normalize line breaks and replace 3 or more consecutive
+        // break with just 2 breaks
         $text = str_replace(["\r\n", "\r", "\n"], "\n", $text);
         $text = preg_replace('/(\n{3,})/', "\n\n", $text);
+
+        // Convert to paragraphs and convert single line breaks to
+        // `<br>` elements
         $text = explode("\n\n", $text);
         $text = array_map(function($item) {
-            return '<p>' . nl2br($item, false) . '</p>'; }, $text);
+            return '<p>' . nl2br($item, false) . '</p>';
+        }, $text);
         $text = implode("\n", $text);
+
         return $text;
     }
 
