@@ -678,6 +678,13 @@ To override the translation strings of the Plugin UI, any string from `languages
 'sgkirby.commentions.t.XX.snippet.list.comments' => 'Comments',
 ```
 
+### Comment formatting
+
+```php
+'allowlinks' => true,    /* Allow links in comments, if true */
+'autolinks' => true,    /* Automatically recognize URLs in comments and turn them into links. Has no effect, if allowlinks is false. */
+```
+
 ## Requirements
 
 [Kirby 3.3.0+](https://getkirby.com)
