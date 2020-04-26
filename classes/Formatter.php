@@ -76,7 +76,7 @@ class Formatter
      */
     public static function filter(string $text, ?bool $smartypants = null, ?string $direction = null): string
     {
-        if (static::purifierAvailable() === false) {
+        if (static::advancedFormattingAvailable() === false) {
             return static::escapeAndFormat($text);
         }
 
@@ -110,7 +110,15 @@ class Formatter
         return $text;
     }
 
-    public static function purifierAvailable(): bool
+    /**
+     * Checks whether advanced comment formatting is available. HTML and
+     * Markdown formatting are only enabled in comments, if the
+     * HTML Purifier Library has been installed via composer or
+     * otherwise before.
+     *
+     * @return boolean
+     */
+    public static function advancedFormattingAvailable(): bool
     {
         return class_exists('HTMLPurifier');
     }
