@@ -12,10 +12,12 @@ function commentionsFeedback()
 {
     commentions('feedback');
 }
+
 function commentionsForm()
 {
     commentions('form');
 }
+
 function commentionsList(string $format = 'list')
 {
     if ($format == 'grouped') {
@@ -26,11 +28,18 @@ function commentionsList(string $format = 'list')
         commentions('list');
     }
 }
+
 function commentionsEndpoints()
 {
     commentions('endpoints');
 }
+
 function commentionsCss()
 {
     commentions('css');
+}
+
+function commentionsHelp()
+{
+    commentions('help');
 }

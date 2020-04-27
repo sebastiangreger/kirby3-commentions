@@ -238,14 +238,15 @@ class Commentions
         $data         = Storage::read($page, 'commentions');
         $dataModified = Storage::modified($page, 'commentions');
         $pageid       = $page->id();
+        $cacheKey     = static::cacheKey($pageid);
 
         $cache         = static::getSanitizedTextCache();
-        $cacheModified = $cache->modified($pageid);
+        $cacheModified = $cache->modified($cacheKey);
 
-        if ($cacheModified !== false && $cacheModified > $dataModified) {
+        if (false && $cacheModified !== false && $cacheModified > $dataModified) {
             // Cache exists and is newer than commentions data file,
             // use the cache as base
-            $cachedText = $cache->get($pageid);
+            $cachedText = $cache->get($cacheKey);
         } else {
             // Drop cache if outdated
             $cachedText = [];
@@ -274,7 +275,7 @@ class Commentions
             // If at least one commention has been sanitized,
             // update the cache value if needed.
             $cachedText = array_merge($cachedText, $sanitizedText);
-            $cache->set($pageid, $cachedText, 0);
+            $cache->set($cacheKey, $cachedText, 0);
         }
 
         // Wrap in a Structure object to make manipulations, such as
@@ -398,5 +399,17 @@ class Commentions
         }
 
         return static::$cacheInstance;
+    }
+
+    /**
+     * Generates the cache key for given page id based on which type
+     * of comment formatting is available.
+     *
+     * @return string The cache key.
+     */
+    protected static function cacheKey(string $pageId): string
+    {
+        $suffix = Formatter::advancedFormattingAvailable() ? 'formatted' : 'escaped';
+        return "{$pageId}-{$suffix}";
     }
 }

@@ -20,6 +20,7 @@ $translations = [
     'snippet.form.honeypot'            => 'Please leave this field empty!',
     'snippet.form.website'             => 'Website (optional; publicly linked if provided)',
     'snippet.form.comment'             => 'Comment',
+    'snippet.form.help.noformatting'   => 'HTML-Formatierungen werden entfernt.',
     'snippet.form.help.title'          => 'Available formatting commands',
     'snippet.form.help.intro'          =>
         'Use Markdown commands or their HTML equivalents to add simple formatting to your comment:',

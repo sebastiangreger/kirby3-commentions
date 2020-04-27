@@ -82,10 +82,10 @@ Kirby::plugin('sgkirby/commentions', [
     'routes' => require __DIR__ . '/config/routes.php',
 
     'snippets' => [
-        'commentions-list'      => __DIR__ . '/snippets/commentions-list.php',
-        'commentions-form'      => __DIR__ . '/snippets/commentions-form.php',
-        'commentions-form-help' => __DIR__ . '/snippets/commentions-form-help.php',
-        'commentions-feedback'  => __DIR__ . '/snippets/commentions-feedback.php',
+        'commentions-list'     => __DIR__ . '/snippets/commentions-list.php',
+        'commentions-form'     => __DIR__ . '/snippets/commentions-form.php',
+        'commentions-help'     => __DIR__ . '/snippets/commentions-help.php',
+        'commentions-feedback' => __DIR__ . '/snippets/commentions-feedback.php',
     ],
 
     'pageMethods' => [

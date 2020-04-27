@@ -99,17 +99,21 @@ class Formatter
      */
     protected static function escapeAndFormat(string $text): string
     {
-        $text = html($text);
 
         // Normalize line breaks and replace 3 or more consecutive
         // break with just 2 breaks
         $text = str_replace(["\r\n", "\r", "\n"], "\n", $text);
+        $text = preg_replace('/<\/p>[\s]+/', "</p>\n\n", $text);
         $text = preg_replace('/(\n{3,})/', "\n\n", $text);
+
+        $text = strip_tags($text);
+        $text = html($text);
 
         // Convert to paragraphs and convert single line breaks to
         // `<br>` elements
         $text = explode("\n\n", $text);
         $text = array_map(function($item) {
+            $item = trim($item);
             return '<p>' . nl2br($item, false) . '</p>';
         }, $text);
         $text = implode("\n", $text);

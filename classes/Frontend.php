@@ -44,6 +44,14 @@ class Frontend
                 }
                 break;
 
+            case 'help':
+                snippet('commentions-help', [
+                    'formattingEnabled' => Formatter::advancedFormattingAvailable(),
+                    'allowlinks' => option('sgkirby.commentions.allowlinks'),
+                    'autolinks' => option('sgkirby.commentions.autolinks'),
+                ]);
+                break;
+
             // display comments
             case 'list':
             case 'grouped':
