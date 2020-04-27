@@ -70,31 +70,58 @@ class Commentions
     public static function add($page, $data)
     {
         // a regular comment has to at least feature a text
-        if ((empty($data['type']) || $data['type'] == 'comment') && empty($data['text'])) {
+        if ((empty($data['type']) || $data['type'] === 'comment') && empty($data['text'])) {
             return false;
         }
 
         // a webmention has to at least feature a source that is a valid URL
-        if ((! empty($data['type']) && $data['type'] != 'comment') && (empty($data['source']) || ! Str::isURL($data['source']))) {
+        if ((! empty($data['type']) && $data['type'] !== 'comment') && (empty($data['source']) || ! Str::isURL($data['source']))) {
             return false;
         }
 
         // clean up the data; incl. removal of any user-provided uid
         $data = static::sanitize($data, false);
 
-        // add a uid field
-        $data['uid'] = static::uid();
-
         // flag comment posted by a logged-in user
-        if ($data['type'] == 'comment' && kirby()->user()) {
+        if ($data['type'] === 'comment' && kirby()->user()) {
             $data['authenticated'] = true;
         }
 
         // trigger a hook that would allow to stop processing by throwing an exception
         kirby()->trigger('commentions.add:before', $page, $data);
 
-        // save commention to the according txt file
-        $saved = Storage::add($page, $data, 'commentions');
+        // if webmention with this source url exists, this is an update
+        if ($data['type'] !== 'comment' && $page->commentions('all')->filterBy('source', $data['source'])->count() != 0) {
+
+            $duplicates = $page->commentions('all')->filterBy('source', $data['source']);
+            if ($duplicates->filterBy('status', 'approved')->count() != 0 && static::defaultstatus($data['type']) !== 'approved') {
+                // if original mention is approved and auto-approval is off for this type, create an 'update' item in inbox
+                $data['status'] = 'update';
+                if ($duplicates->filterBy('status', 'update')->count() != 0) {
+                    // if another update is already pending, update that
+                    $uid = $duplicates->filterBy('status', 'update')->first()->uid()->toString();
+                    $saved = Storage::update($page, $uid, $data, 'commentions');
+                } else {
+                    // add new pending update
+                    $data['uid'] = static::uid();
+                    $saved = Storage::add($page, $data, 'commentions');
+                }
+            }
+
+            else {
+                // directly update the existing webmention; keep status and timestamp
+                $uid = $duplicates->first()->uid()->toString();
+                unset($data['status'], $data['timestamp']);
+                $saved = Storage::update($page, $uid, $data, 'commentions');
+            }
+        }
+
+        // otherwise: default action
+        else {
+            // save commention to the according txt file
+            $data['uid'] = static::uid();
+            $saved = Storage::add($page, $data, 'commentions');
+        }
 
         // trigger a hook that allows further processing of the data
         kirby()->trigger('commentions.add:after', $page, $saved);
@@ -119,11 +146,37 @@ class Commentions
             unset($data['uid']);
         }
 
-        // sanitize data array, but keep the uid
-        $data = Commentions::sanitize($data, true);
+        // special treatment for status change if item has status 'update'
+        if ($page->commentions('update')->filterBy('uid', $uid)->count() != 0) {
+            $update = $page->commentions($uid);
+            $original = $page->commentions('approved')->filterBy('source', $update->source())->first();
+            if ($data == 'delete') {
+                // delete the original entry
+                Storage::update($page, $original->uid(), 'delete', 'commentions');
+            } elseif ($data['status'] == 'approved') {
+                // overwrite the old data with the update's data and the new status
+                $data = array_merge($original->toArray(), $update->toArray(), $data);
+                // delete the update entry
+                Storage::update($page, $uid, 'delete', 'commentions');
+                // use the original uid instead
+                $uid = $original->uid()->toString();
+            }
+        }
+
+        // sanitize data array, except if string command (like 'delete') given
+        if (is_array($data)) {
+            $data = Commentions::sanitize($data, true);
+        }
+
+        // also delete any pending webmention updates, if applicable
+        if ($data === 'delete' && $page->commentions($uid)->source()) {
+            if ($update = $page->commentions('update')->filterBy('source', $page->commentions($uid)->source())->first()) {
+                Storage::update($page, $update->uid(), 'delete', 'commentions');
+            }
+        }
 
         // trigger a hook that would allow to stop processing by throwing an exception
-        kirby()->trigger('commentions.add:before', $page, $data);
+        kirby()->trigger('commentions.update:before', $page, $data);
 
         // update commention in the according txt file
         $saved = Storage::update($page, $uid, $data, 'commentions');
@@ -184,7 +237,7 @@ class Commentions
 
         // timestamp is required and has to be of format 'Y-m-d H:i'
         if (! empty($data['timestamp']) && ! V::match($data['timestamp'], '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/')) {
-            if (V::date($data['timestamp']) || V::date(date('Y-m-d H:i',intval($data['timestamp'])))) {
+            if (V::date($data['timestamp']) || V::date(date('Y-m-d H:i', (int)($data['timestamp'])))) {
                 // if the variable validates as date (epoch/string) use this
                 $data['timestamp'] = date('Y-m-d H:i', is_int($data['timestamp']) ? $data['timestamp'] : strtotime($data['timestamp']));
             } elseif ($update) {
@@ -242,7 +295,7 @@ class Commentions
 
         $data = Storage::read($page, 'commentions');
         $pageid = $page->id();
-        $data = array_map(function($item) use ($pageid) {
+        $data = array_map(function ($item) use ($pageid) {
             $item['pageid'] = $pageid;
             return $item;
         }, $data);
@@ -255,7 +308,7 @@ class Commentions
             if (!empty($language)) {
                 $language = $language->code() ?? null;
             }
-        } else if (is_string($language) && strlen($language) === 2) {
+        } elseif (is_string($language) && strlen($language) === 2) {
             // invalid language code in call = show all
             if (!in_array($language, kirby()->languages()->codes())) {
                 $language = null;
@@ -267,7 +320,7 @@ class Commentions
 
         if ($language !== null) {
             // Filter by language, if given
-            $commentions = $commentions->filter(function($item) use ($language) {
+            $commentions = $commentions->filter(function ($item) use ($language) {
                 if ($item->language()->isEmpty()) {
                     // Commentions without a language are always included in the array
                     return true;
@@ -282,7 +335,9 @@ class Commentions
             });
         }
 
-        if ($query !== 'all') {
+        if ($query === 'pending') {
+            $commentions = $commentions->filterBy('status', 'in', ['pending','update']);
+        } elseif ($query !== 'all') {
             $commentions = $commentions->filterBy('status', $query);
         }
 

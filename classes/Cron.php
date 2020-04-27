@@ -286,25 +286,19 @@ class Cron
 
             // create the commention data
             $finaldata = [
-                'name' => $result['author']['name'] ?? false,
-                'website' => $result['author']['url'] ?? false,
-                'avatar' => $result['author']['photo'] ?? false,
-                'text' => $result['text'],
-                'source' => $source,
-                'type' => $result['type'],
-                'language' => Commentions::determineLanguage($page, $path),
+                'name'      => $result['author']['name'] ?? false,
+                'website'   => $result['author']['url'] ?? false,
+                'avatar'    => $result['author']['photo'] ?? false,
+                'text'      => $result['text'],
+                'source'    => $source,
+                'type'      => $result['type'],
+                'language'  => Commentions::determineLanguage($page, $path),
+                'timestamp' => date('Y-m-d H:i', $result['timestamp']),
+                'status'    => Commentions::defaultstatus($result['type']),
             ];
 
-            if ($page->commentions('all')->filterBy('source', $source)->count() != 0) {
-                // if webmention with this source url exists, this is an update
-                $updateid = $page->commentions('all')->filterBy('source', $source)->first()->uid()->toString();
-                return Commentions::update($page, $updateid, $finaldata);
-            } else {
-                // add as new webmention
-                $finaldata['timestamp'] = date('Y-m-d H:i', $result['timestamp']);
-                $finaldata['status'] = Commentions::defaultstatus($result['type']);
-                return Commentions::add($page, $finaldata);
-            }
+            // add as new webmention
+            return Commentions::add($page, $finaldata);
         }
 
         // return error for any other HTTP codes

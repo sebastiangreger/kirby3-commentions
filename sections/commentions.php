@@ -80,6 +80,9 @@ return [
                 $text = isset($data['text']) ? htmlspecialchars($data['text']) : '';
                 $name = isset($data['name']) ? htmlspecialchars($data['name']) : t('commentions.name.anonymous');
                 $meta = $data['type'];
+                if ($data['status'] === 'update') {
+                    $meta .= ' update';
+                }
 
                 // avoid returning empty array entries when no commentions exist
                 if (!empty($meta)) {
@@ -106,6 +109,14 @@ return [
                     } elseif ($data['status'] == 'unapproved') {
                         $class = 'k-list-item-commention-unapproved';
                         $icon = [ 'type' => 'protected', 'back' => 'transparent' ];
+                        $options[] = [
+                            'icon' => 'check',
+                            'text' => t('commentions.section.option.approve'),
+                            'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
+                        ];
+                    } elseif ($data['status'] == 'update') {
+                        $class = 'k-list-item-commention-update';
+                        $icon = [ 'type' => 'refresh', 'back' => 'transparent' ];
                         $options[] = [
                             'icon' => 'check',
                             'text' => t('commentions.section.option.approve'),
