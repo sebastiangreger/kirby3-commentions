@@ -119,6 +119,9 @@ class Commentions
             unset($data['uid']);
         }
 
+        // sanitize data array, but keep the uid
+        $data = Commentions::sanitize($data, true);
+
         // trigger a hook that would allow to stop processing by throwing an exception
         kirby()->trigger('commentions.add:before', $page, $data);
 

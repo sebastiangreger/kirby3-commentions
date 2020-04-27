@@ -110,12 +110,6 @@ class Storage
      */
     public static function update($page, $uid, $data = [], $filename)
     {
-        // clean up the data if it is an array (skip for string, which would be a command like 'delete')
-        if ($filename === 'commentions' && is_array($data) && !empty($data)) {
-            // sanitize data array, but keep the uid
-            $data = Commentions::sanitize($data, true);
-        }
-
         // loop through array of all comments
         $output = [];
         foreach (static::read($page, $filename) as $entry) {
