@@ -217,7 +217,7 @@ class Cron
         // find the Kirby page the target URL refers to
         $path = Url::path($target);
         if ($path == '') {
-            $page = page('home');
+            $page = page(site()->homePageId());
         } else {
             $page = page(kirby()->call(trim($path, '/')));
         }
