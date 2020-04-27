@@ -8,7 +8,6 @@ use HTMLPurifier_AttrDef;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
 use HTMLPurifier_TagTransform;
-use Kirby\Cms\Dir;
 use sgkirby\Commentions\Formatter\HTMLPurifierCacheAdapter;
 
 class Formatter
