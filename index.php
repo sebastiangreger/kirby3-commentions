@@ -14,11 +14,33 @@ use sgkirby\Commentions\Commentions;
 use sgkirby\Commentions\Structure;
 use Kirby\Cms\App as Kirby;
 
+load([
+    'sgkirby\\commentions\\Commention' => 'classes/Commention.php',
+    'sgkirby\\commentions\\Commentions' => 'classes/Commentions.php',
+    'sgkirby\\commentions\\Cron' => 'classes/Cron.php',
+    'sgkirby\\commentions\\Endpoint' => 'classes/Endpoint.php',
+    'sgkirby\\commentions\\Formatter' => 'classes/Formatter.php',
+    'sgkirby\\commentions\\Formatter\\HTMLPurifierCacheAdapter' => 'classes/Formatter/HTMLPurifierCacheAdapter.php',
+    'sgkirby\\commentions\\Frontend' => 'classes/Frontend.php',
+    'sgkirby\\commentions\\Migration' => 'classes/Migration.php',
+    'sgkirby\\commentions\\Storage' => 'classes/Storage.php',
+    'sgkirby\\commentions\\Structure' => 'classes/Structure.php',
+], __DIR__);
+
+@require_once __DIR__ . '/helpers.php';
+@require_once __DIR__ . '/includes/mf2-parser.php';
+@require_once __DIR__ . '/includes/php-comments.php';
+
 @include_once __DIR__ . '/vendor/autoload.php';
 
 Kirby::plugin('sgkirby/commentions', [
 
     'options' => [
+        'cache'               => [
+            'sanitized-text' => true,
+            'purifier-definitions' => true,
+        ],
+
         'secret'              => '',
         'keepfailed'          => true,
         'defaultstatus'       => 'pending',
@@ -29,6 +51,8 @@ Kirby::plugin('sgkirby/commentions', [
         'avatarurls'          => false,
         'hideforms'           => false,
         'expand'              => false,
+        'allowlinks'          => true,
+        'autolinks'           => true,
         'formfields'          => ['name'],
         'grouped'             => [
             'read'            => 'Read by',
@@ -60,6 +84,7 @@ Kirby::plugin('sgkirby/commentions', [
     'snippets' => [
         'commentions-list'     => __DIR__ . '/snippets/commentions-list.php',
         'commentions-form'     => __DIR__ . '/snippets/commentions-form.php',
+        'commentions-help'     => __DIR__ . '/snippets/commentions-help.php',
         'commentions-feedback' => __DIR__ . '/snippets/commentions-feedback.php',
     ],
 

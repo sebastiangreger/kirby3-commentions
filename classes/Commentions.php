@@ -2,16 +2,16 @@
 
 namespace sgkirby\Commentions;
 
-use Exception;
+use Kirby\Cache\Cache;
 use Kirby\Cms\Page;
-use Kirby\Data\Data;
-use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 class Commentions
 {
     public static $feedback = null;
+
+    protected static $cacheInstance = null;
 
     /**
      * Checks the settings to assign the correct status to new comment submissions
@@ -293,13 +293,51 @@ class Commentions
             return static::get($page, 'all')->filterBy('uid', $query)->first();
         }
 
-        $data = Storage::read($page, 'commentions');
-        $pageid = $page->id();
-        $data = array_map(function ($item) use ($pageid) {
+        $data         = Storage::read($page, 'commentions');
+        $dataModified = Storage::modified($page, 'commentions');
+        $pageid       = $page->id();
+        $cacheKey     = static::cacheKey($pageid);
+
+        $cache         = static::getSanitizedTextCache();
+        $cacheModified = $cache->modified($cacheKey);
+
+        if ($cacheModified !== false && $cacheModified > $dataModified) {
+            // Cache exists and is newer than commentions data file,
+            // use the cache as base
+            $cachedText = $cache->get($cacheKey);
+        } else {
+            // Drop cache if outdated
+            $cachedText = [];
+        }
+
+        // Use an array to keep track of all texts, that have been
+        // sanitized
+        $sanitizedText = [];
+
+        $data = array_map(function($item) use ($pageid, &$cachedText, &$sanitizedText) {
+            $uid = $item['uid'];
             $item['pageid'] = $pageid;
+
+            if (array_key_exists($uid, $cachedText) === true) {
+                // Use cache value
+                $item['text_sanitized'] = $cachedText[$uid];
+            } else if (array_key_exists('text', $item) === true) {
+                // Item has a text field, sanitize it
+                $item['text_sanitized'] = $sanitizedText[$uid] = Formatter::filter($item['text']);
+            }
+
             return $item;
         }, $data);
 
+        if (sizeof($sanitizedText) > 0) {
+            // If at least one commention has been sanitized,
+            // update the cache value if needed.
+            $cachedText = array_merge($cachedText, $sanitizedText);
+            $cache->set($cacheKey, $cachedText, 0);
+        }
+
+        // Wrap in a Structure object to make manipulations, such as
+        // filtering easier.
         $commentions = new Structure($data, $page);
 
         if ($language == 'auto') {
@@ -407,5 +445,31 @@ class Commentions
 
         // not identified as spam
         return false;
+    }
+
+    /**
+     * Gets the cache instance for sanitized comment texts
+     *
+     * @return \Kirby\Cache\Cache The cache instance.
+     */
+    protected static function getSanitizedTextCache(): Cache
+    {
+        if (static::$cacheInstance === null) {
+            static::$cacheInstance = kirby()->cache('sgkirby.commentions.sanitized-text');
+        }
+
+        return static::$cacheInstance;
+    }
+
+    /**
+     * Generates the cache key for given page id based on which type
+     * of comment formatting is available.
+     *
+     * @return string The cache key.
+     */
+    protected static function cacheKey(string $pageId): string
+    {
+        $suffix = Formatter::advancedFormattingAvailable() ? 'formatted' : 'escaped';
+        return "{$pageId}-{$suffix}";
     }
 }

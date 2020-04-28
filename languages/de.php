@@ -5,52 +5,72 @@ $translations = [
 
     // general
 
-    'commentions.name.anonymous'                    => 'Anonym',
+    'name.anonymous'                    => 'Anonym',
 
 
     // snippets
 
     // - form
-    'commentions.snippet.form.headline'             => 'Kommentare und Webmentions',
-    'commentions.snippet.form.ctacomment'           => 'Hinterlasse einen Kommentar',
-    'commentions.snippet.form.ctawebmention'        => 'Auf der eigenen Website geantwortet? Sende eine Webmention!',
-    'commentions.snippet.form.responseurl'          => 'URL der Antwort auf deiner Website (stelle sicher, dass die Seite einen Link auf diese URL enthält)',
-    'commentions.snippet.form.name'                 => 'Name (optional)',
-    'commentions.snippet.form.email'                => 'E-Mail (optional; falls du eine persönliche Antwort wünschst)',
-    'commentions.snippet.form.honeypot'             => 'Bitte lasse dieses Feld leer!',
-    'commentions.snippet.form.website'              => 'Website (optional; wird öffentlich verlinkt, falls angegeben)',
-    'commentions.snippet.form.comment'              => 'Kommentar',
+    'snippet.form.headline'             => 'Kommentare und Webmentions',
+    'snippet.form.ctacomment'           => 'Hinterlasse einen Kommentar',
+    'snippet.form.ctawebmention'        => 'Auf der eigenen Website geantwortet? Sende eine Webmention!',
+    'snippet.form.responseurl'          => 'URL der Antwort auf deiner Website (stelle sicher, dass die Seite einen Link auf diese URL enthält)',
+    'snippet.form.name'                 => 'Name (optional)',
+    'snippet.form.email'                => 'E-Mail (optional; falls du eine persönliche Antwort wünschst)',
+    'snippet.form.honeypot'             => 'Bitte lasse dieses Feld leer!',
+    'snippet.form.website'              => 'Website (optional; wird öffentlich verlinkt, falls angegeben)',
+    'snippet.form.comment'              => 'Kommentar',
+    'snippet.form.help.noformatting'    => 'All HTML tags are removed.',
+    'snippet.form.help.title'           => 'Verfügbare Formatierungen',
+    'snippet.form.help.intro'           =>
+        'Benutze Markdown-Befehle oder ihre HTML-Äquivalente, um deinen Kommentar zu formatieren:',
+    'snippet.form.help.common'         =>
+        '<dt>Textauszeichnungen</dt>' .
+        '<dd><em>*kursiv*</em>, <strong>**fett**</strong>, <del>~~durchgestrichen~~</del>, <code>`Code`</code> und <mark>&lt;mark&gt;markierter Text&lt;/mark&gt;</mark></code>.</dd>' .
+        '<dt>Listen</dt>' .
+        '<dd><pre class="code"><code class="language-markdown">- Listenpunkt 1<br>- Listenpunkt 1</code></pre>' .
+        '<dd><pre class="code"><code class="language-markdown">1. Nummerierte Liste 1<br>2. Nummerierte Liste 2</code></pre></dd>' .
+        '<dt>Zitate</dt>' .
+        '<dd><pre class="code"><code class="language-markdown">&gt; Zitierter Text</code></pre></dd>' .
+        '<dt>Code-Blöcke</dt>' .
+        '<dd><pre><code>```<br>// Ein einfacher Code-Block<br>```</code></pre>' .
+        '<dd><pre class="code"><code class="language-php">```php<br>// Etwas PHP-Code<br>phpinfo();<br>```</code></pre></dd>',
+    'snippet.form.help.links'          =>
+        '<dt>Verlinkungen</dt>' .
+        '<dd><code>[Link-Text](https://example.com)</code></dd>',
+    'snippet.form.help.autolinks'      =>
+        '<dd>Vollständige URLs werden automatisch in Links umgewandelt.</dd>',
 
     // - list
-    'commentions.snippet.list.comments'             => 'Kommentare',
-    'commentions.snippet.list.comment'              => '{ author }',
-    'commentions.snippet.list.mentioned'            => '{ author } erwähnte dies',
-    'commentions.snippet.list.mentionedAt'          => '{ author } erwähnte dies auf { link }',
-    'commentions.snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir« auf { link }',
-    'commentions.snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
-    'commentions.snippet.list.replies'              => '{ author } antwortete auf { link }',
-    'commentsions.snippet.list.dateFormat.date'     => 'd.m.Y H:i Uhr',
-    'commentsions.snippet.list.dateFormat.strftime' => '%d.%m.%Y %H:%M Uhr',
+    'snippet.list.comments'             => 'Kommentare',
+    'snippet.list.comment'              => '{ author }',
+    'snippet.list.mentioned'            => '{ author } erwähnte dies',
+    'snippet.list.mentionedAt'          => '{ author } erwähnte dies auf { link }',
+    'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir« auf { link }',
+    'snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
+    'snippet.list.replies'              => '{ author } antwortete auf { link }',
+    'snippet.list.dateFormat.date'      => 'd.m.Y H:i Uhr',
+    'snippet.list.dateFormat.strftime'  => '%d.%m.%Y %H:%M Uhr',
 
 
     // panel sections
 
     // - headlines
-    'commentions.section.headline.default'          => 'Kommentare und Webmentions',
-    'commentions.section.headline.pending'          => 'Eingang: Kommentare und Webmentions',
-    'commentions.section.headline.all'              => 'Alle Kommentare und Webmentions',
+    'section.headline.default'          => 'Kommentare und Webmentions',
+    'section.headline.pending'          => 'Eingang: Kommentare und Webmentions',
+    'section.headline.all'              => 'Alle Kommentare und Webmentions',
 
     // - empty messages
-    'commentions.section.empty.pending'             => 'Keine ungeprüften Kommentare',
-    'commentions.section.empty.default'             => 'Keine Kommentare',
+    'section.empty.pending'             => 'Keine ungeprüften Kommentare',
+    'section.empty.default'             => 'Keine Kommentare',
 
     //  -options buttons
-    'commentions.section.option.unapprove'          => 'Ablehnen',
-    'commentions.section.option.approve'            => 'Akzteptieren',
-    'commentions.section.option.delete'             => 'Löschen',
-    'commentions.section.option.viewsource'         => 'Quelle ansehen',
-    'commentions.section.option.viewwebsite'        => 'Website ansehen',
-    'commentions.section.option.sendemail'          => 'E-Mail senden',
+    'section.option.unapprove'          => 'Ablehnen',
+    'section.option.approve'            => 'Akzteptieren',
+    'section.option.delete'             => 'Löschen',
+    'section.option.viewsource'         => 'Quelle ansehen',
+    'section.option.viewwebsite'        => 'Website ansehen',
+    'section.option.sendemail'          => 'E-Mail senden',
 
 
 ];

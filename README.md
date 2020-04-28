@@ -2,11 +2,11 @@
 
 A minimalist, yet powerful and extendable, comment system and Webmention endpoint.
 
-* Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention).
-* Incoming webmentions are stored in a queue and processed asynchronously.
-* Comments can be approved/deleted in the Kirby Panel using the built-in panel sections
-* A range of page(s) methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
-* Supports multi-language sites and virtual pages
+- Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention).
+- Incoming webmentions are stored in a queue and processed asynchronously.
+- Comments can be approved/deleted in the Kirby Panel using the built-in panel sections
+- A range of page(s) methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
+- Supports multi-language sites and virtual pages
 
 Versions 1.x (April 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); to go back to an old version, the last release of the old branch was [0.3.2](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v0.3.2).
 
@@ -14,18 +14,18 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 
 ## Table of contents
 
-* [Ethics and privacy](#ethics-and-privacy)
-* [Installation](#installation)
-* [Setup](#setup)
-* [Frontend helper](#frontend-helper)
-* [Panel sections](#panel-sections)
-* [Page methods](#page-methods)
-* [Pages methods](#pages-methods)
-* [API endpoints](#api-endpoints)
-* [Hooks](#hooks)
-* [Data structure and storage](#data-structure-and-storage)
-* [Config options](#config-options)
-* [Requirements, credits, license](#requirements)
+- [Ethics and privacy](#ethics-and-privacy)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Frontend helper](#frontend-helper)
+- [Panel sections](#panel-sections)
+- [Page methods](#page-methods)
+- [Pages methods](#pages-methods)
+- [API endpoints](#api-endpoints)
+- [Hooks](#hooks)
+- [Data structure and storage](#data-structure-and-storage)
+- [Config options](#config-options)
+- [Requirements, credits, license](#requirements)
 
 ## Ethics and privacy
 
@@ -99,9 +99,9 @@ If you would like to use basic CSS styles for these prefabricated HTML snippets 
 
 Alternatively, you can add the form feedback snippet (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list.
 
-* The helper `<?php commentions('feedback'); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
-* To render the comment form, include `<?php commentions('form'); ?>` in your template.
-* Finally, `<?php commentions('list'); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentions('grouped')` instead (check options further below for additional control).
+- The helper `<?php commentions('feedback'); ?>` renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
+- To render the comment form, include `<?php commentions('form'); ?>` in your template.
+- Finally, `<?php commentions('list'); ?>` renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `commentions('grouped')` instead (check options further below for additional control).
 
 (If your are using the Starterkit, place the feedback helper just before the opening `<article>` tag, and the form and list helpers just after the closing `</article>` tag in `site/templates/note.php` for best results.)
 
@@ -127,7 +127,7 @@ In order to receive webmentions (this is optional, you may also use the plugin f
 
 Per the specification ([ch 3.2](https://www.w3.org/TR/webmention/#receiving-webmentions)), incoming webmentions are always placed in a backlog queue for asynchronous processing (this is to mitigate the risk of DDoS attacks by flooding your site with webmentions). In order to have these webmentions processed, this queue needs to be run regularly.
 
-First, set a secret key with at least 10 characters in your `site/config/config.php` (the key may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `):
+First, set a secret key with at least 10 characters in your `site/config/config.php` (the key may NOT include any of the following: `&` `%` `#` `+` nor a space sign ``):
 
 ```php
 return [
@@ -215,11 +215,12 @@ Unless your site is running on the Starterkit, you likely want to write your own
 ### commentions
 
 This universal panel section displays either
-* all comments for the page it is on (no `show` property, or `show: page`), or
-* an "inbox" of all or all pending comments for all pages (`show: all`, `show: pending`)
+
+- all comments for the page it is on (no `show` property, or `show: page`), or
+- an "inbox" of all or all pending comments for all pages (`show: all`, `show: pending`)
 
 | Property | Type    | Default | Description                                                                                                                                                                                           |
-|----------|---------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | empty    | string  | –       | Sets the text for the empty state box                                                                                                                                                                 |
 | flip     | boolean | false   | Default presentation order (`false`) is latest first; `true` shows comments chronologically                                                                                                           |
 | headline | string  | –       | The headline for the section.                                                                                                                                                                         |
@@ -252,7 +253,7 @@ sections:
 
 ## Page methods
 
-### $page->commentions()
+### \$page->commentions()
 
 Returns an array with comments for the page object.
 
@@ -261,14 +262,14 @@ Returns an array with comments for the page object.
 #### Parameters
 
 | Name    | Type   | Default    | Description                                                                                                                                        |
-|---------|--------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| $query  | string | 'approved' | Selects the comments to be included in the array; possible values are either a valid status('approved', 'pending', 'all') or a single comment UID. |
-| $sort   | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically                                                          |
+| ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \$query | string | 'approved' | Selects the comments to be included in the array; possible values are either a valid status('approved', 'pending', 'all') or a single comment UID. |
+| \$sort  | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically                                                          |
 
 #### Return
 
-* When requesting with a status: array with all comments for the requested object (see "Data structure" chapter below for details); empty array if none. A field `'pageid'` is added to each comment's array, indicating the Kirby page ID the comment belongs to.
-* When requesting with a UID: array with the data of the comment; boolean `false` if UID is not valid.
+- When requesting with a status: array with all comments for the requested object (see "Data structure" chapter below for details); empty array if none. A field `'pageid'` is added to each comment's array, indicating the Kirby page ID the comment belongs to.
+- When requesting with a UID: array with the data of the comment; boolean `false` if UID is not valid.
 
 The following example shows the most minimal comment and webmentions possible (displayed fields are compulsory):
 
@@ -297,7 +298,7 @@ Array (
 
 The field `pageid` does not come from the data storage; it is added by the parser to the output of the page(s) method by default.
 
-### $page->addCommention()
+### \$page->addCommention()
 
 Adds a comment entry to the page.
 
@@ -305,15 +306,15 @@ Adds a comment entry to the page.
 
 #### Parameters
 
-| Name  | Type  | Description                                                                                    |
-|-------|-------|------------------------------------------------------------------------------------------------|
-| $data | array | All the data for the comment/webmention, according to the specifications of the Data structure |
+| Name   | Type  | Description                                                                                    |
+| ------ | ----- | ---------------------------------------------------------------------------------------------- |
+| \$data | array | All the data for the comment/webmention, according to the specifications of the Data structure |
 
 #### Return
 
 Array with the data as saved, including the assigned UID, or boolean `false` if failed.
 
-### $page->updateCommention()
+### \$page->updateCommention()
 
 Updates a comment entry on the page.
 
@@ -321,16 +322,16 @@ Updates a comment entry on the page.
 
 #### Parameters
 
-| Name  | Type   | Description                                                                                    |
-|-------|--------|------------------------------------------------------------------------------------------------|
-| $uid  | string | The unique ID of the comment; 10 alphanumeric characters (lower-case letters and numbers).     |
-| $data | array  | All the data for the comment/webmention, according to the specifications of the Data structure |
+| Name   | Type   | Description                                                                                    |
+| ------ | ------ | ---------------------------------------------------------------------------------------------- |
+| \$uid  | string | The unique ID of the comment; 10 alphanumeric characters (lower-case letters and numbers).     |
+| \$data | array  | All the data for the comment/webmention, according to the specifications of the Data structure |
 
 #### Return
 
 Array with the data as saved, or boolean `false` if failed.
 
-### $page->deleteCommention()
+### \$page->deleteCommention()
 
 Deletes a comment entry from the page.
 
@@ -338,9 +339,9 @@ Deletes a comment entry from the page.
 
 #### Parameters
 
-| Name | Type   | Description                                                                                |
-|------|--------|--------------------------------------------------------------------------------------------|
-| $uid | string | The unique ID of the comment; 10 alphanumeric characters (lower-case letters and numbers). |
+| Name  | Type   | Description                                                                                |
+| ----- | ------ | ------------------------------------------------------------------------------------------ |
+| \$uid | string | The unique ID of the comment; 10 alphanumeric characters (lower-case letters and numbers). |
 
 #### Return
 
@@ -348,7 +349,7 @@ Boolean `true` on success, `false` if failed.
 
 ## Pages methods
 
-### $pages->commentions()
+### \$pages->commentions()
 
 Returns an array with comments for the page collection.
 
@@ -357,9 +358,9 @@ Returns an array with comments for the page collection.
 #### Parameters
 
 | Name     | Type   | Default    | Description                                                                                     |
-|----------|--------|------------|-------------------------------------------------------------------------------------------------|
-| $status  | string | 'approved' | Selects the comments to be included in the array; possible values: 'approved', 'pending', 'all' |
-| $sort    | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically       |
+| -------- | ------ | ---------- | ----------------------------------------------------------------------------------------------- |
+| \$status | string | 'approved' | Selects the comments to be included in the array; possible values: 'approved', 'pending', 'all' |
+| \$sort   | string | 'asc'      | Comments are ordered by timestamp; 'desc' lists latest first, 'asc' lists chronologically       |
 
 #### Return
 
@@ -377,8 +378,8 @@ Changes a comment's status from 'pending' or 'unapproved' to 'approved'.
 
 #### Parameters
 
-| Name | Type   | Required |Description                                 |
-|------|--------|----------|--------------------------------------------|
+| Name | Type   | Required | Description                                |
+| ---- | ------ | -------- | ------------------------------------------ |
 | uid  | string | required | the 10-character alphanumeric comment UID  |
 | uri  | string | required | The URI of the page the comment belongs to |
 
@@ -396,8 +397,8 @@ _NB. This does not reinstate the 'pending' status, which only applies for new in
 
 #### Parameters
 
-| Name | Type   | Required |Description                                 |
-|------|--------|----------|--------------------------------------------|
+| Name | Type   | Required | Description                                |
+| ---- | ------ | -------- | ------------------------------------------ |
 | uid  | string | required | the 10-character alphanumeric comment UID  |
 | uri  | string | required | The URI of the page the comment belongs to |
 
@@ -413,8 +414,8 @@ Deletes a comment.
 
 #### Parameters
 
-| Name | Type   | Required |Description                                 |
-|------|--------|----------|--------------------------------------------|
+| Name | Type   | Required | Description                                |
+| ---- | ------ | -------- | ------------------------------------------ |
 | uid  | string | required | the 10-character alphanumeric comment UID  |
 | uri  | string | required | The URI of the page the comment belongs to |
 
@@ -432,10 +433,10 @@ This hook is triggered before a comment/webmention is added. It can be used for 
 
 #### Variables
 
-| Name  | Type   | Description                                                 |
-|-------|--------|-------------------------------------------------------------|
-| $page | object | The Kirby page object the comment was added to              |
-| $data | string | The complete data array about to be saved to the text file. |
+| Name   | Type   | Description                                                 |
+| ------ | ------ | ----------------------------------------------------------- |
+| \$page | object | The Kirby page object the comment was added to              |
+| \$data | string | The complete data array about to be saved to the text file. |
 
 #### Example
 
@@ -459,10 +460,10 @@ This hook is triggered before a comment/webmention is updated. It can be used fo
 
 #### Variables
 
-| Name  | Type   | Description                                                                                                                    |
-|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| $page | object | The Kirby page object the comment was added to                                                                                 |
-| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+| Name   | Type   | Description                                                                                                                    |
+| ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| \$page | object | The Kirby page object the comment was added to                                                                                 |
+| \$data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
 
 ### commentions.add:after
 
@@ -470,10 +471,10 @@ This hook is triggered after a comment/webmention is added.
 
 #### Variables
 
-| Name  | Type   | Description                                                                                                                    |
-|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| $page | object | The Kirby page object the comment was added to                                                                                 |
-| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+| Name   | Type   | Description                                                                                                                    |
+| ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| \$page | object | The Kirby page object the comment was added to                                                                                 |
+| \$data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
 
 #### Example
 
@@ -484,7 +485,7 @@ Adding the following code to `site/config.php` or in a plugin would replace ever
 	'commentions.add:after' => function ( $page, $data ) {
 		$page->updateCommention( $data['uid'], [ 'text' => print_r( $data, true ) ] );
 	}
-], 
+],
 ```
 
 ### commentions.update:after
@@ -493,10 +494,10 @@ This hook is triggered after a comment/webmention is updated.
 
 #### Variables
 
-| Name  | Type   | Description                                                                                                                    |
-|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| $page | object | The Kirby page object the comment was added to                                                                                 |
-| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+| Name   | Type   | Description                                                                                                                    |
+| ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| \$page | object | The Kirby page object the comment was added to                                                                                 |
+| \$data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
 
 ### commentions.webmention:after
 
@@ -506,10 +507,10 @@ Since the parsing of a received webmention also manifests the addition of a new 
 
 #### Variables
 
-| Name  | Type   | Description                                                                                                                    |
-|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| $page | object | The Kirby page object the webmention was added to                                                                              |
-| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+| Name   | Type   | Description                                                                                                                    |
+| ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| \$page | object | The Kirby page object the webmention was added to                                                                              |
+| \$data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
 
 _NB. Incoming webmentions are parsed asynchronously; this hook is not triggered when the request is submitted, but once the cronjob has successfully parsed and processed the request._
 
@@ -524,7 +525,7 @@ The file `commentions.yml` contains the comment data.
 These are the fields that can be used, including information on which are compulsory for what type of comment:
 
 | Field     | Comment  | Webment. | Description                                                                                                                                        | Example                               |
-|-----------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
+| --------- | -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | timestamp | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
 | type      | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
 | status    | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                        | approved                              |
@@ -541,7 +542,7 @@ These are the fields that can be used, including information on which are compul
 The file `webmentionqueue.yml` contains the data of yet unprocessed, incoming webmentions.
 
 | Field     | Description                                                                                                                        | Example                                    |
-|-----------|------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | timestamp | Time of the submission, as UNIX epoch timestamp.                                                                                   | 1587220838                                 |
 | source    | The URL containing the mention of the page on this website, as submitted in the webmention request.                                | https://example.com/a-webmention-post      |
 | target    | The URL of the page the webmention claims to mention, as submitted in the webmention request.                                      | https://thisdomain.com/a-mentioned-article |
@@ -589,7 +590,7 @@ A cronjob is required for the asynchronous processing of incoming webmentions. T
 'sgkirby.commentions.secret' => '<YOUR-SECRET>',
 ```
 
-A valid secret key must be at least 10 characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `.
+A valid secret key must be at least 10 characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ``.
 
 _NB. Without this setting, the cronjob will always fail._
 
@@ -676,6 +677,13 @@ When comments are displayed using the `commentions('grouped')` helper, adding th
 ```
 
 _NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
+
+### Comment formatting
+
+```php
+'allowlinks' => true,    /* Allow links in comments, if true */
+'autolinks' => true,    /* Automatically recognize URLs in comments and turn them into links. Has no effect, if allowlinks is false. */
+```
 
 ## Requirements
 

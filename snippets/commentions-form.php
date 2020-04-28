@@ -47,6 +47,7 @@
       <div class="commentions-form-message">
         <label for="message"><?= t('commentions.snippet.form.comment') ?> <abbr title="required">*</abbr></label>
         <textarea id="message" name="message" rows="8" required></textarea>
+        <?php commentions('help') ?>
       </div>
 
       <?php /* "commentions" value enables identifying commentions submissions in route:before hook + creation timestamp is used for spam protection */ ?>
