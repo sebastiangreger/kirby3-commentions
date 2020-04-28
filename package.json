@@ -1,0 +1,31 @@
+{
+  "name": "kirby3-commentions",
+  "version": "1.0.0-alpha",
+  "description": "A minimalist, yet powerful and extendable, comment system and Webmention endpoint.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastiangreger/kirby3-commentions.git"
+  },
+  "scripts": {
+    "dev": "parcel watch src/index.js --no-source-maps -d ./",
+    "build": "parcel build src/index.js --no-source-maps --experimental-scope-hoisting -d ./"
+  },
+  "posthtml": {
+    "recognizeSelfClosing": true
+  },
+  "author": "Sebastian Greger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sebastiangreger/kirby3-commentions/issues"
+  },
+  "homepage": "https://github.com/sebastiangreger/kirby3-commentions#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@vue/component-compiler-utils": "^3.1.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "dependencies": {
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4"
+  }
+}

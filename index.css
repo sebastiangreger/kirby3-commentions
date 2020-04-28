@@ -1,11 +1,1 @@
-/* overriding the component's default styles to accommodate commentions */
-.k-section-name-commentions { font-size:.75rem; line-height:1.25rem; }
-	.k-section-name-commentions .k-list-item { align-items:start; }
-		.k-section-name-commentions .k-list-item-content { align-items:start; }
-			.k-section-name-commentions .k-list-item-image .k-icon svg { opacity:1; }
-			.k-section-name-commentions .k-list-item-commention-approved .k-list-item-image .k-icon svg { color:#a7bd68; }
-			.k-section-name-commentions .k-list-item-commention-unapproved .k-list-item-image .k-icon svg { color:#d16464; }
-			.k-section-name-commentions .k-list-item-commention-pending .k-list-item-image .k-icon svg { color:#d16464; }
-			.k-section-name-commentions .k-list-item-commention-update .k-list-item-image .k-icon svg { color:#d16464; }
-			.k-section-name-commentions .k-list-item-text { white-space:pre-line; }
-				.k-section-name-commentions .k-list-item-text small { opacity:0; }
+.k-section-name-commentions{font-size:.75rem;line-height:1.25rem}.k-section-name-commentions .k-list-item,.k-section-name-commentions .k-list-item-content{align-items:start}.k-section-name-commentions .k-list-item-image .k-icon svg{opacity:1}.k-section-name-commentions .k-list-item-commention-approved .k-list-item-image .k-icon svg{color:#a7bd68}.k-section-name-commentions .k-list-item-commention-pending .k-list-item-image .k-icon svg,.k-section-name-commentions .k-list-item-commention-unapproved .k-list-item-image .k-icon svg,.k-section-name-commentions .k-list-item-commention-update .k-list-item-image .k-icon svg{color:#d16464}.k-section-name-commentions .k-list-item-text{white-space:pre-line}.k-section-name-commentions .k-list-item-text small{opacity:0}
