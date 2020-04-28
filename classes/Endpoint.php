@@ -84,7 +84,7 @@ class Endpoint
         // find the Kirby page the target URL refers to
         $path = Url::path($target);
         if ($path == '') {
-            $page = page('home');
+            $page = page(site()->homePageId());
         } else {
             $page = page(kirby()->call(trim($path, '/')));
         }
@@ -102,7 +102,7 @@ class Endpoint
         }
         // all other requests are enqueued in the home page commention file
         else {
-            return Storage::add(page('home'), $data, 'webmentionqueue');
+            return Storage::add(page(site()->homePageId()), $data, 'webmentionqueue');
         }
     }
 }
