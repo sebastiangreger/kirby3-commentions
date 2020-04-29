@@ -55,9 +55,6 @@ return [
 
         'commentions' => function () {
 
-            // display comments newest first, unless flip option is true
-            $sort = $this->flip() ? 'asc' : 'desc';
-
             // retrieve the show property
             switch ($this->show()) {
                 case 'all':
@@ -70,6 +67,7 @@ return [
             }
 
             if ($this->flip()) {
+                // display comments newest first, unless flip option is true
                 $comments = $comments->flip();
             }
 
@@ -77,7 +75,7 @@ return [
 
             // transpose all comments into an array
             foreach ($comments as $data) {
-                $text = isset($data['text']) ? htmlspecialchars($data['text']) : '';
+                $text = isset($data['text']) ? Formatter::filter($data['text']) : '';
                 $name = isset($data['name']) ? htmlspecialchars($data['name']) : t('commentions.name.anonymous');
                 $meta = $data['type'];
                 if ($data['status'] === 'update') {
