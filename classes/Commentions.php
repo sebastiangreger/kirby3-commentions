@@ -301,7 +301,7 @@ class Commentions
         $cache         = static::getSanitizedTextCache();
         $cacheModified = $cache->modified($cacheKey);
 
-        if ($cacheModified !== false && $cacheModified > $dataModified) {
+        if (false && $cacheModified !== false && $cacheModified > $dataModified) {
             // Cache exists and is newer than commentions data file,
             // use the cache as base
             $cachedText = $cache->get($cacheKey);

@@ -8,6 +8,7 @@ use HTMLPurifier_AttrDef;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
 use HTMLPurifier_TagTransform;
+use HTMLPurifier_TagTransform_Simple;
 use sgkirby\Commentions\Formatter\HTMLPurifierCacheAdapter;
 
 class Formatter
@@ -243,6 +244,14 @@ class Formatter
                     return $tag;
                 }
             };
+
+            // Transform headlines into regular paragraphs
+            $def->info_tag_transform['h1'] = new HTMLPurifier_TagTransform_Simple('p');
+            $def->info_tag_transform['h2'] = new HTMLPurifier_TagTransform_Simple('p');
+            $def->info_tag_transform['h3'] = new HTMLPurifier_TagTransform_Simple('p');
+            $def->info_tag_transform['h4'] = new HTMLPurifier_TagTransform_Simple('p');
+            $def->info_tag_transform['h5'] = new HTMLPurifier_TagTransform_Simple('p');
+            $def->info_tag_transform['h6'] = new HTMLPurifier_TagTransform_Simple('p');
 
             static::$purifier = new HTMLPurifier($config);
         }

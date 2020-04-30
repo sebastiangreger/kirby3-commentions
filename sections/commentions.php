@@ -53,28 +53,28 @@ return [
             }
         },
 
-        'commentions' => function () {
+        'commentions' => function (): array {
 
             // retrieve the show property
             switch ($this->show()) {
                 case 'all':
                 case 'pending':
-                    $comments = site()->index()->commentions($this->show());
+                    $commentions = site()->index()->commentions($this->show());
                     break;
                 default:
-                    $comments = $this->model()->commentions('all');
+                    $commentions = $this->model()->commentions('all');
                     break;
             }
 
             if ($this->flip()) {
-                // display comments newest first, unless flip option is true
-                $comments = $comments->flip();
+                // display commentions newest first, unless flip option is true
+                $commentions = $commentions->flip();
             }
 
-            $comments = $comments->toArray();
+            return array_values($commentions->toArray());
 
             // transpose all comments into an array
-            foreach ($comments as $data) {
+            /*foreach ($comments as $data) {
                 $text = isset($data['text']) ? Formatter::filter($data['text']) : '';
                 $name = isset($data['name']) ? htmlspecialchars($data['name']) : t('commentions.name.anonymous');
                 $meta = $data['type'];
@@ -83,7 +83,7 @@ return [
                 }
 
                 // avoid returning empty array entries when no commentions exist
-                if (!empty($meta)) {
+                /*if (!empty($meta)) {
                     $content =
                         strtoupper($meta)
                         . (!empty($data['language']) ? ' [' . $data['language'] . ']' : '')
@@ -169,10 +169,10 @@ return [
 
                     $return[] = [ $content, $options, $class, $icon ];
                 }
-            }
+            }*/
 
             // return the array to the vue component
-            return  $return ?? [] ;
+            //return  $return ?? [] ;
         }
 
     ],
