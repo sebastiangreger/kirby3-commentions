@@ -72,19 +72,22 @@ $translations = [
     'section.option.sendemail'          => 'Send email',
 
     // - dialogs
-    'section.delete.webmention.confirm' => 'Do you really want to delete this Webmention?',
-    'section.delete.mention.confirm'    => 'Do you really want to delete this Mention?',
-    'section.delete.trackback.confirm'  => 'Do you really want to delete this Trackback?',
-    'section.delete.pingback.confirm'   => 'Do you really want to delete this Pingback?',
-    'section.delete.like.confirm'       => 'Do you really want to delete this Like?',
-    'section.delete.bookmark.confirm'   => 'Do you really want to delete this Bookmark?',
-    'section.delete.reply.confirm'      => 'Do you really want to delete this Reply?',
-    'section.delete.comment.confirm'    => 'Do you really want to delete this Comment?',
+    'section.delete.webmention.confirm' => 'Do you really want to delete this <strong>Webmention</strong>?',
+    'section.delete.mention.confirm'    => 'Do you really want to delete this <strong>Mention</strong>?',
+    'section.delete.trackback.confirm'  => 'Do you really want to delete this <strong>Trackback</strong>?',
+    'section.delete.pingback.confirm'   => 'Do you really want to delete this <strong>Pingback</strong>?',
+    'section.delete.like.confirm'       => 'Do you really want to delete this <strong>Like</strong>?',
+    'section.delete.bookmark.confirm'   => 'Do you really want to delete this <strong>Bookmark</strong>?',
+    'section.delete.reply.confirm'      => 'Do you really want to delete this <strong>Reply</strong>?',
+    'section.delete.comment.confirm'    => 'Do you really want to delete this <strong>Comment</strong>?',
     'section.delete.unknown.confirm'    => 'Do you really want to delete this?',
 
     // - buttons
     'section.button.viewsource'         => 'View source',
     'section.button.refresh'            => 'Refresh',
+
+    // - misc
+    'section.datetime.format'           => 'YYYY-MM-DD HH:mm',
 ];
 
 foreach ($translations as $key => $value) {

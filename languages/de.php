@@ -72,19 +72,22 @@ $translations = [
     'section.option.sendemail'          => 'E-Mail senden',
 
     // - dialogs
-    'section.delete.webmention.confirm' => 'Willst du diese Webmention wirklich löschen?',
-    'section.delete.mention.confirm'    => 'Willst du diese Erwähnung wirklich löschen?',
-    'section.delete.trackback.confirm'  => 'Willst du diesen Trackback wirklich löschen?',
-    'section.delete.pingback.confirm'   => 'Willst du diesen Pingback wirklich löschen?',
-    'section.delete.like.confirm'       => 'Willst du dieses „Gefällt mir“ wirklich löschen?',
-    'section.delete.bookmark.confirm'   => 'Willst du dieses Lesezeichen wirklich löschen?',
-    'section.delete.reply.confirm'      => 'Willst du diese Antwort wirklich löschen?',
-    'section.delete.comment.confirm'    => 'Willst du diesen Kommentar wirklich löschen?',
-    'section.delete.unknown.confirm'    => 'Willst du diesen Eintrag wirklich löschen?',
+    'section.delete.webmention.confirm' => 'Willst du diese <strong>Webmention</strong> wirklich löschen?',
+    'section.delete.mention.confirm'    => 'Willst du diese <strong>Erwähnung</strong> wirklich löschen?',
+    'section.delete.trackback.confirm'  => 'Willst du diesen <strong>Trackback</strong> wirklich löschen?',
+    'section.delete.pingback.confirm'   => 'Willst du diesen <strong>Pingback</strong> wirklich löschen?',
+    'section.delete.like.confirm'       => 'Willst du dieses <strong>„Gefällt mir“</strong> wirklich löschen?',
+    'section.delete.bookmark.confirm'   => 'Willst du dieses <strong>Lesezeichen</strong> wirklich löschen?',
+    'section.delete.reply.confirm'      => 'Willst du diese <strong>Antwort</strong> wirklich löschen?',
+    'section.delete.comment.confirm'    => 'Willst du diesen <strong>Kommentar</strong> wirklich löschen?',
+    'section.delete.unknown.confirm'    => 'Willst du diesen <strong>Eintrag</strong> wirklich löschen?',
 
     // - buttons
     'section.button.viewsource'         => 'Quelltext anzeigen',
     'section.button.refresh'            => 'Aktualisieren',
+
+    // - misc
+    'section.datetime.format'           => 'DD.MM.YYYY · HH:mm [Uhr]',
 ];
 
 foreach ($translations as $key => $value) {

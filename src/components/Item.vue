@@ -102,7 +102,9 @@ export default {
     },
 
     dateFormatted() {
-      return this.$library.dayjs(this.item.timestamp).format("DD.MM.YYYY HH:mm");
+      return this.$library
+        .dayjs(this.item.timestamp)
+        .format(this.$t('commentions.section.datetime.format'));
     },
 
     options() {
@@ -237,6 +239,7 @@ $breakpoint-huge: 120em;
   color: var(--color-text-light);
   display: block;
   font-size: var(--font-size-tiny);
+  font-variant-numeric: tabular-nums;
 }
 
 .k-commentions-item-email {
