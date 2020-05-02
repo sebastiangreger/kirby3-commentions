@@ -37,6 +37,8 @@ class Commention extends StructureObject
     public function toArray(): array
     {
         $array = $this->content()->toArray();
+        $array['name_formatted'] = $this->nameFormatted();
+        $array['source_formatted'] = $this->sourceFormatted();
         ksort($array);
         return $array;
     }
