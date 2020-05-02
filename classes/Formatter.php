@@ -260,7 +260,7 @@ class Formatter
         $text = static::$purifier->purify($text);
 
         // Remove links, which got their attribute stripped during sanitation
-        $text = preg_replace('/<a rel="[^"]+">(.*)<\/a>/uU', '$1', $text);
+        $text = preg_replace('/<a(?:\s+rel="[^"]+")?>(.*)<\/a>/uU', '$1', $text);
 
         return $text;
     }
