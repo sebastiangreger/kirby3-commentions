@@ -68,7 +68,6 @@ $translations = [
     'section.option.unapprove'          => 'Ablehnen',
     'section.option.approve'            => 'Akzteptieren',
     'section.option.delete'             => 'Löschen',
-    'section.option.viewsource'         => 'Quelltext anzeigen',
     'section.option.openwebsite'        => 'Website öffnen',
     'section.option.sendemail'          => 'E-Mail senden',
 
@@ -82,6 +81,10 @@ $translations = [
     'section.delete.reply.confirm'      => 'Willst du diese Antwort wirklich löschen?',
     'section.delete.comment.confirm'    => 'Willst du diesen Kommentar wirklich löschen?',
     'section.delete.unknown.confirm'    => 'Willst du diesen Eintrag wirklich löschen?',
+
+    // - buttons
+    'section.button.viewsource'         => 'Quelltext anzeigen',
+    'section.button.refresh'            => 'Aktualisieren',
 ];
 
 foreach ($translations as $key => $value) {

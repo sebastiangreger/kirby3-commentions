@@ -68,7 +68,6 @@ $translations = [
     'section.option.unapprove'          => 'Unapprove',
     'section.option.approve'            => 'Approve',
     'section.option.delete'             => 'Delete',
-    'section.option.viewsource'         => 'View source',
     'section.option.openwebsite'        => 'Open website',
     'section.option.sendemail'          => 'Send email',
 
@@ -82,6 +81,10 @@ $translations = [
     'section.delete.reply.confirm'      => 'Do you really want to delete this Reply?',
     'section.delete.comment.confirm'    => 'Do you really want to delete this Comment?',
     'section.delete.unknown.confirm'    => 'Do you really want to delete this?',
+
+    // - buttons
+    'section.button.viewsource'         => 'View source',
+    'section.button.refresh'            => 'Refresh',
 ];
 
 foreach ($translations as $key => $value) {

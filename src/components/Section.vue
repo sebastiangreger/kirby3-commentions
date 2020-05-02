@@ -10,8 +10,8 @@
     <header class="k-section-header">
       <k-headline>{{ headline }}</k-headline>
       <k-button-group>
-        <k-button icon="code" :theme="viewSource ? 'active' : ''" @click="toggleViewSource()">View source</k-button>
-        <k-button icon="refresh" @click="refresh">Refresh</k-button>
+        <k-button icon="code" :theme="viewSource ? 'active' : ''" @click="toggleViewSource()">{{ $t('commentions.section.button.viewsource') }}</k-button>
+        <k-button icon="refresh" @click="refresh">{{ $t('commentions.section.button.refresh') }}</k-button>
       </k-button-group>
     </header>
 
