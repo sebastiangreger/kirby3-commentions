@@ -57,7 +57,7 @@ return [
                 ];
             }
 
-            if (class_exists('Materminds\\HTML5') === false || Formatter::advancedFormattingAvailable() === false) {
+            if (class_exists('Masterminds\\HTML5') === false || Formatter::advancedFormattingAvailable() === false) {
                 $errors[] = [
                     'id' => 'missing-dependencies',
                     'message' => t('commentions.section.error.missing-dependencies'),
