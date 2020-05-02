@@ -88,6 +88,10 @@ $translations = [
 
     // - misc
     'section.datetime.format'           => 'YYYY-MM-DD HH:mm',
+
+    // - errors
+    'section.error.storage-version'      => '<strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/commentions-migrationassistant" target="_blank">Migration assistant</a> to get things running again!',
+    'section.error.missing-dependencies' => '<strong>Missing libraries:</strong> The Commentions plugin uses <a href="http://masterminds.github.io/html5-php/" target="_blank">html5-php</a> and <a href="http://htmlpurifier.org/">HTML Purifier</a> for filtering, analysing and formatting HTML input. For security reasons, no HTML is shown in comments or Webmention and no Markdown-formatting will be applied, as long as these Libraries are missing. In <code>README.md</code> in the plugin folder, you can find help for how to install these packages manually.',
 ];
 
 foreach ($translations as $key => $value) {

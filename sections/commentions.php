@@ -45,12 +45,31 @@ return [
 
     'computed' => [
 
-        'error' => function () {
-            if (is_dir(kirby()->root() . DS . 'content' . DS . '.commentions')) {
-                return 'version';
-            } else {
-                return false;
+        'errors' => function () {
+
+            $errors = [];
+
+            if (is_dir(kirby()->root() . DS . 'content' . DS . '.commentions') === true) {
+                $errors[] = [
+                    'id'      => 'storage-version',
+                    'message' => t('commentions.section.error.storage-version'),
+                    'theme'   => 'negative',
+                ];
             }
+
+            if (class_exists('Materminds\\HTML5') === false || Formatter::advancedFormattingAvailable() === false) {
+                $errors[] = [
+                    'id' => 'missing-dependencies',
+                    'message' => t('commentions.section.error.missing-dependencies'),
+                    'theme' => 'info',
+                ];
+            }
+
+            return $errors;
+        },
+
+        'dependenciesError' => function () {
+            return ;
         },
 
         'commentions' => function (): array {

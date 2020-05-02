@@ -1,12 +1,6 @@
 <template>
   <section class="k-commentions-section k-section">
 
-    <!-- <k-info-field
-      label="⚠️ Missing dependencies"
-      text="Some dependencies are missing"
-      theme="negative">
-    </k-info-field> -->
-
     <header class="k-section-header">
       <k-headline>{{ headline }}</k-headline>
       <k-button-group>
@@ -15,13 +9,15 @@
       </k-button-group>
     </header>
 
-    <k-box theme="negative" v-if="error">
-      <k-text size="small" v-if="error == 'version'">
-        <strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/commentions-migrationassistant" target="_blank">Migration assistant</a> to get things running again!
-      </k-text>
-      <k-text size="small" v-else>
-        {{ error }}
-      </k-text>
+    <k-box
+      v-for="error in errors"
+      :key="error.id"
+      :theme="error.theme"
+    >
+      <k-text
+        v-html="error.message"
+        size="small"
+      />
     </k-box>
 
     <k-commentions-list
@@ -80,7 +76,7 @@ export default {
       headline: null,
       commentions: [],
       empty: null,
-      error: null,
+      errors: [],
       viewSource: false,
     }
   },
@@ -90,7 +86,7 @@ export default {
       this.headline    = response.headline;
       this.commentions = response.commentions;
       this.empty       = response.empty;
-      this.error       = response.error;
+      this.errors      = response.errors;
     });
   },
 
@@ -155,4 +151,10 @@ export default {
     top: .7rem;
   }
 }
+
+.k-commentions-section > .k-box {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
 </style>
