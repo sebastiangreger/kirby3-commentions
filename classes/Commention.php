@@ -69,13 +69,15 @@ class Commention extends StructureObject
      *
      * @return string
      */
-    public function sourceFormatted(?string $anonymous = null): ?string
+    public function sourceFormatted(string $anonymous = null): ?string
     {
         // Format author name
         $author = $this->nameFormatted($anonymous);
 
         if ($this->website()->isNotEmpty()) {
             $author = '<a href="' . $this->website() . '" rel="noopener noreferrer nofollow">' . $author . '</a>';
+        } else {
+            $author = "<strong>{$author}</strong>";
         }
 
         // Format domain of source URL
