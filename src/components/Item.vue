@@ -126,7 +126,7 @@ export default {
         '-',
         {
           icon: 'url',
-          text: this.$t('commentions.section.option.viewsource'),
+          text: this.$t('commentions.section.option.openwebsite'),
           link: this.item.website,
           target: '_blank',
           disabled: !this.item.website,

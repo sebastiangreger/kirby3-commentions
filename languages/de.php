@@ -68,8 +68,8 @@ $translations = [
     'section.option.unapprove'          => 'Ablehnen',
     'section.option.approve'            => 'Akzteptieren',
     'section.option.delete'             => 'Löschen',
-    'section.option.viewsource'         => 'Quelle ansehen',
-    'section.option.viewwebsite'        => 'Website ansehen',
+    'section.option.viewsource'         => 'Quelltext anzeigen',
+    'section.option.openwebsite'        => 'Website öffnen',
     'section.option.sendemail'          => 'E-Mail senden',
 
     // - dialogs

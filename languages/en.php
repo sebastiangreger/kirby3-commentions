@@ -69,7 +69,7 @@ $translations = [
     'section.option.approve'            => 'Approve',
     'section.option.delete'             => 'Delete',
     'section.option.viewsource'         => 'View source',
-    'section.option.viewwebsite'        => 'View website',
+    'section.option.openwebsite'        => 'Open website',
     'section.option.sendemail'          => 'Send email',
 
     // - dialogs
