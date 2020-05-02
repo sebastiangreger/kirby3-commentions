@@ -54,7 +54,6 @@ return [
         },
 
         'commentions' => function (): array {
-
             // retrieve the show property
             switch ($this->show()) {
                 case 'all':
@@ -71,108 +70,9 @@ return [
                 $commentions = $commentions->flip();
             }
 
+            // JavaScript needs a zero-based index for native array,
+            // while `$commentions->toArray()` uses UIDs as keys.
             return array_values($commentions->toArray());
-
-            // transpose all comments into an array
-            /*foreach ($comments as $data) {
-                $text = isset($data['text']) ? Formatter::filter($data['text']) : '';
-                $name = isset($data['name']) ? htmlspecialchars($data['name']) : t('commentions.name.anonymous');
-                $meta = $data['type'];
-                if ($data['status'] === 'update') {
-                    $meta .= ' update';
-                }
-
-                // avoid returning empty array entries when no commentions exist
-                /*if (!empty($meta)) {
-                    $content =
-                        strtoupper($meta)
-                        . (!empty($data['language']) ? ' [' . $data['language'] . ']' : '')
-                        . ': ' . $name . ' ('
-                        . date($data['timestamp']) . ")\n"
-                        . (!empty($data['source']) ? $data['source'] . "\n" : '')
-                        . (empty($data['source']) && !empty($data['website']) ? $data['website'] . "\n" : '')
-                        . ($text != '' ? "\n" . $text : '');
-
-                    $options = [];
-
-                    // appearance and dropdown options depend on comment status
-                    if ($data['status'] == 'approved') {
-                        $class = 'k-list-item-commention-approved';
-                        $icon = [ 'type' => 'chat', 'back' => 'transparent' ];
-                        $options[] = [
-                            'icon' => 'remove',
-                            'text' => t('commentions.section.option.unapprove'),
-                            'click' => 'unapprove-' . $data['uid'] . '|' . $data['pageid']
-                        ];
-                    } elseif ($data['status'] == 'unapproved') {
-                        $class = 'k-list-item-commention-unapproved';
-                        $icon = [ 'type' => 'protected', 'back' => 'transparent' ];
-                        $options[] = [
-                            'icon' => 'check',
-                            'text' => t('commentions.section.option.approve'),
-                            'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
-                        ];
-                    } elseif ($data['status'] == 'update') {
-                        $class = 'k-list-item-commention-update';
-                        $icon = [ 'type' => 'refresh', 'back' => 'transparent' ];
-                        $options[] = [
-                            'icon' => 'check',
-                            'text' => t('commentions.section.option.approve'),
-                            'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
-                        ];
-                    } else {
-                        $class = 'k-list-item-commention-pending';
-                        $icon = [ 'type' => 'circle-outline', 'back' => 'transparent' ];
-                        $options[] = [
-                            'icon' => 'check',
-                            'text' => t('commentions.section.option.approve'),
-                            'click' => 'approve-' . $data['uid'] . '|' . $data['pageid']
-                        ];
-                        $options[] = [
-                            'icon' => 'protected',
-                            'text' => t('commentions.section.option.unapprove'),
-                            'click' => 'unapprove-' . $data['uid'] . '|' . $data['pageid']
-                        ];
-                    }
-
-                    // second option is always 'delete'
-                    $options[] = [
-                        'icon' => 'trash',
-                        'text' => t('commentions.section.option.delete'),
-                        'click' => 'delete-' . $data['uid'] . '|' . $data['pageid']
-                    ];
-
-                    // third option is link to source
-                    if (! empty($data['source'])) {
-                        $options[] = '-';
-                        $options[] = [
-                            'icon' => 'open',
-                            'text' => t('commentions.section.option.viewsource'),
-                            'click' => 'open-' . $data['uid'] . '|' . $data['source']
-                        ];
-                    } elseif (! empty($data['website'])) {
-                        $options[] = '-';
-                        $options[] = [
-                            'icon' => 'open',
-                            'text' => t('commentions.section.option.viewwebsite'),
-                            'click' => 'open-' . $data['uid'] . '|' . $data['website']
-                        ];
-                    }
-                    if (! empty($data['email'])) {
-                        $options[] = '-';
-                        $options[] = [
-                            'icon' => 'open',
-                            'text' => t('commentions.section.option.sendemail'),
-                            'click' => 'open-' . $data['uid'] . '|mailto:' . $data['email']
-                        ];
-                    }
-
-                    $return[] = [ $content, $options, $class, $icon ];
-                }
-            }*/
-
-            // return the array to the vue component
-            //return  $return ?? [] ;
         }
 
     ],

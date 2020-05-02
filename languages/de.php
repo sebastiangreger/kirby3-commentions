@@ -46,7 +46,7 @@ $translations = [
     'snippet.list.comment'              => '{ author }',
     'snippet.list.mentioned'            => '{ author } erwähnte dies',
     'snippet.list.mentionedAt'          => '{ author } erwähnte dies auf { link }',
-    'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir« auf { link }',
+    'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir“ auf { link }',
     'snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
     'snippet.list.replies'              => '{ author } antwortete auf { link }',
     'snippet.list.dateFormat.date'      => 'd.m.Y H:i Uhr',
@@ -72,7 +72,16 @@ $translations = [
     'section.option.viewwebsite'        => 'Website ansehen',
     'section.option.sendemail'          => 'E-Mail senden',
 
-
+    // - dialogs
+    'section.delete.webmention.confirm' => 'Willst du diese Webmention wirklich löschen?',
+    'section.delete.mention.confirm'    => 'Willst du diese Erwähnung wirklich löschen?',
+    'section.delete.trackback.confirm'  => 'Willst du diesen Trackback wirklich löschen?',
+    'section.delete.pingback.confirm'   => 'Willst du diesen Pingback wirklich löschen?',
+    'section.delete.like.confirm'       => 'Willst du dieses „Gefällt mir“ wirklich löschen?',
+    'section.delete.bookmark.confirm'   => 'Willst du dieses Lesezeichen wirklich löschen?',
+    'section.delete.reply.confirm'      => 'Willst du diese Antwort wirklich löschen?',
+    'section.delete.comment.confirm'    => 'Willst du diesen Kommentar wirklich löschen?',
+    'section.delete.unknown.confirm'    => 'Willst du diesen Eintrag wirklich löschen?',
 ];
 
 foreach ($translations as $key => $value) {

@@ -72,7 +72,16 @@ $translations = [
     'section.option.viewwebsite'        => 'View website',
     'section.option.sendemail'          => 'Send email',
 
-
+    // - dialogs
+    'section.delete.webmention.confirm' => 'Do you really want to delete this Webmention?',
+    'section.delete.mention.confirm'    => 'Do you really want to delete this Mention?',
+    'section.delete.trackback.confirm'  => 'Do you really want to delete this Trackback?',
+    'section.delete.pingback.confirm'   => 'Do you really want to delete this Pingback?',
+    'section.delete.like.confirm'       => 'Do you really want to delete this Like?',
+    'section.delete.bookmark.confirm'   => 'Do you really want to delete this Bookmark?',
+    'section.delete.reply.confirm'      => 'Do you really want to delete this Reply?',
+    'section.delete.comment.confirm'    => 'Do you really want to delete this Comment?',
+    'section.delete.unknown.confirm'    => 'Do you really want to delete this?',
 ];
 
 foreach ($translations as $key => $value) {
