@@ -248,7 +248,7 @@ class Cron
                         if ($page->syndication()->isNotEmpty()) {
                             foreach ($page->syndication()->split() as $syndication) {
                                 if (Str::contains($sourcecontent, $syndication)) {
-                                    $result = \IndieWeb\comments\parse($data['items'][0], $syndication);
+                                    $result = \IndieWeb\comments\parse($mf2['items'][0], $syndication);
                                     $linkfound = true;
                                     break;
                                 }
