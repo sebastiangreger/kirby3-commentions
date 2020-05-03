@@ -54,7 +54,7 @@ class Cron
     public static function processQueue()
     {
         // limit to one process by only proceeding if no (or an expired left over) lockfile exists
-        $lockfile = kirby()->root('content') . DS . '.commentions_queuelock';
+        $lockfile = kirby()->root('site') . DS . 'logs' . DS . 'commentions' . DS . 'queuelock.txt';
         if (F::exists($lockfile) && F::modified($lockfile) > (time() - 120)) {
             throw new Exception('A queue process is already running.');
         } elseif (F::exists($lockfile)) {
@@ -120,9 +120,16 @@ class Cron
                 }
             }
         }
+
+        // remove the lockfile, if exists
         if (F::exists($lockfile)) {
             F::remove($lockfile);
         }
+
+        // create/update the timestamp file to check for last cron run
+        $logfile = kirby()->root('site') . DS . 'logs' . DS . 'commentions' . DS . 'lastcron.txt';
+        F::write($logfile, '');
+
         return true;
     }
 
