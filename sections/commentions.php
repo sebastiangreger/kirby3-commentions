@@ -2,6 +2,8 @@
 
 namespace sgkirby\Commentions;
 
+use Kirby\Toolkit\F;
+
 return [
 
     'props' => [
@@ -48,6 +50,15 @@ return [
         'errors' => function () {
 
             $errors = [];
+
+            $logfile = kirby()->root('site') . DS . 'logs' . DS . 'commentions' . DS . 'lastcron.txt';
+            if (!F::exists($logfile) || F::modified($logfile) < (time() - 86400)) {
+                $errors[] = [
+                    'id'      => 'cronjob-alert',
+                    'message' => t('commentions.section.error.cronjob-alert'),
+                    'theme'   => 'negative',
+                ];
+            }
 
             if (is_dir(kirby()->root() . DS . 'content' . DS . '.commentions') === true) {
                 $errors[] = [

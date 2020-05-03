@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Http\Remote;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -54,7 +55,8 @@ class Cron
     public static function processQueue()
     {
         // limit to one process by only proceeding if no (or an expired left over) lockfile exists
-        $lockfile = kirby()->root('content') . DS . '.commentions_queuelock';
+        $logfolder = kirby()->root('site') . DS . 'logs' . DS . 'commentions';
+        $lockfile = $logfolder . DS . 'queuelock.txt';
         if (F::exists($lockfile) && F::modified($lockfile) > (time() - 120)) {
             throw new Exception('A queue process is already running.');
         } elseif (F::exists($lockfile)) {
@@ -120,9 +122,16 @@ class Cron
                 }
             }
         }
+
+        // remove the lockfile, if exists
         if (F::exists($lockfile)) {
             F::remove($lockfile);
         }
+
+        // create/update the timestamped log file
+        $logfile = $logfolder . DS . 'lastcron.txt';
+        F::write($logfile, time());
+
         return true;
     }
 
