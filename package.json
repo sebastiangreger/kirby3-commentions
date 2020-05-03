@@ -21,8 +21,10 @@
   "homepage": "https://github.com/sebastiangreger/kirby3-commentions#readme",
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "@vue/component-compiler-utils": "^3.1.2",
     "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/component-compiler-utils": "^3.1.2",
+    "cssnano": "^4.1.10",
+    "sass": "^1.26.5",
     "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {
