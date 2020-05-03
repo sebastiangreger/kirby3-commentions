@@ -46,7 +46,7 @@ $translations = [
     'snippet.list.comment'              => '{ author }',
     'snippet.list.mentioned'            => '{ author } erwähnte dies',
     'snippet.list.mentionedAt'          => '{ author } erwähnte dies auf { link }',
-    'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir« auf { link }',
+    'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir“ auf { link }',
     'snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
     'snippet.list.replies'              => '{ author } antwortete auf { link }',
     'snippet.list.dateFormat.date'      => 'd.m.Y H:i Uhr',
@@ -68,11 +68,31 @@ $translations = [
     'section.option.unapprove'          => 'Ablehnen',
     'section.option.approve'            => 'Akzteptieren',
     'section.option.delete'             => 'Löschen',
-    'section.option.viewsource'         => 'Quelle ansehen',
-    'section.option.viewwebsite'        => 'Website ansehen',
+    'section.option.openwebsite'        => 'Website öffnen',
     'section.option.sendemail'          => 'E-Mail senden',
 
+    // - dialogs
+    'section.delete.webmention.confirm' => 'Willst du diese <strong>Webmention</strong> wirklich löschen?',
+    'section.delete.mention.confirm'    => 'Willst du diese <strong>Erwähnung</strong> wirklich löschen?',
+    'section.delete.trackback.confirm'  => 'Willst du diesen <strong>Trackback</strong> wirklich löschen?',
+    'section.delete.pingback.confirm'   => 'Willst du diesen <strong>Pingback</strong> wirklich löschen?',
+    'section.delete.like.confirm'       => 'Willst du dieses <strong>„Gefällt mir“</strong> wirklich löschen?',
+    'section.delete.bookmark.confirm'   => 'Willst du dieses <strong>Lesezeichen</strong> wirklich löschen?',
+    'section.delete.reply.confirm'      => 'Willst du diese <strong>Antwort</strong> wirklich löschen?',
+    'section.delete.comment.confirm'    => 'Willst du diesen <strong>Kommentar</strong> wirklich löschen?',
+    'section.delete.unknown.confirm'    => 'Willst du diesen <strong>Eintrag</strong> wirklich löschen?',
 
+    // - buttons
+    'section.button.viewsource'         => 'Quelltext anzeigen',
+    'section.button.refresh'            => 'Aktualisieren',
+
+    // - misc
+    'section.datetime.format'           => 'DD.MM.YYYY · HH:mm [Uhr]',
+
+    // - errors
+    'section.error.storage-version'      => '<strong>Aktion notwendig!</strong> Du hast das <em>Kirby3-Commentions</em>-Plugin auf Version 1.x aktualisiert, doch deine Daten sind noch im (jetzt inkompatiblen) 0.x-Format gespeichert! Keine Sorge: Deine Daten gehen nicht verloren, aber du musst den  <a href="/commentions-migrationassistant" target="_blank">Migrations-Assistenten</a> ausführen, damit wieder alles funktioniert!',
+    'section.error.missing-dependencies' => '<strong>Fehlende Bibliotheken:</strong> Das Commentions-Plugin verwendet <a href="http://masterminds.github.io/html5-php/" target="_blank">html5-php</a> und <a href="http://htmlpurifier.org/">HTML Purifier</a>, um HTML-Eingaben zu filtern, analysieren und formatieren. Aus Sicherheitsgründen wird kein HTML-Text in Kommentaren oder Webmentions angezeigt und keine Markdown-Formatierung angewendet, solange diese Bibliotheken fehlen. In <code>README.md</code> im Plugin-Ordner findest du Hinweise dazu, wie du diese Pakete manuell installieren kannst.',
+    'section.error.cronjob-alert'        => '<strong>Fehler in der Konfiguration:</strong> Der zur Verarbeitung eingehender Webmentions nötige Cronjob wurde in den letzten 24 Stunden nicht ausgeführt. In <code>README.md</code> im Plugin-Ordner findest du Hinweise zur Einrichtung des Cronjobs.',
 ];
 
 foreach ($translations as $key => $value) {

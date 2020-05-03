@@ -68,11 +68,31 @@ $translations = [
     'section.option.unapprove'          => 'Unapprove',
     'section.option.approve'            => 'Approve',
     'section.option.delete'             => 'Delete',
-    'section.option.viewsource'         => 'View source',
-    'section.option.viewwebsite'        => 'View website',
+    'section.option.openwebsite'        => 'Open website',
     'section.option.sendemail'          => 'Send email',
 
+    // - dialogs
+    'section.delete.webmention.confirm' => 'Do you really want to delete this <strong>Webmention</strong>?',
+    'section.delete.mention.confirm'    => 'Do you really want to delete this <strong>Mention</strong>?',
+    'section.delete.trackback.confirm'  => 'Do you really want to delete this <strong>Trackback</strong>?',
+    'section.delete.pingback.confirm'   => 'Do you really want to delete this <strong>Pingback</strong>?',
+    'section.delete.like.confirm'       => 'Do you really want to delete this <strong>Like</strong>?',
+    'section.delete.bookmark.confirm'   => 'Do you really want to delete this <strong>Bookmark</strong>?',
+    'section.delete.reply.confirm'      => 'Do you really want to delete this <strong>Reply</strong>?',
+    'section.delete.comment.confirm'    => 'Do you really want to delete this <strong>Comment</strong>?',
+    'section.delete.unknown.confirm'    => 'Do you really want to delete this?',
 
+    // - buttons
+    'section.button.viewsource'         => 'View source',
+    'section.button.refresh'            => 'Refresh',
+
+    // - misc
+    'section.datetime.format'           => 'YYYY-MM-DD HH:mm',
+
+    // - errors
+    'section.error.storage-version'      => '<strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/commentions-migrationassistant" target="_blank">Migration assistant</a> to get things running again!',
+    'section.error.missing-dependencies' => '<strong>Missing libraries:</strong> The Commentions plugin uses <a href="http://masterminds.github.io/html5-php/" target="_blank">html5-php</a> and <a href="http://htmlpurifier.org/">HTML Purifier</a> for filtering, analysing and formatting HTML input. For security reasons, no HTML is shown in comments or Webmention and no Markdown-formatting will be applied, as long as these Libraries are missing. In <code>README.md</code> in the plugin folder, you can find help for how to install these packages manually.',
+    'section.error.cronjob-alert'        => '<strong>Setup issue:</strong> The cron job required to process incoming webmentions, has not been run in the last 24h. In <code>README.md</code> in the plugin folder, you can find help for how to set up this cron job.',
 ];
 
 foreach ($translations as $key => $value) {

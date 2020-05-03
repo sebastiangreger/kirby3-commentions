@@ -37,6 +37,8 @@ class Commention extends StructureObject
     public function toArray(): array
     {
         $array = $this->content()->toArray();
+        $array['name_formatted'] = $this->nameFormatted();
+        $array['source_formatted'] = $this->sourceFormatted();
         ksort($array);
         return $array;
     }
@@ -69,13 +71,15 @@ class Commention extends StructureObject
      *
      * @return string
      */
-    public function sourceFormatted(?string $anonymous = null): ?string
+    public function sourceFormatted(string $anonymous = null): ?string
     {
         // Format author name
         $author = $this->nameFormatted($anonymous);
 
         if ($this->website()->isNotEmpty()) {
             $author = '<a href="' . $this->website() . '" rel="noopener noreferrer nofollow">' . $author . '</a>';
+        } else {
+            $author = "<strong>{$author}</strong>";
         }
 
         // Format domain of source URL
@@ -135,7 +139,7 @@ class Commention extends StructureObject
      */
     public function text(): Field
     {
-        $text = $this->content()->get('text');
+        $text = $this->textUnsafe();
 
         if ($text->isEmpty() === true) {
             // Return text field if empty, hence empty fields cannot
@@ -158,6 +162,18 @@ class Commention extends StructureObject
         // happen by default, purify on-the fly to prevent unfiltered
         // HTML from ever appearing in the comments list.
         return new Field($this, 'text', Formatter::filter($text));
+    }
+
+    /**
+     * Returns the raw, unescaped text value. Always use `$commention->text()`,
+     * if you want to include untrusted user input into an HTML page to
+     * mitigae the risk XSS attacks.
+     *
+     * @return Field The raw text as Field.
+     */
+    public function textUnsafe(): Field
+    {
+        return $this->content()->get('text');
     }
 
     /**

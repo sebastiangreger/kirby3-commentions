@@ -14,5 +14,9 @@ debug.txt
 *.geany
 *.code-workspace
 
-# composer vendor folder
+# vendor folders
 /vendor/
+/node_modules
+
+# parcel cache
+.cache/
