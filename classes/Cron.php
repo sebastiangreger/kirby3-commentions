@@ -56,7 +56,7 @@ class Cron
     {
         // limit to one process by only proceeding if no (or an expired left over) lockfile exists
         $logfolder = kirby()->root('site') . DS . 'logs' . DS . 'commentions';
-        $lockfile = $logfolder . DS . 'queuelock.txt';
+        $lockfile = $logfolder . DS . 'queuelock.log';
         if (F::exists($lockfile) && F::modified($lockfile) > (time() - 120)) {
             throw new Exception('A queue process is already running.');
         } elseif (F::exists($lockfile)) {
@@ -129,7 +129,7 @@ class Cron
         }
 
         // create/update the timestamped log file
-        $logfile = $logfolder . DS . 'lastcron.txt';
+        $logfile = $logfolder . DS . 'lastcron.log';
         F::write($logfile, time());
 
         return true;

@@ -51,7 +51,7 @@ return [
 
             $errors = [];
 
-            $logfile = kirby()->root('site') . DS . 'logs' . DS . 'commentions' . DS . 'lastcron.txt';
+            $logfile = kirby()->root('site') . DS . 'logs' . DS . 'commentions' . DS . 'lastcron.log';
             if (!F::exists($logfile) || F::modified($logfile) < (time() - 86400)) {
                 $errors[] = [
                     'id'      => 'cronjob-alert',
