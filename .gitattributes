@@ -9,3 +9,7 @@
 # .travis.yml export-ignore
 # phpunit.xml.dist export-ignore
 # tests/ export-ignore
+
+# Mark compiled files as binary to avoid git from rendering diffs
+/index.js -diff
+/index.css -diff
