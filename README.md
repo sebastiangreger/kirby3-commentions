@@ -293,7 +293,7 @@ sections:
 
 Returns a structure object of comments for the page.
 
-`$page->commentions( $query, $language )`
+`$page->commentions($query, $language)`
 
 #### Parameters
 
@@ -304,7 +304,7 @@ Returns a structure object of comments for the page.
 
 #### Return
 
-The page method returns a [Structure object](https://getkirby.com/docs/reference/@/classes/cms/structure) with all comments for the requested object that meet the criteria; empty structure if no matches.
+The page method returns a [Structure-like object](https://getkirby.com/docs/reference/@/classes/cms/structure) with all comments for the requested object that meet the criteria; empty structure if no matches.
 
 #### Usage
 
@@ -316,7 +316,7 @@ foreach ( $testpage->commentions('all') as $item ) {
 }
 ```
 
-`$item->content()` returns a content object with all the fields stored for the comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->text_unsafe()`.
+`$item->content()` returns a content object with all the fields stored for the comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->content()->get('text')`.
 
 If preferred, `$item->content()->toArray()` transforms the return object into an array.
 
