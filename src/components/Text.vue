@@ -7,6 +7,7 @@
   </div>
   <div
     class="k-commentions-text"
+    ref="preview"
     v-else
     v-html="text"
   />
@@ -32,7 +33,31 @@ export default {
   data() {
     return [];
   },
-}
+
+  mounted() {
+    this.postfixPreviewHTML();
+  },
+
+  updated() {
+    this.postfixPreviewHTML();
+  },
+
+  methods: {
+    postfixPreviewHTML(container) {
+      if (!this.$refs.preview) {
+        return;
+      }
+
+      // Add target="_blank" to all links.
+      const links = this.$refs.preview.querySelectorAll("a");
+      links.forEach(element => {
+        if (element.getAttribute("target") !== "_blank") {
+          element.setAttribute("target", "_blank");
+        }
+      });
+    },
+  }
+};
 </script>
 
 <style lang="scss">
