@@ -64,6 +64,17 @@ export default {
 
 .k-commentions-text {
   /**
+   * 1. [NO BREAK SPACE] + [NORTH EAST ARROW]
+   * 2. Prevents the underline from being rendered below the external
+   *    link icon.
+   */
+  a[rel~="noopener"]::after {
+    color: #999;
+    content: "\00a0\2197\fe0e"; /* 1 */
+    display: inline-block; /* 2 */
+  }
+
+  /**
     * 1. Emulate `line-height: normal`
     */
   > * + * {
