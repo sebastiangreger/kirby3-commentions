@@ -5,11 +5,22 @@ namespace sgkirby\Commentions;
 use Parsedown;
 use HTMLPurifier;
 use HTMLPurifier_AttrDef;
+use HTMLPurifier_AttrValidator;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
+use HTMLPurifier_Injector;
 use HTMLPurifier_TagTransform;
 use HTMLPurifier_TagTransform_Simple;
-use sgkirby\Commentions\Formatter\HTMLPurifierCacheAdapter;
+use HTMLPurifier_Token_End;
+use HTMLPurifier_Token_Start;
+use HTMLPurifier_Token_Text;
+use sgkirby\Commentions\Formatter\CacheAdapter;
+use sgkirby\Commentions\Formatter\CodeClassAttrDef;
+use sgkirby\Commentions\Formatter\FixBreaksPosition;
+use sgkirby\Commentions\Formatter\LinkTransformer;
+use sgkirby\Commentions\Formatter\RemoveEmptyLinksInjector;
+
+use function PHPSTORM_META\map;
 
 class Formatter
 {
@@ -26,6 +37,35 @@ class Formatter
      * @var \Parsedown
      */
     protected static $parsedown;
+
+
+    protected static $inline = [
+        'a',
+        'abbr',
+        'b',
+        'br',
+        'cite',
+        'code',
+        'del',
+        'em',
+        'i',
+        'ins',
+        'kbd',
+        'mark',
+        'q',
+        'strong',
+        'sub',
+        'sup',
+    ];
+
+    protected static $blocks = [
+        'blockquote',
+        'li',
+        'ol',
+        'p',
+        'pre',
+        'ul',
+    ];
 
     /**
      * Generates the config string for HTML Purifiers list of allowed
@@ -152,11 +192,15 @@ class Formatter
             // Workaround for force-loading the class, because HTML Purifier
             // only checks for classes, that have already been loaded
             // beforehand.
-            HTMLPurifierCacheAdapter::triggerAutoload();
-            $purifierCache->register('Kirby', HTMLPurifierCacheAdapter::class);
+            CacheAdapter::triggerAutoload();
+            $purifierCache->register('Kirby', CacheAdapter::class);
 
             $config = HTMLPurifier_Config::createDefault();
             $config->set('Cache.DefinitionImpl', 'Kirby');
+
+            // Setting a doctype is required to get HTML5-style self-closing
+            // tags (<img>) instead of XHTML syntax (<img />)
+            $config->set('HTML.Doctype','HTML 4.01 Transitional');
 
             // Set default text direction
             if ($direction !== null) {
@@ -216,34 +260,16 @@ class Formatter
             // The code element only accepts a class name in the format
             // `language-*`, that is used by JavaScript-based syntax
             // highlighters for determing a code block’s language.
-            $def->addAttribute('code', 'class', new class extends HTMLPurifier_AttrDef {
-                public function validate($string, $config, $context) {
-                    return preg_match('/^language-[a-z0-9]+$/', $string) === 1;
-                }
-            });
+            $def->addAttribute('code', 'class', new CodeClassAttrDef());
 
             // Add rel="noreferrer noopener" to all external links, while
             // "nofollow" has been added by the purifier itself already.
             // "norefferer" and "noopener" are for safety, if another filter or
             // JavaScript code adds target="_blank" to external links.
-            $def->info_tag_transform['a'] = new class extends HTMLPurifier_TagTransform {
-                public function transform($tag, $config, $context) {
-                    $tag = clone $tag;
-                    $siteHost = parse_url(url(), PHP_URL_HOST);
-                    $hrefHost = parse_url($tag->attr['href'] ?? '', PHP_URL_HOST);
+            $def->info_tag_transform['a'] = new LinkTransformer();
 
-                    if ($siteHost !== $hrefHost) {
-                        // Hosts don’t match, this is an external link
-                        // Add 'noreferrer' and 'noopener' to the attribute.
-                        $rel = array_filter(explode(' ', $tag->attr['rel'] ?? ''));
-                        $rel = array_merge($rel, ['noreferrer', 'noopener']);
-                        $rel = array_unique($rel);
-                        $tag->attr['rel'] = implode(' ', $rel);
-                    }
-
-                    return $tag;
-                }
-            };
+            // Remove links without `href` attribute.
+            $def->info_injector[] = new RemoveEmptyLinksInjector();
 
             // Transform headlines into regular paragraphs
             $def->info_tag_transform['h1'] = new HTMLPurifier_TagTransform_Simple('p');
