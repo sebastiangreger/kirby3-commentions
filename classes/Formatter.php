@@ -285,8 +285,15 @@ class Formatter
         // Apply purifier filter
         $text = static::$purifier->purify($text);
 
-        // Remove links, which got their attribute stripped during sanitation
-        $text = preg_replace('/<a(?:\s+rel="[^"]+")?>(.*)<\/a>/uU', '$1', $text);
+        // Move `<br>` tags at the beginning or end of an inline element
+        // before/after that element to prevent styling issues (e.g. displaying
+        // an icon after a external link).
+        $text = preg_replace('#(<(' . implode('|', static::$inline) .')(?:\s+[^>]*)*>)(\s*<br>\s*)*(.*?)(\s*<br>\s*)*(<\/\2>)#siu', '$3$1$4$6$5', $text);
+
+        // Trim `<br>` elements at the beginning or end of block-level elements
+        $blocks = implode('|', static::$blocks);
+        $text = preg_replace("#(<(?:{$blocks})(?:\s+[^>]*)*>)(\s*<br>\s*)*#siu", '$1', $text);
+        $text = preg_replace("#(\s*<br>\s*)*(</(?:{$blocks})(?:\s+[^>]*)*>)#siu", '$2', $text);
 
         return $text;
     }
