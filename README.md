@@ -48,7 +48,7 @@ composer require sgkirby/commentions
 #### Git submodule
 
 ```bash
-git submodule add https://github.com/sebastiangreger/kirby3-micropublisher.git site/plugins/kirby3-micropublisher
+git submodule add https://github.com/sebastiangreger/kirby3-commentions.git site/plugins/kirby3-commentions
 ```
 
 #### Download
