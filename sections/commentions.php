@@ -47,7 +47,7 @@ return [
 
     'computed' => [
 
-        'errors' => function () {
+        'commentionsSystemErrors' => function () {
 
             $errors = [];
 
@@ -77,10 +77,6 @@ return [
             }
 
             return $errors;
-        },
-
-        'dependenciesError' => function () {
-            return ;
         },
 
         'commentions' => function (): array {

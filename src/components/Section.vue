@@ -10,7 +10,7 @@
     </header>
 
     <k-box
-      v-for="error in errors"
+      v-for="error in commentionsSystemErrors"
       :key="error.id"
       :theme="error.theme"
     >
@@ -83,10 +83,10 @@ export default {
 
   created() {
     this.load().then((response) => {
-      this.headline    = response.headline;
-      this.commentions = response.commentions;
-      this.empty       = response.empty;
-      this.errors      = response.errors;
+      this.headline                = response.headline;
+      this.commentions             = response.commentions;
+      this.empty                   = response.empty;
+      this.commentionsSystemErrors = response.commentionsSystemErrors;
     });
   },
 
