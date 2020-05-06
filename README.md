@@ -64,7 +64,30 @@ When installing the plugin as a Git submodule or by download, you likely want to
 | html-php5 | https://github.com/Masterminds/html5-php | `site/plugins/kirby3-commentions/vendor/html5-php` |
 | HTML Purifier | http://htmlpurifier.org/download | `site/plugins/kirby3-commentions/vendor/htmlpurifier` |
 
-The Panel sections present an alert until both libraries have been installed correctly, as their absence significantly limits the functionality of this plugin.
+The plugin will detect and use the manually installed libraries if the resulting folder structures looks like this:
+
+```
+kirby3-commentions
+  /vendor
+    /htmlpurifier
+      /extras
+      /library
+      /maintenance
+      /plugins
+      /test
+      composer.json
+      CREDITS
+      ...
+    /html5-php
+      /bin
+      /src
+      /test
+      composer.json
+      CREDITS
+      ...
+```
+
+_NB. The Panel sections present an alert until both libraries have been installed correctly, as their absence significantly limits the functionality of this plugin._
 
 ## Setup
 
