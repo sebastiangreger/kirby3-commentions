@@ -65,6 +65,12 @@ class Formatter
         'p',
         'pre',
         'ul',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
     ];
 
     /**
@@ -85,6 +91,12 @@ class Formatter
             'code[class]',
             'del',
             'em',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
             'i',
             'ins',
             'kbd',
@@ -272,12 +284,12 @@ class Formatter
             $def->info_injector[] = new RemoveEmptyLinksInjector();
 
             // Transform headlines into regular paragraphs
-            $def->info_tag_transform['h1'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h2'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h3'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h4'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h5'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h6'] = new HTMLPurifier_TagTransform_Simple('p');
+            // $def->info_tag_transform['h1'] = new HTMLPurifier_TagTransform_Simple('p');
+            // $def->info_tag_transform['h2'] = new HTMLPurifier_TagTransform_Simple('p');
+            // $def->info_tag_transform['h3'] = new HTMLPurifier_TagTransform_Simple('p');
+            // $def->info_tag_transform['h4'] = new HTMLPurifier_TagTransform_Simple('p');
+            // $def->info_tag_transform['h5'] = new HTMLPurifier_TagTransform_Simple('p');
+            // $def->info_tag_transform['h6'] = new HTMLPurifier_TagTransform_Simple('p');
 
             static::$purifier = new HTMLPurifier($config);
         }
@@ -294,6 +306,10 @@ class Formatter
         $blocks = implode('|', static::$blocks);
         $text = preg_replace("#(<(?:{$blocks})(?:\s+[^>]*)*>)(\s*<br>\s*)*#siu", '$1', $text);
         $text = preg_replace("#(\s*<br>\s*)*(</(?:{$blocks})(?:\s+[^>]*)*>)#siu", '$2', $text);
+
+        // Remove headlines and replace with s paragraph of bold text, to prevent them
+        // from messing with the outline of the containing documnent.
+        $text = preg_replace('#(<(h[1-6])(?:\s+[^>]*)*>)(.*?)(<\/\2>)#siu', '<p><strong>$3</strong></p>', $text);
 
         return $text;
     }
