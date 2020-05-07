@@ -91,7 +91,7 @@ class Endpoint
         if ($path == '') {
             $page = page(site()->homePageId());
         } else {
-            $page = page(kirby()->call(trim($path, '/')));
+            $page = page(kirby()->router()->call($path));
         }
 
         // if url does not resolve to valid page, attach to homepage instead
