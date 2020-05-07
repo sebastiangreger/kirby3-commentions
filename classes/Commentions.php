@@ -44,6 +44,33 @@ class Commentions
     }
 
     /**
+     * Checks if a page accepts comments/webmentions based on its template
+     *
+     * @param \Kirby\Cms\Page $page The page object
+     * @return bool
+     */
+    public static function accepted($page, string $type)
+    {
+        if (!in_array($type, ['webmentions', 'comments'])) {
+            return false;
+        }
+
+        $allowlist = option('sgkirby.commentions.templatesWith' . ucfirst($type));
+
+        // if no allowlist is set, comments and webmentions are allowed on all pages
+        if (!is_array($allowlist)) {
+            return true;
+        }
+
+        // if applicable template is in allowlist, return true
+        if (in_array($page->intendedTemplate(), $allowlist)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Generates random comment UID
      *
      * @return string A random alpahnumeric string (10 characters)

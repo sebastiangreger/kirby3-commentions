@@ -17,6 +17,11 @@ class Endpoint
      */
     public static function route()
     {
+        // bounce any submissions if no template accepts webmentions
+        if (is_array(option('sgkirby.commentions.templatesWithWebmentions')) && sizeof(option('sgkirby.commentions.templatesWithWebmentions')) === 0) {
+            return new Response('<p>Error: This website does not accept webmentions.</p>', 'text/html', 400);
+        }
+
         if (kirby()->request()->is('POST')) {
             // for POST requests, queue the incoming webmention
             try {
@@ -89,6 +94,16 @@ class Endpoint
             $page = page(kirby()->call(trim($path, '/')));
         }
 
+        // if url does not resolve to valid page, attach to homepage instead
+        if ($page === null) {
+            $page = page(site()->homePageId());
+        }
+
+        // check for allowlist status
+        if (!Commentions::accepted($page, 'webmentions')) {
+            throw new Exception('This content does not accept webmentions.');
+        }
+
         $data = [
             'target' => $target,
             'source' => $source,
@@ -96,13 +111,7 @@ class Endpoint
             'uid' => Commentions::uid()
         ];
 
-        // if the target resolves to an existing Kirby page, add to the queue in the according commention file
-        if ($page != null) {
-            return Storage::add($page, $data, 'webmentionqueue');
-        }
-        // all other requests are enqueued in the home page commention file
-        else {
-            return Storage::add(page(site()->homePageId()), $data, 'webmentionqueue');
-        }
+        // add to the queue in the according commention file
+        return Storage::add($page, $data, 'webmentionqueue');
     }
 }

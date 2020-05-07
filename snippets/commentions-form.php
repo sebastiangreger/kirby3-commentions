@@ -57,6 +57,8 @@
 
     </form>
 
+    <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'webmentions')) : ?>
+
     <?php if (option('sgkirby.commentions.expand')) : ?>
 
     <h3 class="expander" id="commentions-form-webmention">
@@ -85,5 +87,7 @@
       <input type="submit" name="submit" value="Send webmention">
 
     </form>
+
+    <?php endif; ?>
 
   </div>

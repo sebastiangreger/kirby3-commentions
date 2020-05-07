@@ -21,12 +21,15 @@ class Frontend
 
             // output html head tags for webmention endpoint discovery
             case 'endpoints':
-                $endpoint = site()->url() . '/' . option('sgkirby.commentions.endpoint');
-                echo '
-                    <link rel="webmention" href="' . $endpoint . '" />
-                    <link rel="http://webmention.org/" href="' . $endpoint . '" />
-                ';
-                break;
+                // display whenever any template is allowlisted for webmentions (regardless of current page; needed for discovery)
+                if (!is_array(option('sgkirby.commentions.templatesWithWebmentions')) || sizeof(option('sgkirby.commentions.templatesWithWebmentions')) > 0) {
+                    $endpoint = site()->url() . '/' . option('sgkirby.commentions.endpoint');
+                    echo '
+                        <link rel="webmention" href="' . $endpoint . '" />
+                        <link rel="http://webmention.org/" href="' . $endpoint . '" />
+                    ';
+                    break;
+                }
 
             // display ui feedback after form submission
             case 'feedback':
@@ -37,7 +40,7 @@ class Frontend
 
             // display comment form
             case 'form':
-                if (!get('thx')) {
+                if (!get('thx') && Commentions::accepted(page(), 'comments')) {
                     snippet('commentions-form', [
                         'fields' => (array)option('sgkirby.commentions.formfields'),
                     ]);
@@ -68,10 +71,10 @@ class Frontend
                     return $commentions;
                 } elseif ($commentions->count() > 0) {
 
-                    // restructure the data if grouped view
+                // restructure the data if grouped view
                     if ($template == 'grouped') {
 
-                        // array of all groups to be pulled out from content list,
+                    // array of all groups to be pulled out from content list,
                         // in presentation order
                         $groups = option('sgkirby.commentions.grouped');
 
@@ -101,7 +104,6 @@ class Frontend
                         'reactions' => $reactions,
                     ]);
                 }
-
                 break;
 
             default:
@@ -122,6 +124,12 @@ class Frontend
      */
     public static function processCommentform($page, $path)
     {
+        // bounce submissions to pages not allowlisted for comments
+        if(!Commentions::accepted(page(), 'comments')) {
+            go($page->url());
+            exit;
+        }
+
         // assemble the commention data
         $data = [
             'name' => get('name'),
