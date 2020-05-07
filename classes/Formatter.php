@@ -4,23 +4,12 @@ namespace sgkirby\Commentions;
 
 use Parsedown;
 use HTMLPurifier;
-use HTMLPurifier_AttrDef;
-use HTMLPurifier_AttrValidator;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
-use HTMLPurifier_Injector;
-use HTMLPurifier_TagTransform;
-use HTMLPurifier_TagTransform_Simple;
-use HTMLPurifier_Token_End;
-use HTMLPurifier_Token_Start;
-use HTMLPurifier_Token_Text;
 use sgkirby\Commentions\Formatter\CacheAdapter;
 use sgkirby\Commentions\Formatter\CodeClassAttrDef;
-use sgkirby\Commentions\Formatter\FixBreaksPosition;
 use sgkirby\Commentions\Formatter\LinkTransformer;
 use sgkirby\Commentions\Formatter\RemoveEmptyLinksInjector;
-
-use function PHPSTORM_META\map;
 
 class Formatter
 {
