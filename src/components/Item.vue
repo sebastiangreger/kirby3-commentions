@@ -168,10 +168,6 @@ $breakpoint-huge: 120em;
   position: relative;
 }
 
-.k-commentions-item-text a {
-  text-decoration: underline solid #999;
-}
-
 .k-commentions-item-icon {
   flex-shrink: 0;
   height: $list-item-height;
@@ -223,6 +219,10 @@ $breakpoint-huge: 120em;
 .k-commentions-item-header strong,
 .k-commentions-item-header a {
   font-weight: 600;
+}
+
+.k-commentions-item-header a {
+  text-decoration: underline solid #999;
 }
 
 .k-commentions-item-source {

@@ -51,9 +51,9 @@ export default {
 
       // Add target="_blank" to all links.
       const links = this.$refs.preview.querySelectorAll("a");
-      links.forEach(element => {
-        if (element.getAttribute("target") !== "_blank") {
-          element.setAttribute("target", "_blank");
+      links.forEach(el => {
+        if (el.getAttribute("target") !== "_blank") {
+          el.setAttribute("target", "_blank");
         }
       });
     },
@@ -63,6 +63,11 @@ export default {
 
 <style lang="scss">
 .k-commentions-text {
+  a {
+    color: #4271ae;
+    text-decoration: underline;
+  }
+
   /**
    * 1. [NO BREAK SPACE] + [NORTH EAST ARROW]
    * 2. Prevents the underline from being rendered below the external
@@ -113,7 +118,7 @@ export default {
   pre,
   code {
     background: var(--color-background);
-    border-radius: 1px;
+    border-radius: 3px;
     font-family: var(--font-family-mono);
     font-size: .8125rem;
   }
@@ -129,20 +134,18 @@ export default {
   }
 
   pre {
-    border: 1px solid #ddd;
-    padding: .5em 1em;
+    padding: 1.5em;
     white-space: pre-wrap;
     width: 100%;
   }
 
   :not(pre) > code {
-    border: 1px solid #e5e5e5;
-    border-radius: 2px;
+    border-radius: 3px;
     box-decoration-break: clone;
     font-size: 1em;
     line-height: inherit;
-    margin: -1px -2px;
-    padding: 0 1px;
+    margin: -2px -2px;
+    padding: 2px 2px;
     white-space: normal;
   }
 
