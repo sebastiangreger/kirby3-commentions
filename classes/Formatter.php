@@ -311,6 +311,18 @@ class Formatter
         // from messing with the outline of the containing documnent.
         $text = preg_replace('#(<(h[1-6])(?:\s+[^>]*)*>)(.*?)(<\/\2>)#siu', '<p><strong>$3</strong></p>', $text);
 
+        // Remove 'code' class from <pre> elements, that do not contain
+        // a <code> element as first child, because they should not be
+        // considered a code example.
+        $text = preg_replace_callback('#(<pre class="code"[^>]*>)(.*?)(</pre>)#siu', function($matches) {
+            list($outerHtml, $start, $content, $end) = $matches;
+            if (preg_match('#^\s*<code[^>]+#siU', $content)) {
+                return $outerHtml;
+            }
+
+            return "<pre>{$content}</pre>";
+        }, $text);
+
         return $text;
     }
 
