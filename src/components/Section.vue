@@ -154,7 +154,6 @@ export default {
 
 .k-commentions-section > .k-box {
   margin-bottom: 1.5rem;
-  margin-top: 1.5rem;
 }
 
 </style>
