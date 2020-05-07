@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     text: {
@@ -61,7 +62,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-commentions-text {
   /**
    * 1. [NO BREAK SPACE] + [NORTH EAST ARROW]
@@ -133,19 +133,6 @@ export default {
     padding: .5em 1em;
     white-space: pre-wrap;
     width: 100%;
-  }
-
-  pre code.language-commention {
-    background: transparent;
-    display: block;
-    white-space: pre-wrap;
-    width: 100%;
-  }
-
-  pre[class*="language-"] {
-    margin: .5em 0;
-    overflow: auto;
-    padding: 1em;
   }
 
   :not(pre) > code {
