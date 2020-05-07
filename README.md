@@ -587,6 +587,32 @@ The plugin maintains two log files at `site/logs/commentions`.
 
 The plugin can be configured with optional settings in your `site/config/config.php`.
 
+### Limit by template
+
+By default, the Commentions plugin accepts incoming comments and webmentions for all content.
+
+To limit the pages accepting comment submissions (separate setting for comments and webmentions), add arrays of template names allowing for incoming comments to your config:
+
+```php
+'sgkirby.commentions.templatesWithComments' => ['note', 'article'],
+'sgkirby.commentions.templatesWithWebmentions' => ['note'],
+```
+
+To disable a type of comments entirely, provide an empty array. For example, to allow comments on all pages with template `note` but disable webmentions entirely:
+
+```php
+'sgkirby.commentions.templatesWithComments' => ['note'],
+'sgkirby.commentions.templatesWithWebmentions' => [],
+```
+
+To limit comments to template `note` but allow webmentions across the entire website, omit the `'sgkirby.commentions.templatesWithWebmentions'` setting:
+
+```php
+'sgkirby.commentions.templatesWithComments' => ['note'],
+```
+
+_NB. This only affects incoming comments and/or webmentions; existing content and its display is not affected by this setting._
+
 ### Default status
 
 By default, all new comments and webmentions are set to status 'pending', i.e. awaiting confirmation by the admin. To change this global default, add this setting to your config:
