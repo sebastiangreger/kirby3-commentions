@@ -81,14 +81,6 @@ export default {
     margin-top: 1.14em; /* 1 */
   }
 
-  mark {
-    background: #f4d08b;
-    border-radius: 1px;
-    box-decoration-break: clone;
-    margin: -.125em;
-    padding: .125em;
-  }
-
   /**
     * 1. Half of `line-height: normal`
     */
@@ -156,11 +148,23 @@ export default {
     padding: 1em;
   }
 
-  :not(pre) > code[class*="language-"] {
-    border-radius: 1px;
+  :not(pre) > code {
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    font-size: 1em;
     line-height: inherit;
-    padding: .1em;
+    margin: -1px -2px;
+    padding: 0 1px;
     white-space: normal;
+  }
+
+  mark {
+    background: #F9DC91;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    margin: -1px -2px;
+    padding: 1px 2px;
   }
 }
 </style>
