@@ -129,12 +129,12 @@ export default {
         {
           icon: 'url',
           text: this.$t('commentions.section.option.openwebsite'),
-          link: this.item.website,
+          link: (this.item.source ? this.item.source : this.item.website),
           target: '_blank',
-          disabled: !this.item.website,
+          disabled: !this.item.source && !this.item.website,
         },
         {
-          icon: 'url',
+          icon: 'email',
           text: this.$t('commentions.section.option.sendemail'),
           link: `mailto:${this.item.email}`,
           target: '_blank',
