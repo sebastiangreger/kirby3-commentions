@@ -46,7 +46,7 @@ class Frontend
 
             case 'help':
                 snippet('commentions-help', [
-                    'formattingEnabled' => Sanitizer::advancedFormattingAvailable(),
+                    'formattingEnabled' => Sanitizer::available(),
                     'allowlinks' => option('sgkirby.commentions.allowlinks'),
                     'autolinks' => option('sgkirby.commentions.autolinks'),
                 ]);

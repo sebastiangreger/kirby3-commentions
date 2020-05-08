@@ -134,7 +134,10 @@ class Sanitizer
             'autolinks' => option('sgkirby.commentions.autolinks', true),
         ], $options);
 
-        if (static::advancedFormattingAvailable() === false) {
+        if (static::available() === false) {
+            // Use simple formatting and escaping as fallback, if
+            // required dependencies for advanced HTML sanitization are
+            // not available
             return static::escapeAndFormat($text, $options);
         }
 
@@ -162,7 +165,7 @@ class Sanitizer
     {
 
         // Normalize line breaks and replace 3 or more consecutive
-        // break with just 2 breaks
+        // breaks with just 2 breaks
         $text = str_replace(["\r\n", "\r", "\n"], "\n", $text);
         $text = preg_replace('/<\/p>[\s]+/', "</p>\n\n", $text);
         $text = preg_replace('/(\n{3,})/', "\n\n", $text);
@@ -190,7 +193,7 @@ class Sanitizer
      *
      * @return boolean
      */
-    public static function advancedFormattingAvailable(): bool
+    public static function available(): bool
     {
         return class_exists(HTMLPurifier::class);
     }
