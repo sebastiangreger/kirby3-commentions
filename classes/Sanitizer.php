@@ -272,14 +272,6 @@ class Sanitizer
             // Remove links without `href` attribute.
             $def->info_injector[] = new RemoveEmptyLinksInjector();
 
-            // Transform headlines into regular paragraphs
-            // $def->info_tag_transform['h1'] = new HTMLPurifier_TagTransform_Simple('p');
-            // $def->info_tag_transform['h2'] = new HTMLPurifier_TagTransform_Simple('p');
-            // $def->info_tag_transform['h3'] = new HTMLPurifier_TagTransform_Simple('p');
-            // $def->info_tag_transform['h4'] = new HTMLPurifier_TagTransform_Simple('p');
-            // $def->info_tag_transform['h5'] = new HTMLPurifier_TagTransform_Simple('p');
-            // $def->info_tag_transform['h6'] = new HTMLPurifier_TagTransform_Simple('p');
-
             static::$purifier = new HTMLPurifier($config);
         }
 
@@ -298,7 +290,7 @@ class Sanitizer
 
         // Remove headlines and replace with s paragraph of bold text, to prevent them
         // from messing with the outline of the containing documnent.
-        $text = preg_replace('#(<(h[1-6])(?:\s+[^>]*)*>)(.*?)(<\/\2>)#siu', '<p><strong>$3</strong></p>', $text);
+        $text = preg_replace('#(<(h[1-6])(?:\s+[^>]*)*>)(.*?)(<\/\2>)#siu', '<p class="$2-sanitized"><strong>$3</strong></p>', $text);
 
         // Remove 'code' class from <pre> elements, that do not contain
         // a <code> element as first child, because they should not be
