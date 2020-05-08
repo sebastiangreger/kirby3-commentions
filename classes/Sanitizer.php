@@ -6,12 +6,12 @@ use Parsedown;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
-use sgkirby\Commentions\Formatter\CacheAdapter;
-use sgkirby\Commentions\Formatter\CodeClassAttrDef;
-use sgkirby\Commentions\Formatter\LinkTransformer;
-use sgkirby\Commentions\Formatter\RemoveEmptyLinksInjector;
+use sgkirby\Commentions\Sanitizer\CacheAdapter;
+use sgkirby\Commentions\Sanitizer\CodeClassAttrDef;
+use sgkirby\Commentions\Sanitizer\LinkTransformer;
+use sgkirby\Commentions\Sanitizer\RemoveEmptyLinksInjector;
 
-class Formatter
+class Sanitizer
 {
     /**
      * Cached instance of HTML Purifier instance used for processing

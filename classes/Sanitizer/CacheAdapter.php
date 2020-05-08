@@ -1,6 +1,6 @@
 <?php
 
-namespace sgkirby\Commentions\Formatter;
+namespace sgkirby\Commentions\Sanitizer;
 
 use HTMLPurifier_DefinitionCache;
 
