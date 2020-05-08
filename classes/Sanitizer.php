@@ -173,7 +173,7 @@ class Sanitizer
      */
     public static function advancedFormattingAvailable(): bool
     {
-        return class_exists('HTMLPurifier');
+        return class_exists(HTMLPurifier::class);
     }
 
     /**
