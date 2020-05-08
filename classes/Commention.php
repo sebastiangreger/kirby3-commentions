@@ -161,7 +161,7 @@ class Commention extends StructureObject
         // If somehow the cache failed to load, which should never
         // happen by default, purify on-the fly to prevent unfiltered
         // HTML from ever appearing in the comments list.
-        return new Field($this, 'text', Sanitizer::filter($text));
+        return new Field($this, 'text', Sanitizer::sanitize($text));
     }
 
     /**

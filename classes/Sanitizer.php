@@ -27,8 +27,12 @@ class Sanitizer
      */
     protected static $parsedown;
 
-
-    protected static $inline = [
+    /**
+     * Subset of HTML inline elements needed for sanitization
+     *
+     * @var array
+     */
+    const INLINE_ELEMENTS = [
         'a',
         'abbr',
         'b',
@@ -47,7 +51,12 @@ class Sanitizer
         'sup',
     ];
 
-    protected static $blocks = [
+    /**
+     * Subset of HTML block elements needed for sanitization
+     *
+     * @var array
+     */
+    const BLOCK_ELEMENTS = [
         'blockquote',
         'li',
         'ol',
@@ -63,12 +72,12 @@ class Sanitizer
     ];
 
     /**
-     * Generates the config string for HTML Purifiers list of allowed
+     * Generates the config string for HTML Purifier’s list of allowed
      * elements, based on the plugin configutation
      *
      * @return string The configuration string
      */
-    protected static function getAllowedElements(): string
+    protected static function getAllowedElements(array $options): string
     {
         $allowed = [
             '*[lang|dir]',
@@ -101,7 +110,7 @@ class Sanitizer
             'ul',
         ];
 
-        if (option('sgkirby.commentions.allowlinks') === true) {
+        if ($options['allowlinks'] === true) {
             $allowed[] = 'a[rel|href]';
         }
 
@@ -112,23 +121,33 @@ class Sanitizer
      * Converts untrusted HTML/Markdown input into sanitized, safe HTML code.
      *
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
-     * @param string|null $direction Text direction, 'ltr' or 'rtl'
+     * @param array $options
      * @return string The cleaned-up/"purified" text.
      */
-    public static function filter(string $text, ?string $direction = null): string
+    public static function sanitize(string $text, array $options = []): string
     {
+        $options = array_merge([
+            'dir' => null,
+            'markdown' => false,
+            'smartypants' => option('smartypants', false),
+            'allowlinks' => option('sgkirby.commentions.allowlinks', true),
+            'autolinks' => option('sgkirby.commentions.autolinks', true),
+        ], $options);
+
         if (static::advancedFormattingAvailable() === false) {
-            return static::escapeAndFormat($text);
+            return static::escapeAndFormat($text, $options);
         }
 
-        $text = static::markdown($text);
+        if ($options['markdown'] === true) {
+            $text = static::markdown($text, $options);
+        }
 
-        if (option('smartypants') === true) {
+        if ($options['smartypants'] === true) {
             // Only apply smartypants filter, if enabled in Kirby
             $text = smartypants($text);
         }
 
-        return static::purifiy($text, $direction);
+        return static::purifiy($text, $options);
     }
 
     /**
@@ -139,7 +158,7 @@ class Sanitizer
      * @param string $text Unsafe test input, possibly containing HTML tags
      * @return string Escaped and formatted HTML string
      */
-    protected static function escapeAndFormat(string $text): string
+    protected static function escapeAndFormat(string $text, array $options): string
     {
 
         // Normalize line breaks and replace 3 or more consecutive
@@ -185,7 +204,7 @@ class Sanitizer
      * @param string|null $direction Text direction, 'ltr' or 'rtl'
      * @return string Sanitized HTML string
      */
-    protected static function purifiy(string $text, ?string $direction = null): string
+    protected static function purifiy(string $text, array $options): string
     {
         if (static::$purifier === null) {
 
@@ -204,18 +223,18 @@ class Sanitizer
             $config->set('HTML.Doctype','HTML 4.01 Transitional');
 
             // Set default text direction
-            if ($direction !== null) {
-                $config->set('Attr.DefaultTextDir', $direction);
+            if (!empty($options['dir'])) {
+                $config->set('Attr.DefaultTextDir', $options['dir']);
             } else if ($language = kirby()->language()) {
                 $config->set('Attr.DefaultTextDir', $language->direction());
             }
 
             $config->set('Attr.AllowedRel', ['noopener', 'noreferrer', 'nofollow']);
-            $config->set('HTML.Allowed', static::getAllowedElements());
+            $config->set('HTML.Allowed', static::getAllowedElements($options));
 
-            if (option('sgkirby.commentions.allowlinks') === true) {
+            if ($options['allowlinks'] === true) {
                 // Enable link processing only, if enabled in site config
-                if (option('sgkirby.commentions.autolinks') === true) {
+                if ($options['autolinks'] === true) {
                     // Recognize URLs in text and turn them into links
                     // automatically.
                     $config->set('AutoFormat.Linkify', true);
@@ -281,10 +300,10 @@ class Sanitizer
         // Move `<br>` tags at the beginning or end of an inline element
         // before/after that element to prevent styling issues (e.g. displaying
         // an icon after a external link).
-        $text = preg_replace('#(<(' . implode('|', static::$inline) .')(?:\s+[^>]*)*>)(\s*<br>\s*)*(.*?)(\s*<br>\s*)*(<\/\2>)#siu', '$3$1$4$6$5', $text);
+        $text = preg_replace('#(<(' . implode('|', static::INLINE_ELEMENTS) .')(?:\s+[^>]*)*>)(\s*<br>\s*)*(.*?)(\s*<br>\s*)*(<\/\2>)#siu', '$3$1$4$6$5', $text);
 
         // Trim `<br>` elements at the beginning or end of block-level elements
-        $blocks = implode('|', static::$blocks);
+        $blocks = implode('|', static::BLOCK_ELEMENTS);
         $text = preg_replace("#(<(?:{$blocks})(?:\s+[^>]*)*>)(\s*<br>\s*)*#siu", '$1', $text);
         $text = preg_replace("#(\s*<br>\s*)*(</(?:{$blocks})(?:\s+[^>]*)*>)#siu", '$2', $text);
 
@@ -313,14 +332,14 @@ class Sanitizer
      *
      * @return string The resulting HTML of the conversion
      */
-    protected static function markdown(string $text): string
+    protected static function markdown(string $text, array $options): string
     {
         if (static::$parsedown === null) {
             // Using the Parsedown library directly instead of Kirby’s
             // Markdown component to have full control over the settings.
             static::$parsedown = new Parsedown();
             static::$parsedown->setBreaksEnabled(true);
-            static::$parsedown->setUrlsLinked(option('sgkirby.commentions.allowlinks') && option('sgkirby.commentions.autolinks'));
+            static::$parsedown->setUrlsLinked($options['allowlinks'] && $options['autolinks']);
         }
 
         return static::$parsedown->text($text);
