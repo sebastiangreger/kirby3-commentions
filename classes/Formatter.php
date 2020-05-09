@@ -6,12 +6,12 @@ use Parsedown;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
-use sgkirby\Commentions\Sanitizer\CacheAdapter;
-use sgkirby\Commentions\Sanitizer\CodeClassAttrDef;
-use sgkirby\Commentions\Sanitizer\LinkTransformer;
-use sgkirby\Commentions\Sanitizer\RemoveEmptyLinksInjector;
+use sgkirby\Commentions\Formatter\CacheAdapter;
+use sgkirby\Commentions\Formatter\CodeClassAttrDef;
+use sgkirby\Commentions\Formatter\LinkTransformer;
+use sgkirby\Commentions\Formatter\RemoveEmptyLinksInjector;
 
-class Sanitizer
+class Formatter
 {
     /**
      * Cached instance of HTML Purifier instance used for processing
@@ -75,7 +75,8 @@ class Sanitizer
      * Generates the config string for HTML Purifier’s list of allowed
      * elements, based on the plugin configutation
      *
-     * @return string The configuration string
+     * @param array $options Configuration
+     * @return string The configuration string for HTML Purifier
      */
     protected static function getAllowedElements(array $options): string
     {
@@ -121,7 +122,7 @@ class Sanitizer
      * Converts untrusted HTML/Markdown input into sanitized, safe HTML code.
      *
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
-     * @param array $options
+     * @param array $options Configuration
      * @return string The cleaned-up/"purified" text.
      */
     public static function sanitize(string $text, array $options = []): string
@@ -159,6 +160,7 @@ class Sanitizer
      * single line breaks into `<br>` tags.
      *
      * @param string $text Unsafe test input, possibly containing HTML tags
+     * @param array $options Configuration
      * @return string Escaped and formatted HTML string
      */
     protected static function escapeAndFormat(string $text, array $options): string
@@ -204,7 +206,7 @@ class Sanitizer
      * a given whitelist.
      *
      * @param string $text Untrusted string of HTML
-     * @param string|null $direction Text direction, 'ltr' or 'rtl'
+     * @param array $options Configuration
      * @return string Sanitized HTML string
      */
     protected static function purifiy(string $text, array $options): string
@@ -310,13 +312,13 @@ class Sanitizer
         $text = preg_replace("#(<(?:{$blocks})(?:\s+[^>]*)*>)(\s*<br>\s*)*#siu", '$1', $text);
         $text = preg_replace("#(\s*<br>\s*)*(</(?:{$blocks})(?:\s+[^>]*)*>)#siu", '$2', $text);
 
-        // Remove headlines and replace with s paragraph of bold text, to prevent them
+        // Remove headlines and replace with paragraphs of bold text, to prevent them
         // from messing with the outline of the containing documnent.
         $text = preg_replace('#(<(h[1-6])(?:\s+[^>]*)*>)(.*?)(<\/\2>)#siu', '<p class="$2-sanitized"><strong>$3</strong></p>', $text);
 
         // Remove 'code' class from <pre> elements, that do not contain
         // a <code> element as first child, because they should not be
-        // considered a code example.
+        // considered a code block.
         $text = preg_replace_callback('#(<pre class="code"[^>]*>)(.*?)(</pre>)#siu', function($matches) {
             list($outerHtml, $start, $content, $end) = $matches;
             if (preg_match('#^\s*<code[^>]+#siU', $content)) {
@@ -331,8 +333,9 @@ class Sanitizer
 
     /**
      * Converts Markdown formatting on given string into HTML using the
-     * Parsedown library
+     * Parsedown library.
      *
+     * @param array $options Configuration
      * @return string The resulting HTML of the conversion
      */
     protected static function markdown(string $text, array $options): string

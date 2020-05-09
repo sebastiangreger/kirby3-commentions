@@ -1,6 +1,6 @@
 <?php
 
-namespace sgkirby\Commentions\Sanitizer;
+namespace sgkirby\Commentions\Formatter;
 
 use HTMLPurifier_AttrDef;
 

@@ -333,7 +333,7 @@ class Commentions
                 $item['text_sanitized'] = $cachedText[$uid];
             } else if (array_key_exists('text', $item) === true) {
                 // Item has a text field, sanitize it
-                $sanitized = Sanitizer::sanitize($item['text'], [
+                $sanitized = Formatter::sanitize($item['text'], [
                     'markdown' => $item['type'] === 'comment',
                 ]);
                 $item['text_sanitized'] = $sanitizedText[$uid] = $sanitized;
@@ -486,7 +486,7 @@ class Commentions
         // not available) and for proper sanitized HTML (when HTML Purifier
         // is available) for avoiding errors, after the library has been
         // installed.
-        $suffix = Sanitizer::available() ? 'sanitized' : 'escaped';
+        $suffix = Formatter::available() ? 'sanitized' : 'escaped';
         return "{$pageId}-{$suffix}";
     }
 }
