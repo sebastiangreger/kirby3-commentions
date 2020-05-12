@@ -29,65 +29,31 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 
 ## Ethics and privacy
 
-**Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical and legal assessment.** By enabling users to post comments and/or webmentions, a website deals with what is considered personal data in most jurisdictions. The processing of personal data is subject to often very strict privacy laws, coming with a potentially wide range of obligations.
+**Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical and legal assessment.** By enabling users to post comments and/or by processing webmentions, a website deals with what is considered personal data in most jurisdictions. The processing of personal data is subject to often very strict privacy laws, coming with a potentially wide range of obligations.
 
 "GDPR compliance" or similar is never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, responsibility for ethical conduct and compliance with applicable laws ultimately rests with the operator of the website (the data controller). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
 
 ## Installation
 
-### Plugin
+This plugin relies on two libraries not included in the repository due to potential licensing issues ([html-php5](http://masterminds.github.io/html5-php/) and [HTML Purifier](http://htmlpurifier.org/); used for filtering, analysing and formatting HTML input). The **Composer method is hence strongly recommended**, as it takes care of installing these dependencies. Alternatively, when installing as Git submodule or via download, the plugin [kirby-sanitizer](https://github.com/avoskitchen/kirby-sanitizer) should be installed as well, adding the missing libraries.
 
-This plugin relies on two libraries not included in the repository due to potential licensing issues (code is under LGPL). The **Composer method is hence strongly recommended**, as it takes care of installing these dependencies.
-
-#### Composer (recommended)
+### Composer (recommended)
 
 ```bash
 composer require sgkirby/commentions
 ```
 
-#### Git submodule
+### Git submodule
 
 ```bash
 git submodule add https://github.com/sebastiangreger/kirby3-commentions.git site/plugins/kirby3-commentions
 ```
 
-#### Download
+### Download
 
 Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
-### Dependencies
-
-When installing the plugin as a Git submodule or by download, you likely want to manually install both [html-php5](http://masterminds.github.io/html5-php/) and [HTML Purifier](http://htmlpurifier.org/) (used for filtering, analysing and formatting HTML input) manually.
-
-| Library | Download from | Install to folder |
-|---|--|--|
-| html-php5 | https://github.com/Masterminds/html5-php | `site/plugins/kirby3-commentions/vendor/html5-php` |
-| HTML Purifier | http://htmlpurifier.org/download | `site/plugins/kirby3-commentions/vendor/htmlpurifier` |
-
-The plugin will detect and use the manually installed libraries if the resulting folder structures looks like this:
-
-```
-kirby3-commentions
-  /vendor
-    /htmlpurifier
-      /extras
-      /library
-      /maintenance
-      /plugins
-      /test
-      composer.json
-      CREDITS
-      ...
-    /html5-php
-      /bin
-      /src
-      /test
-      composer.json
-      CREDITS
-      ...
-```
-
-_NB. The Panel sections present an alert until both libraries have been installed correctly, as their absence significantly limits the functionality of this plugin._
+_NB. The Panel sections present an alert until all dependencies have been installed correctly, as their absence significantly limits the functionality of this plugin._
 
 ## Setup
 
