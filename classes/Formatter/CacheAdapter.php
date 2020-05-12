@@ -4,13 +4,12 @@ namespace sgkirby\Commentions\Formatter;
 
 use HTMLPurifier_DefinitionCache;
 
-class HTMLPurifierCacheAdapter extends HTMLPurifier_DefinitionCache
+class CacheAdapter extends HTMLPurifier_DefinitionCache
 {
     /**
      * @var \Kirby\Cache\Cache
      */
     protected $cache;
-
 
     public function __construct($type)
     {

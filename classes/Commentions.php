@@ -9,9 +9,19 @@ use Kirby\Toolkit\V;
 
 class Commentions
 {
+    /**
+     * Stores feedback for form submission
+     *
+     * @var array|null
+     */
     public static $feedback = null;
 
-    protected static $cacheInstance = null;
+    /**
+     * Cache instance for storing sanitized and formatted commention texts.
+     *
+     * @var Kirby\Cms\Cache
+     */
+    protected static $cache = null;
 
     /**
      * Checks the settings to assign the correct status to new comment submissions
@@ -323,7 +333,10 @@ class Commentions
                 $item['text_sanitized'] = $cachedText[$uid];
             } else if (array_key_exists('text', $item) === true) {
                 // Item has a text field, sanitize it
-                $item['text_sanitized'] = $sanitizedText[$uid] = Formatter::filter($item['text']);
+                $sanitized = Formatter::sanitize($item['text'], [
+                    'markdown' => $item['type'] === 'comment',
+                ]);
+                $item['text_sanitized'] = $sanitizedText[$uid] = $sanitized;
             }
 
             return $item;
@@ -454,11 +467,11 @@ class Commentions
      */
     protected static function getSanitizedTextCache(): Cache
     {
-        if (static::$cacheInstance === null) {
-            static::$cacheInstance = kirby()->cache('sgkirby.commentions.sanitized-text');
+        if (static::$cache === null) {
+            static::$cache = kirby()->cache('sgkirby.commentions.sanitized-text');
         }
 
-        return static::$cacheInstance;
+        return static::$cache;
     }
 
     /**
@@ -469,7 +482,11 @@ class Commentions
      */
     protected static function cacheKey(string $pageId): string
     {
-        $suffix = Formatter::advancedFormattingAvailable() ? 'formatted' : 'escaped';
+        // Use different cache keys for simply-escaped HTMl (when HTML Purifier is
+        // not available) and for proper sanitized HTML (when HTML Purifier
+        // is available) for avoiding errors, after the library has been
+        // installed.
+        $suffix = Formatter::available() ? 'sanitized' : 'escaped';
         return "{$pageId}-{$suffix}";
     }
 }

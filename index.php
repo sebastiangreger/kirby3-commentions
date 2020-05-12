@@ -13,24 +13,31 @@
 use sgkirby\Commentions\Commentions;
 use sgkirby\Commentions\Structure;
 use Kirby\Cms\App as Kirby;
+use Kirby\Toolkit\F;
 
-load([
-    'sgkirby\\commentions\\Commention' => 'classes/Commention.php',
-    'sgkirby\\commentions\\Commentions' => 'classes/Commentions.php',
-    'sgkirby\\commentions\\Cron' => 'classes/Cron.php',
-    'sgkirby\\commentions\\Endpoint' => 'classes/Endpoint.php',
-    'sgkirby\\commentions\\Formatter' => 'classes/Formatter.php',
-    'sgkirby\\commentions\\Formatter\\HTMLPurifierCacheAdapter' => 'classes/Formatter/HTMLPurifierCacheAdapter.php',
-    'sgkirby\\commentions\\Frontend' => 'classes/Frontend.php',
-    'sgkirby\\commentions\\Migration' => 'classes/Migration.php',
-    'sgkirby\\commentions\\Storage' => 'classes/Storage.php',
-    'sgkirby\\commentions\\Structure' => 'classes/Structure.php',
-], __DIR__);
+if (F::exists(__DIR__ . '/vendor/autoload.php') === false) {
+    // Fallback to manual autoloading via class map, if composer
+    // autoloader is not present
+    load([
+        'sgkirby\\commentions\\Commention' => 'classes/Commention.php',
+        'sgkirby\\commentions\\Commentions' => 'classes/Commentions.php',
+        'sgkirby\\commentions\\Cron' => 'classes/Cron.php',
+        'sgkirby\\commentions\\Endpoint' => 'classes/Endpoint.php',
+        'sgkirby\\commentions\\Frontend' => 'classes/Frontend.php',
+        'sgkirby\\commentions\\Migration' => 'classes/Migration.php',
+        'sgkirby\\commentions\\Formatter' => 'classes/Formatter.php',
+        'sgkirby\\commentions\\Formatter\\CacheAdapter' => 'classes/Formatter/CacheAdapter.php',
+        'sgkirby\\commentions\\Formatter\\CodeClassAttrDef' => 'classes/Formatter/CodeClassAttrDef.php',
+        'sgkirby\\commentions\\Formatter\\LinkTransformer' => 'classes/Formatter/LinkTransformer.php',
+        'sgkirby\\commentions\\Formatter\\RemoveEmptyLinksInjector' => 'classes/Formatter/RemoveEmptyLinksInjector.php',
+        'sgkirby\\commentions\\Storage' => 'classes/Storage.php',
+        'sgkirby\\commentions\\Structure' => 'classes/Structure.php',
+    ], __DIR__);
+}
 
 @require_once __DIR__ . '/helpers.php';
 @require_once __DIR__ . '/includes/mf2-parser.php';
 @require_once __DIR__ . '/includes/php-comments.php';
-
 @include_once __DIR__ . '/vendor/autoload.php';
 
 Kirby::plugin('sgkirby/commentions', [

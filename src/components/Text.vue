@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     text: {
@@ -50,9 +51,9 @@ export default {
 
       // Add target="_blank" to all links.
       const links = this.$refs.preview.querySelectorAll("a");
-      links.forEach(element => {
-        if (element.getAttribute("target") !== "_blank") {
-          element.setAttribute("target", "_blank");
+      links.forEach(el => {
+        if (el.getAttribute("target") !== "_blank") {
+          el.setAttribute("target", "_blank");
         }
       });
     },
@@ -61,21 +62,28 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-commentions-text {
+  a {
+    color: #4271ae;
+    text-decoration: underline;
+  }
+
+  /**
+   * 1. [NO BREAK SPACE] + [NORTH EAST ARROW]
+   * 2. Prevents the underline from being rendered below the external
+   *    link icon.
+   */
+  a[rel~="noopener"]::after {
+    color: #999;
+    content: "\00a0\2197\fe0e"; /* 1 */
+    display: inline-block; /* 2 */
+  }
+
   /**
     * 1. Emulate `line-height: normal`
     */
   > * + * {
     margin-top: 1.14em; /* 1 */
-  }
-
-  mark {
-    background: #f4d08b;
-    border-radius: 1px;
-    box-decoration-break: clone;
-    margin: -.125em;
-    padding: .125em;
   }
 
   /**
@@ -110,7 +118,7 @@ export default {
   pre,
   code {
     background: var(--color-background);
-    border-radius: 1px;
+    border-radius: 3px;
     font-family: var(--font-family-mono);
     font-size: .8125rem;
   }
@@ -126,30 +134,27 @@ export default {
   }
 
   pre {
-    border: 1px solid #ddd;
-    padding: .5em 1em;
+    padding: 1.5em;
     white-space: pre-wrap;
     width: 100%;
   }
 
-  pre code.language-commention {
-    background: transparent;
-    display: block;
-    white-space: pre-wrap;
-    width: 100%;
-  }
-
-  pre[class*="language-"] {
-    margin: .5em 0;
-    overflow: auto;
-    padding: 1em;
-  }
-
-  :not(pre) > code[class*="language-"] {
-    border-radius: 1px;
+  :not(pre) > code {
+    border-radius: 3px;
+    box-decoration-break: clone;
+    font-size: 1em;
     line-height: inherit;
-    padding: .1em;
+    margin: -2px -2px;
+    padding: 2px 2px;
     white-space: normal;
+  }
+
+  mark {
+    background: #F9DC91;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    margin: -1px -2px;
+    padding: 1px 2px;
   }
 }
 </style>

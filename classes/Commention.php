@@ -140,6 +140,7 @@ class Commention extends StructureObject
     public function text(): Field
     {
         $text = $this->textUnsafe();
+        $type = $this->type()->toString();
 
         if ($text->isEmpty() === true) {
             // Return text field if empty, hence empty fields cannot
@@ -147,7 +148,7 @@ class Commention extends StructureObject
             return $text;
         }
 
-        if (in_array($this->type()->toString(), ['reply', 'comment']) === false) {
+        if (in_array($type, ['reply', 'comment']) === false) {
             // Always return empty field if not a reply or comment.
             return new Field($this, 'text', '');
         }
@@ -161,7 +162,10 @@ class Commention extends StructureObject
         // If somehow the cache failed to load, which should never
         // happen by default, purify on-the fly to prevent unfiltered
         // HTML from ever appearing in the comments list.
-        return new Field($this, 'text', Formatter::filter($text));
+        $sanitized = Formatter::sanitize($text, [
+            'markdown' => $type === 'comment',
+        ]);
+        return new Field($this, 'text', $sanitized);
     }
 
     /**

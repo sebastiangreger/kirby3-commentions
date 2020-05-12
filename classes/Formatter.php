@@ -4,12 +4,12 @@ namespace sgkirby\Commentions;
 
 use Parsedown;
 use HTMLPurifier;
-use HTMLPurifier_AttrDef;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
-use HTMLPurifier_TagTransform;
-use HTMLPurifier_TagTransform_Simple;
-use sgkirby\Commentions\Formatter\HTMLPurifierCacheAdapter;
+use sgkirby\Commentions\Formatter\CacheAdapter;
+use sgkirby\Commentions\Formatter\CodeClassAttrDef;
+use sgkirby\Commentions\Formatter\LinkTransformer;
+use sgkirby\Commentions\Formatter\RemoveEmptyLinksInjector;
 
 class Formatter
 {
@@ -28,12 +28,57 @@ class Formatter
     protected static $parsedown;
 
     /**
-     * Generates the config string for HTML Purifiers list of allowed
+     * Subset of HTML inline elements needed for sanitization
+     *
+     * @var array
+     */
+    const INLINE_ELEMENTS = [
+        'a',
+        'abbr',
+        'b',
+        'br',
+        'cite',
+        'code',
+        'del',
+        'em',
+        'i',
+        'ins',
+        'kbd',
+        'mark',
+        'q',
+        'strong',
+        'sub',
+        'sup',
+    ];
+
+    /**
+     * Subset of HTML block elements needed for sanitization
+     *
+     * @var array
+     */
+    const BLOCK_ELEMENTS = [
+        'blockquote',
+        'li',
+        'ol',
+        'p',
+        'pre',
+        'ul',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+    ];
+
+    /**
+     * Generates the config string for HTML Purifier’s list of allowed
      * elements, based on the plugin configutation
      *
-     * @return string The configuration string
+     * @param array $options Configuration
+     * @return string The configuration string for HTML Purifier
      */
-    protected static function getAllowedElements(): string
+    protected static function getAllowedElements(array $options): string
     {
         $allowed = [
             '*[lang|dir]',
@@ -45,6 +90,12 @@ class Formatter
             'code[class]',
             'del',
             'em',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
             'i',
             'ins',
             'kbd',
@@ -60,7 +111,7 @@ class Formatter
             'ul',
         ];
 
-        if (option('sgkirby.commentions.allowlinks') === true) {
+        if ($options['allowlinks'] === true) {
             $allowed[] = 'a[rel|href]';
         }
 
@@ -71,23 +122,36 @@ class Formatter
      * Converts untrusted HTML/Markdown input into sanitized, safe HTML code.
      *
      * @param string $text The input text, expecting "dirty" HTML code and/or Markdown
-     * @param string|null $direction Text direction, 'ltr' or 'rtl'
+     * @param array $options Configuration
      * @return string The cleaned-up/"purified" text.
      */
-    public static function filter(string $text, ?string $direction = null): string
+    public static function sanitize(string $text, array $options = []): string
     {
-        if (static::advancedFormattingAvailable() === false) {
-            return static::escapeAndFormat($text);
+        $options = array_merge([
+            'dir' => null,
+            'markdown' => false,
+            'smartypants' => option('smartypants', false),
+            'allowlinks' => option('sgkirby.commentions.allowlinks', true),
+            'autolinks' => option('sgkirby.commentions.autolinks', true),
+        ], $options);
+
+        if (static::available() === false) {
+            // Use simple formatting and escaping as fallback, if
+            // required dependencies for advanced HTML sanitization are
+            // not available
+            return static::escapeAndFormat($text, $options);
         }
 
-        $text = static::markdown($text);
+        if ($options['markdown'] === true) {
+            $text = static::markdown($text, $options);
+        }
 
-        if (option('smartypants') === true) {
+        if ($options['smartypants'] === true) {
             // Only apply smartypants filter, if enabled in Kirby
             $text = smartypants($text);
         }
 
-        return static::purifiy($text, $direction);
+        return static::purifiy($text, $options);
     }
 
     /**
@@ -96,13 +160,14 @@ class Formatter
      * single line breaks into `<br>` tags.
      *
      * @param string $text Unsafe test input, possibly containing HTML tags
+     * @param array $options Configuration
      * @return string Escaped and formatted HTML string
      */
-    protected static function escapeAndFormat(string $text): string
+    protected static function escapeAndFormat(string $text, array $options): string
     {
 
         // Normalize line breaks and replace 3 or more consecutive
-        // break with just 2 breaks
+        // breaks with just 2 breaks
         $text = str_replace(["\r\n", "\r", "\n"], "\n", $text);
         $text = preg_replace('/<\/p>[\s]+/', "</p>\n\n", $text);
         $text = preg_replace('/(\n{3,})/', "\n\n", $text);
@@ -130,9 +195,9 @@ class Formatter
      *
      * @return boolean
      */
-    public static function advancedFormattingAvailable(): bool
+    public static function available(): bool
     {
-        return class_exists('HTMLPurifier');
+        return class_exists(HTMLPurifier::class);
     }
 
     /**
@@ -141,10 +206,10 @@ class Formatter
      * a given whitelist.
      *
      * @param string $text Untrusted string of HTML
-     * @param string|null $direction Text direction, 'ltr' or 'rtl'
+     * @param array $options Configuration
      * @return string Sanitized HTML string
      */
-    protected static function purifiy(string $text, ?string $direction = null): string
+    protected static function purifiy(string $text, array $options): string
     {
         if (static::$purifier === null) {
 
@@ -152,25 +217,29 @@ class Formatter
             // Workaround for force-loading the class, because HTML Purifier
             // only checks for classes, that have already been loaded
             // beforehand.
-            HTMLPurifierCacheAdapter::triggerAutoload();
-            $purifierCache->register('Kirby', HTMLPurifierCacheAdapter::class);
+            CacheAdapter::triggerAutoload();
+            $purifierCache->register('Kirby', CacheAdapter::class);
 
             $config = HTMLPurifier_Config::createDefault();
             $config->set('Cache.DefinitionImpl', 'Kirby');
 
+            // Setting a doctype is required to get HTML5-style self-closing
+            // tags (<img>) instead of XHTML syntax (<img />)
+            $config->set('HTML.Doctype','HTML 4.01 Transitional');
+
             // Set default text direction
-            if ($direction !== null) {
-                $config->set('Attr.DefaultTextDir', $direction);
+            if (!empty($options['dir'])) {
+                $config->set('Attr.DefaultTextDir', $options['dir']);
             } else if ($language = kirby()->language()) {
                 $config->set('Attr.DefaultTextDir', $language->direction());
             }
 
             $config->set('Attr.AllowedRel', ['noopener', 'noreferrer', 'nofollow']);
-            $config->set('HTML.Allowed', static::getAllowedElements());
+            $config->set('HTML.Allowed', static::getAllowedElements($options));
 
-            if (option('sgkirby.commentions.allowlinks') === true) {
+            if ($options['allowlinks'] === true) {
                 // Enable link processing only, if enabled in site config
-                if (option('sgkirby.commentions.autolinks') === true) {
+                if ($options['autolinks'] === true) {
                     // Recognize URLs in text and turn them into links
                     // automatically.
                     $config->set('AutoFormat.Linkify', true);
@@ -216,42 +285,16 @@ class Formatter
             // The code element only accepts a class name in the format
             // `language-*`, that is used by JavaScript-based syntax
             // highlighters for determing a code block’s language.
-            $def->addAttribute('code', 'class', new class extends HTMLPurifier_AttrDef {
-                public function validate($string, $config, $context) {
-                    return preg_match('/^language-[a-z0-9]+$/', $string) === 1;
-                }
-            });
+            $def->addAttribute('code', 'class', new CodeClassAttrDef());
 
             // Add rel="noreferrer noopener" to all external links, while
             // "nofollow" has been added by the purifier itself already.
             // "norefferer" and "noopener" are for safety, if another filter or
             // JavaScript code adds target="_blank" to external links.
-            $def->info_tag_transform['a'] = new class extends HTMLPurifier_TagTransform {
-                public function transform($tag, $config, $context) {
-                    $tag = clone $tag;
-                    $siteHost = parse_url(url(), PHP_URL_HOST);
-                    $hrefHost = parse_url($tag->attr['href'] ?? '', PHP_URL_HOST);
+            $def->info_tag_transform['a'] = new LinkTransformer();
 
-                    if ($siteHost !== $hrefHost) {
-                        // Hosts don’t match, this is an external link
-                        // Add 'noreferrer' and 'noopener' to the attribute.
-                        $rel = array_filter(explode(' ', $tag->attr['rel'] ?? ''));
-                        $rel = array_merge($rel, ['noreferrer', 'noopener']);
-                        $rel = array_unique($rel);
-                        $tag->attr['rel'] = implode(' ', $rel);
-                    }
-
-                    return $tag;
-                }
-            };
-
-            // Transform headlines into regular paragraphs
-            $def->info_tag_transform['h1'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h2'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h3'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h4'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h5'] = new HTMLPurifier_TagTransform_Simple('p');
-            $def->info_tag_transform['h6'] = new HTMLPurifier_TagTransform_Simple('p');
+            // Remove links without `href` attribute.
+            $def->info_injector[] = new RemoveEmptyLinksInjector();
 
             static::$purifier = new HTMLPurifier($config);
         }
@@ -259,26 +302,50 @@ class Formatter
         // Apply purifier filter
         $text = static::$purifier->purify($text);
 
-        // Remove links, which got their attribute stripped during sanitation
-        $text = preg_replace('/<a(?:\s+rel="[^"]+")?>(.*)<\/a>/uU', '$1', $text);
+        // Move `<br>` tags at the beginning or end of an inline element
+        // before/after that element to prevent styling issues (e.g. displaying
+        // an icon after a external link).
+        $text = preg_replace('#(<(' . implode('|', static::INLINE_ELEMENTS) .')(?:\s+[^>]*)*>)(\s*<br>\s*)*(.*?)(\s*<br>\s*)*(<\/\2>)#siu', '$3$1$4$6$5', $text);
+
+        // Trim `<br>` elements at the beginning or end of block-level elements
+        $blocks = implode('|', static::BLOCK_ELEMENTS);
+        $text = preg_replace("#(<(?:{$blocks})(?:\s+[^>]*)*>)(\s*<br>\s*)*#siu", '$1', $text);
+        $text = preg_replace("#(\s*<br>\s*)*(</(?:{$blocks})(?:\s+[^>]*)*>)#siu", '$2', $text);
+
+        // Remove headlines and replace with paragraphs of bold text, to prevent them
+        // from messing with the outline of the containing documnent.
+        $text = preg_replace('#(<(h[1-6])(?:\s+[^>]*)*>)(.*?)(<\/\2>)#siu', '<p class="$2-sanitized"><strong>$3</strong></p>', $text);
+
+        // Remove 'code' class from <pre> elements, that do not contain
+        // a <code> element as first child, because they should not be
+        // considered a code block.
+        $text = preg_replace_callback('#(<pre class="code"[^>]*>)(.*?)(</pre>)#siu', function($matches) {
+            list($outerHtml, $start, $content, $end) = $matches;
+            if (preg_match('#^\s*<code[^>]+#siU', $content)) {
+                return $outerHtml;
+            }
+
+            return "<pre>{$content}</pre>";
+        }, $text);
 
         return $text;
     }
 
     /**
      * Converts Markdown formatting on given string into HTML using the
-     * Parsedown library
+     * Parsedown library.
      *
+     * @param array $options Configuration
      * @return string The resulting HTML of the conversion
      */
-    protected static function markdown(string $text): string
+    protected static function markdown(string $text, array $options): string
     {
         if (static::$parsedown === null) {
             // Using the Parsedown library directly instead of Kirby’s
             // Markdown component to have full control over the settings.
             static::$parsedown = new Parsedown();
             static::$parsedown->setBreaksEnabled(true);
-            static::$parsedown->setUrlsLinked(option('sgkirby.commentions.allowlinks') && option('sgkirby.commentions.autolinks'));
+            static::$parsedown->setUrlsLinked($options['allowlinks'] && $options['autolinks']);
         }
 
         return static::$parsedown->text($text);
