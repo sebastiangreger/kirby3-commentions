@@ -90,7 +90,7 @@ class Cron
                     $pingeddomains[$sourcedomain] = time();
 
                     // parse the request
-                    if ($result = static::parseWebmention($queueitem)) {
+                    if ($result = static::parseWebmention($page, $queueitem)) {
 
                         // if parsing was successful, $result is the array with the saved data
                         if (is_array($result)) {
@@ -143,22 +143,9 @@ class Cron
      * @return array|string - Array: The complete comment data (incl. UID) as returned by the Storage class after saving
      *                      - String: Human-readable error message in case of failure
      */
-    public static function parseWebmention($request)
+    public static function parseWebmention($page, $request)
     {
         $target = $request['target'];
-
-        // find the Kirby page the target URL refers to
-        $path = Url::path($target);
-        if ($path == '') {
-            // empty path means home page
-            $page = page('home');
-        } else {
-            // run the path through the router to determine real page
-            $page = page(kirby()->call(trim($path, '/')));
-        }
-        if (empty($page)) {
-            return 'Could not resolve target URL to Kirby page';
-        }
 
         // retrieve the source and use the final URL (after possible redirects) for processing
         $remote = Remote::get($request['source']);
@@ -301,7 +288,7 @@ class Cron
                 'text'      => $result['text'],
                 'source'    => $source,
                 'type'      => $result['type'],
-                'language'  => Commentions::determineLanguage($page, $path),
+                'language'  => Commentions::determineLanguage($page, Url::path($target)),
                 'timestamp' => date('Y-m-d H:i', $result['timestamp']),
                 'status'    => Commentions::defaultstatus($result['type']),
             ];
