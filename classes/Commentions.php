@@ -419,6 +419,8 @@ class Commentions
             $commentions = $commentions->filterBy('status', $query);
         }
 
+        $commentions = $commentions->sortBy('timestamp');
+
         return $commentions;
     }
 

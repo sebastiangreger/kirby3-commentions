@@ -93,7 +93,7 @@ return [
                     break;
             }
 
-            if ($this->flip()) {
+            if (!$this->flip()) {
                 // display commentions newest first, unless flip option is true
                 $commentions = $commentions->flip();
             }
