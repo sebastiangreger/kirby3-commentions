@@ -2,9 +2,7 @@
 
 Following the Indieweb's [selfdogfood principle](https://indieweb.org/selfdogfood), the original version of this plugin was a rather limited, experimental tool for personal use. With the further development into version 1.0, some of the basics had to be reviewed and adjusted to make it more universally useful.
 
-This leads to some update requirement on your website, when upgrading.
-
-_NB. These new specifications are rather final, but as long as version 1.x is not in a stable state (i.e. versions still carry "beta" designation), further changes could be required._
+This leads to some update requirements on your website when upgrading.
 
 ## From 0.x to 1.x
 
@@ -25,15 +23,15 @@ The names of most of the "helpers" used for rendering the plugin's HTML output h
 | `<?php commentionsEndpoints() ?>`      | `<?php commentions('endpoints') ?>` |
 | `<?php commentionsFeedback() ?>`       | `<?php commentions('feedback') ?>`  |
 
-### Retrieving comments as an array
+### Retrieving comments as an array/object
 
-In previous versions, you could retrieve all comment data in an array for building your own display template.
+In previous versions, you could retrieve all comment data in an array for building your own display template; this was done using `<?php $array = commentions('raw'); ?>`.
 
-Instead of `<?php $array = commentions('raw'); ?>`, a similar (but not identical) array can now be retrieved using `<?php $array = $page->commentions(); ?>` where `$page` is the Kirby page object of the rendered page.
+This has been replaced with a similar (but not identical) functionality, returning a Kirby Structure object instead of an array: `<?php $array = $page->commentions(); ?>` where `$page` is the Kirby Page object of the rendered page.
 
 Please note that `$page->commentions()` returns slightly different fields than the old `commentionsList('raw')`:
-* the 'message' field for comments is now 'text' (as it has always been for webmentions)
-* the boolean value 'approved' has changed to a string field 'status' (values: approved, unapproved, pending)
+* the `message` field for comments is now named `text` (as it has always been for webmentions)
+* the boolean value `approved` has changed to a string field `status` (values: approved, unapproved, pending)
 
 ## In your content folders
 
@@ -54,7 +52,7 @@ Title: Exploring the universe
 
 ----
 
-Text: 
+Text:
 
 Lorem ipsum
 
@@ -66,7 +64,7 @@ Date: 2018-10-31 13:15
 
 Comments:
 
-- 
+-
   language: de
   name: Testy McTesting
   text: >
@@ -75,7 +73,6 @@ Comments:
   timestamp: 2020-04-15 11:20
   type: comment
   status: approved
-  uid: a50vylqwl5
 ```
 
 #### New version 1.x
@@ -83,7 +80,7 @@ Comments:
 For example in file `content/2_notes/20181031_exploring-the-universe/_commentions/commentions.yml`:
 
 ```
-- 
+-
   language: de
   name: Testy McTesting
   text: >
@@ -115,7 +112,7 @@ In JSON file `content/.commentions/queue/webmention-1587221857-d0be2dc421be4fcd0
 In the YAML file inside the page's folder, e.g. `content/2_notes/20181031_exploring-the-universe/_commentions/webmentionsqueue.yml`:
 
 ```
-- 
+-
   source: https://example.com/the-blog-post-linking-to-yours
   target: >
     https://yourblog.com/notes/exploring-the-universe
@@ -149,7 +146,7 @@ In JSON file `content/.commentions/inbox/1234456735.json`:
 In the YAML file inside the page's folder, e.g. `content/2_notes/20181031_exploring-the-universe/_commentions/commentions.yml` (the same folder where all approved comments are stored, only difference being `status: pending` rather than `status: approved`):
 
 ```
-- 
+-
   language: de
   name: Testy McTesting
   text: >

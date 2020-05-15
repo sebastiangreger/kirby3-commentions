@@ -1,16 +1,16 @@
 # Kirby 3 Commentions
 
-A comment system and Webmention endpoint for [Kirby CMS](https://getkirby.com).
+A versatile comment system and integrated Webmention endpoint for [Kirby CMS](https://getkirby.com).
 
 - Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention)
 - Incoming webmentions are stored in a queue and processed asynchronously
 - Comments can be approved/deleted in the Panel
 - A range of methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
-- Supports multi-language sites and virtual pages
+- Supports multilingual sites and virtual pages
 
-> Versions 1.x (May 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new format.
+> Versions 1.x (May 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new storage format.
 
-_NB. The plugin only covers incoming webmentions (i.e. receiving notifications from other websites who link to a page). Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
+_NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites who link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions) (which has recently been updated as well)._
 
 ## Table of contents
 
@@ -31,29 +31,31 @@ _NB. The plugin only covers incoming webmentions (i.e. receiving notifications f
 
 **Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical and legal assessment.** By enabling users to post comments and/or by processing webmentions, a website deals with what is considered personal data in most jurisdictions. The processing of personal data is subject to often very strict privacy laws, coming with a potentially wide range of obligations.
 
-"GDPR compliance" or similar is never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, responsibility for ethical conduct and compliance with applicable laws ultimately rests with the operator of the website (the data controller). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
+"GDPR compliance" etc. is never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, responsibility for ethical conduct and compliance with applicable laws ultimately rests with the operator of the website (the data controller). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
 
 ## Installation
 
-This plugin relies on two libraries not included in the repository due to potential licensing issues ([html-php5](http://masterminds.github.io/html5-php/) and [HTML Purifier](http://htmlpurifier.org/); used for filtering, analysing and formatting HTML input). The **Composer method is hence strongly recommended**, as it takes care of installing these dependencies. Alternatively, when installing as Git submodule or via download, the plugin [kirby-sanitizer](https://github.com/avoskitchen/kirby-sanitizer) should be installed as well, adding the missing libraries.
-
-### Composer (recommended)
+### Recommended: Composer
 
 ```bash
 composer require sgkirby/commentions
 ```
 
-### Git submodule
+### Alternatives
+
+This plugin relies on two libraries not included in the repository due to potential licensing issues ([html-php5](http://masterminds.github.io/html5-php/) and [HTML Purifier](http://htmlpurifier.org/); used for filtering, analysing and formatting HTML input). The Composer method takes care of installing these dependencies. Alternatively, when installing as Git submodule or via download, the plugin [kirby-sanitizer](https://github.com/avoskitchen/kirby-sanitizer) should be installed as well, making the missing libraries available.
+
+_NB. The Panel sections present an alert until all dependencies have been installed correctly, as their absence significantly limits the functionality of this plugin._
+
+#### Git submodule
 
 ```bash
 git submodule add https://github.com/sebastiangreger/kirby3-commentions.git site/plugins/kirby3-commentions
 ```
 
-### Download
+#### Download
 
 Download and copy this repository to `/site/plugins/kirby3-commentions`.
-
-_NB. The Panel sections present an alert until all dependencies have been installed correctly, as their absence significantly limits the functionality of this plugin._
 
 ## Setup
 
@@ -129,11 +131,11 @@ While it may be advisable to use the `commentions('form')` helper, as its markup
 
 The page method [`$page->commentions()`](#page-commentions) on a page object returns an object with all approved comments for that page.
 
-> This is the preferred API if you want to retrieve the comments to design your own logic how your comments and webmentions are displayed; the helper `commentions('raw')` from Commentions 0.x has been deprecated.
+> This is the preferred API if you want to retrieve the comments to design your own logic how your comments and webmentions are displayed; the helper `commentions('raw')` from Commentions 0.x has been deprecated and will be removed in a later version.
 
 The object returned is a [Kirby Structure object](https://getkirby.com/docs/reference/@/classes/cms/structure), and you may use many of its methods to build your presentation logic to taste; details are presented further below. To return unapproved comments as well, use `$page->commentions('all')` (handle with care!).
 
-_NB. The raw data returned by this page method may contain e-mail addresses etc., so make sure to carefully limit what data is being displayed publicly._
+_NB. The raw data returned by this page method may contain fields with e-mail addresses etc., so make sure to carefully limit what data is being rendered for public display._
 
 ### Step 3: Setting up Webmentions (optional)
 
@@ -157,7 +159,7 @@ return [
 ];
 ```
 
-_N.B. Any attempt to trigger the queue process before you set this secret in your `config.php` will lead to an error._
+_N.B. Any attempt to trigger the queue process before you set a valid secret in your `config.php` will lead to an error._
 
 ##### 2. Set up a cron job
 
@@ -189,7 +191,7 @@ Renders the user feedback UI (error/success message after a user submits the com
 
 `<?php commentions('feedback') ?>`
 
-![feedback](https://user-images.githubusercontent.com/6355217/79339976-fc35ea80-7f29-11ea-8a62-f8b3d6d7382e.png)
+![feedback](.github/feedback.png)
 
 ### commentions('form')
 
@@ -197,7 +199,7 @@ Renders the comment form, based on the config settings, for direct use in the te
 
 `<?php commentions('form') ?>`
 
-![form](https://user-images.githubusercontent.com/6355217/79339978-fcce8100-7f29-11ea-9102-42f1070977d3.png)
+![form](.github/form.png)
 
 ### commentions('list')
 
@@ -205,7 +207,7 @@ Renders a list of comments for display in the frontend.
 
 `<?php commentions('list') ?>`
 
-![list](https://user-images.githubusercontent.com/6355217/79339982-fd671780-7f29-11ea-967d-c0e507d570e4.png)
+![list](.github/list.png)
 
 ### commentions('grouped')
 
@@ -213,7 +215,7 @@ The option `'list'`, as described above, presents all comments and mentions in o
 
 `<?php commentions('grouped'); ?>`
 
-![grouped](https://user-images.githubusercontent.com/6355217/79339979-fcce8100-7f29-11ea-8464-e25d0cb98764.png)
+![grouped](.github/grouped.png)
 
 The behaviour of the grouping can be adjusted via the config variable [`sgkirby.commentions.grouped`] described further below.
 
@@ -230,7 +232,7 @@ By default, the `endpoints` helper is nothing more than a shortcut to render the
 
 ### commentions('css')
 
-Renders elementary CSS styles for the HTML snippets rendered by the frontend helper; add this to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit); you can place it rather flexibly, either with other CSS links or at the very end just before the &lt;</head>&gt; tag.
+Renders elementary CSS styles for the HTML snippets rendered by the frontend helper; add this to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit).
 
 `<?php commentions('css'); ?>`
 
@@ -261,7 +263,7 @@ sections:
     type: commentions
 ```
 
-![page](https://user-images.githubusercontent.com/6355217/79339984-fdffae00-7f29-11ea-9bf1-8b938ac89019.png)
+![page](.github/page.png)
 
 #### Pending
 
@@ -274,7 +276,7 @@ sections:
     show: pending
 ```
 
-![pending](https://user-images.githubusercontent.com/6355217/79339985-fdffae00-7f29-11ea-9f1a-4457f5e02fc3.png)
+![pending](.github/pending.png)
 
 ## Page methods
 
@@ -459,7 +461,7 @@ This hook is triggered after a comment/webmention is added.
 
 #### Example
 
-Adding the following code to `site/config.php` or in a plugin would email a summary of every incoming comment:
+Adding the following code to `site/config.php` or in a plugin would email a summary of every incoming comment (given your site is set up for sending email via SMTP or Sendmail):
 
 ```php
 'hooks' => [
@@ -596,7 +598,7 @@ To change the default for a specific comment type, you may configure an array as
 ],
 ```
 
-Any comment types not defined in such array inherit the original default of 'pending'. Possible values are 'pending', 'approved' and 'unapproved' (the latter won't show up in the Panel inbox, as this state is designed for comments that have been seen but not published).
+Possible values are 'pending', 'approved' and 'unapproved' (the latter won't show up in the Panel inbox, as this state is designed for comments that have been seen but not published). Any comment types not defined in such array inherit the original default of 'pending'.
 
 ### Webmention endpoint
 
@@ -616,7 +618,7 @@ A cronjob is required for the asynchronous processing of incoming webmentions. T
 
 A valid secret key must be at least 10 characters long and may NOT include any of the following: `&` `%` `#` `+` nor a space sign ` `.
 
-_NB. Without this setting properly set up, the cronjob will always fail and return a specific error message._
+_NB. Without this setting properly set up, the cronjob will always fail and return an error message._
 
 ### Failed webmentions
 
@@ -650,7 +652,7 @@ _NB. This setting only triggers the inclusion of the required HTML markup. In or
 
 ### Privacy settings
 
-The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing such data.
+The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing personal data.
 
 Since the default presentation does not make use of avatar images, these are not stored. To write avatar URLs from incoming webmention metadata to the comment file, add this setting:
 
@@ -707,7 +709,7 @@ _NB. Sometimes webmentions of these types may contain a text body regardless. By
 To override the translation strings of the Plugin UI, any string from `languages/*.php` can be replaced with a config variable. For example, the bundled translation of the string `sgkirby.commentions.t.en.snippet.list.comments` (in English, as indicated by the `en` part), can be replaced by adding this config variable:
 
 ```php
-'sgkirby.commentions.t.XX.snippet.list.comments' => 'Comments',
+'sgkirby.commentions.t.en.snippet.list.comments' => 'Comments',
 ```
 
 ### Comment formatting
