@@ -90,7 +90,7 @@ class Endpoint
         $path = Url::path($target);
         if ($path == '') {
             $page = page(site()->homePageId());
-        } else {
+        } elseif ( !$page = page($path) ){
             $page = page(kirby()->router()->call($path));
         }
 
