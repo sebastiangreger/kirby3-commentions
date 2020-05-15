@@ -1,5 +1,7 @@
 /* global panel */
 
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import Section from './components/Section.vue';
 
 panel.plugin('sgkirby/commentions', {
