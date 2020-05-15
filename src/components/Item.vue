@@ -7,6 +7,12 @@
       <div class="k-commentions-item-text">
         <div class="k-commentions-item-header">
           <p
+            v-if="item.status === 'update'"
+            class="k-commentions-item-update"
+          >
+            Update:
+          </p>
+          <p
             class="k-commentions-item-source"
             v-html="item.source_formatted"
           />
@@ -18,6 +24,9 @@
           </time>
           <p v-if="item.email" class="k-commentions-item-email">
             <a :href="`mailto:${item.email}`">{{ item.email }}</a>
+          </p>
+          <p class="k-commentions-item-target">
+            → {{ item.pageid }}
           </p>
         </div>
         <k-commentions-text
@@ -223,6 +232,29 @@ $breakpoint-huge: 120em;
 
 .k-commentions-item-header a {
   text-decoration: underline solid #999;
+}
+
+.k-commentions-item-update {
+  color: var(--color-notice);
+  font-style: normal;
+  font-weight:bold;
+  margin-right: .3rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.k-commentions-item-target {
+  color: var(--color-text-light);
+  display: block;
+  font-size: var(--font-size-tiny);
+  width:100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.k-commentions-section[show="page"] .k-commentions-item-target {
+  display: none;
 }
 
 .k-commentions-item-source {
