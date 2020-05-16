@@ -118,7 +118,7 @@ In order to add everything at once, add helper [`commentions()`](#commentions) t
 ?>
 ```
 
-This is your one-stop-shop, and it should sit rather nicely at the bottom of your content (in the Starterkit theme, add it before the `</article>` tag in `site/templates/note.php` for best results).
+This is your one-stop-shop, and it should sit rather nicely at the bottom of your content (in the Starterkit theme, add it right after the `</article>` tag in `site/templates/note.php` for best results).
 
 If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add [`commentions('css')`](#commentionscss) to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit):
 
