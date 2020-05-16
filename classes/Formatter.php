@@ -6,6 +6,7 @@ use Parsedown;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_DefinitionCacheFactory;
+use HTMLPurifier_TagTransform_Simple;
 use sgkirby\Commentions\Formatter\CacheAdapter;
 use sgkirby\Commentions\Formatter\CodeClassAttrDef;
 use sgkirby\Commentions\Formatter\LinkTransformer;
@@ -46,6 +47,8 @@ class Formatter
         'kbd',
         'mark',
         'q',
+        's',
+        'strike',
         'strong',
         'sub',
         'sup',
@@ -105,6 +108,8 @@ class Formatter
             'p',
             'pre[class]',
             'q',
+            's',
+            'strike',
             'strong',
             'sub',
             'sup',
@@ -292,6 +297,9 @@ class Formatter
             // "norefferer" and "noopener" are for safety, if another filter or
             // JavaScript code adds target="_blank" to external links.
             $def->info_tag_transform['a'] = new LinkTransformer();
+
+            // Convert legacy tags to their HTML5-equivalents:
+            $def->info_tag_transform['strike'] = new HTMLPurifier_TagTransform_Simple('s');
 
             // Remove links without `href` attribute.
             $def->info_injector[] = new RemoveEmptyLinksInjector();
