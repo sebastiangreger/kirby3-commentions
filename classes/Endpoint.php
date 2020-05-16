@@ -41,10 +41,10 @@ class Endpoint
             // for GET requests, provide a submission form as error fallback
             return new Response('
                 <html><body>
-                    <form action="' . site()->url('/') . '/' . option('sgkirby.commentions.endpoint') . '" method="post">
+                    <form action="' . kirby()->urls()->base() . '/' . option('sgkirby.commentions.endpoint') . '" method="post">
                         <div>
-                            <label for="target">The URL on ' . site()->url('/') . ' you linked to</label>
-                            <input type="url" name="target" value="' . get('target') . '" pattern=".*' . str_replace('.', '\.', site()->url('/')) . '.*" required>
+                            <label for="target">The URL on ' . kirby()->urls()->base() . ' you linked to</label>
+                            <input type="url" name="target" value="' . get('target') . '" pattern=".*' . str_replace('.', '\.', kirby()->urls()->base()) . '.*" required>
                         </div>
                         <div>
                             <label for="source">The URL of your response (full URL incl https://)</label>
@@ -82,7 +82,7 @@ class Endpoint
             throw new Exception('Target and source are identical.');
         }
 
-        if (!Str::contains($target, str_replace([ 'http:', 'https:' ], '', site()->url('/')))) {
+        if (!Str::contains($target, str_replace([ 'http:', 'https:' ], '', kirby()->urls()->base()))) {
             throw new Exception('Target URL not on this site.');
         }
 

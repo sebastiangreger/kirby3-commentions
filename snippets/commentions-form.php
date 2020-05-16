@@ -74,7 +74,7 @@
 
     <?php endif; ?>
 
-    <form action="<?= site()->url('/') . '/' . option('sgkirby.commentions.endpoint') ?>" method="post" <?= option('sgkirby.commentions.expand') ? 'class="expandertarget"' : '' ?>>
+    <form action="<?= kirby()->urls()->base() . '/' . option('sgkirby.commentions.endpoint') ?>" method="post" <?= option('sgkirby.commentions.expand') ? 'class="expandertarget"' : '' ?>>
 
       <div class="commentions-form-source">
         <label for="source"><?= t('commentions.snippet.form.responseurl') ?></label>
