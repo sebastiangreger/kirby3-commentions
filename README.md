@@ -109,7 +109,7 @@ To show comments on pages and display a form to leave new comments, there are th
 
 #### Option A. Add everything at once
 
-In order to add everything at once, add helper [`<?php commentions() ?>`](#commentions) to the according templates in `site/templates` - a shorthand for the three helpers described in alternative B:
+In order to add everything at once, add helper [`commentions()`](#commentions) to the according templates in `site/templates` - a shorthand for the three helpers described in alternative B:
 
 ```php
 <?php
@@ -120,11 +120,11 @@ In order to add everything at once, add helper [`<?php commentions() ?>`](#comme
 
 This is your one-stop-shop, and it should sit rather nicely at the bottom of your content (in the Starterkit theme, add it before the `</article>` tag in `site/templates/note.php` for best results).
 
-If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add [`<?php commentions('css') ?>`](#commentionscss) to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit):
+If you would like to use basic CSS styles for these prefabricated HTML snippets (a minimalistic design suitable for the Kirby 3 Starterkit), add [`commentions('css')`](#commentionscss) to your HTML &lt;head&gt; area (e.g. in `snippets/header.php` in the Starterkit):
 
 ```php
 <?php
-  // within the &lt;head&gt; tags of a template or snippet
+  // within the <head> tags of a template or snippet
   commentions('css');
 ?>
 ```
@@ -142,13 +142,13 @@ Alternatively, you can add the form feedback snippet (error or success message),
 ?>
 ```
 
-* The helper [`<?php commentions('feedback') ?>`](#commentionsfeedback) renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
-* To render the comment form, include [`<?php commentions('form') ?>`](#commentionsform) in your template.
-* Finally, [`<?php commentions('list') ?>`](#commentionslist) renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use [`commentions('grouped')`](#commentionsgrouped) instead (check options further below for additional control).
+* The helper [`commentions('feedback')`](#commentionsfeedback) renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
+* To render the comment form, include [`commentions('form')`](#commentionsform) in your template.
+* Finally, [`commentions('list')`](#commentionslist) renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use [`commentions('grouped')`](#commentionsgrouped) instead (check options further below for additional control).
 
 (If your are using the Starterkit, place the feedback helper just before the opening `<article>` tag, and the form and list helpers just after the closing `</article>` tag in `site/templates/note.php` for best results.)
 
-As with option A, you may want to include [`<?php commentions('css') ?>`](#commentionscss) in your HTML &lt;head&gt; template for some baseline styling.
+As with option A, you may want to include [`commentions('css')`](#commentionscss) in your HTML &lt;head&gt; template for some baseline styling.
 
 #### Option C. Create your own frontend presentation
 
@@ -174,7 +174,7 @@ In order to receive webmentions, you have to announce your webmention endpoint i
 
 ```php
 <?php
-  // within the &lt;head&gt; tags of a template or snippet
+  // within the <head> tags of a template or snippet
   commentions('endpoints');
 ?>
 ```
@@ -182,6 +182,8 @@ In order to receive webmentions, you have to announce your webmention endpoint i
 #### Setting up a cronjob to process the inbox queue (only applicable if using Webmentions)
 
 Incoming webmentions are placed in a backlog queue for asynchronous processing (this is to mitigate the risk of DDoS attacks by flooding your site with webmentions; ref. Webmention specification chapter [3.2](https://www.w3.org/TR/webmention/#receiving-webmentions)). In order to have them processed and put into the inbox, this queue needs to be run regularly; ideally at least once in 24 hours (as you may receive an error notice in the panel otherwise).
+
+> If your hosting package does not provide cronjobs, there are (even free) services that ping a URL on your behalf at regular intervals. You even could "abuse" an uptime monitor service for this purpose.
 
 ##### 1. Set up secret key
 

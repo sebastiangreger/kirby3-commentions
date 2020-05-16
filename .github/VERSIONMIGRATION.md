@@ -1,6 +1,6 @@
 # Version migration instructions
 
-Following the Indieweb's [selfdogfood principle](https://indieweb.org/selfdogfood), the original version of this plugin was a rather limited, experimental tool for personal use. With the further development into version 1.0, some of the basics had to be reviewed and adjusted to make it more universally useful.
+Following the Indieweb's [selfdogfood principle](https://indieweb.org/selfdogfood), the original version of this plugin was a rather limited, experimental tool for personal use. With the further development into version 1.0, some of the basics had to be reviewed and adjusted to make it more robust and universally useful.
 
 This leads to some update requirements on your website when upgrading.
 
@@ -9,6 +9,8 @@ This leads to some update requirements on your website when upgrading.
 Various APIs and practices have changed with the introduction of version 1.0. In order to ensure full functionality, and avoid data loss, after upgrading, the following changes have to be carried out:
 
 ## In your templates
+
+Both the names of the snippets for rendering plugin output and the means to directly access stored comments for advanced use have changed.
 
 ### Rendering prefabricated HTML snippets
 
@@ -35,9 +37,9 @@ Please note that `$page->commentions()` returns slightly different fields than t
 
 ## In your content folders
 
-**All of the migrations described below should be possible to be carried out using the automated migration tool, to be found at `https://<YOUR-SITE-ADDRESS>/commentions-migrationassistant` after you installed the new version.**
+The most significant change is that comments are no longer stored within a page's content file but in a separate structure. This avoids polluting the global namespace of content variables, prevents editing conflicts, and enables storing comments for virtual pages as well. Keeping the webmention queue and comment inbox with each content page also eliminates the need for a centralised storage of unapproved comments.
 
-The following details should only be relevant if the automated migration fails or leads to complications.
+> **All of the migrations described below should be possible to be carried out using the automated migration tool, to be found at `https://<YOUR-SITE-ADDRESS>/commentions-migrationassistant` after you installed the new version.** The following details should only be relevant if the automated migration fails or leads to complications.
 
 ### Data of received comments and webmentions
 
