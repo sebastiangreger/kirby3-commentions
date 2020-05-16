@@ -182,7 +182,7 @@ class Migration
                 if ($inboxfiles == 0 && $queuefiles == 0) {
                     $html .= '
                         <p>This tool attempts to carry out the migration in an automated manner. It may not work in all circumstances, so it is <strong>absolutely required to create a backup before using this</strong>.</p>
-                        <form action="' . kirby()->site()->url() . DS . 'commentions-migrationassistant" method="post">
+                        <form action="' . site()->url('/') . DS . 'commentions-migrationassistant" method="post">
                     ';
                     if (kirby()->request()->is('POST')) {
                         $html .= '<p style="color:red;">Please confirm the two safety checks to proceed!</p>';

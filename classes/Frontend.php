@@ -23,7 +23,7 @@ class Frontend
             case 'endpoints':
                 // display whenever any template is allowlisted for webmentions (regardless of current page; needed for discovery)
                 if (!is_array(option('sgkirby.commentions.templatesWithWebmentions')) || sizeof(option('sgkirby.commentions.templatesWithWebmentions')) > 0) {
-                    $endpoint = site()->url() . '/' . option('sgkirby.commentions.endpoint');
+                    $endpoint = site()->url('/') . '/' . option('sgkirby.commentions.endpoint');
                     echo '
                         <link rel="webmention" href="' . $endpoint . '" />
                         <link rel="http://webmention.org/" href="' . $endpoint . '" />
