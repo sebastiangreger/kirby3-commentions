@@ -151,6 +151,11 @@ export default {
         },
         '-',
         {
+          icon: 'edit',
+          text: this.$t('commentions.section.option.edit'),
+          click: 'edit',
+        },
+        {
           icon: 'trash',
           text: this.$t('commentions.section.option.delete'),
           click: 'delete',
