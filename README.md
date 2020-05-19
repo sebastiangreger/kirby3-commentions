@@ -310,6 +310,16 @@ sections:
 
 ![page](.github/page.png)
 
+Three toggle switches at the bottom of the section provide control over page-specific settings (stored in each page's [`pagesettings.yml`](#page-settings) file):
+- open/close the page for incoming comments and/or webmentions (hides the comment form if using the [`commentions('form')`](#commentionsform) frontend helper and rejects any submissions of the respective type for this page)
+- hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) or [`commentions('grouped')`](#commentionsgrouped) helpers)
+
+_NB. If one or both types of commentions are already disabled in `config.php` using the [limit by template](#limit-by-template) options, they cannot be controlled on a page level and appear greyed out._
+
+![editdialog](.github/editdialog.png)
+
+The context menu of each item gives access to tools to approve/unapprove or delete them, as well as to an editing window. If available, also a direct link to the author's website (or the webmention source where applicable) and their email.
+
 #### Pending
 
 For creating an "inbox" of comments, the property `show: pending` renders a list of all pending comments and webmentions instead.
@@ -322,6 +332,8 @@ sections:
 ```
 
 ![pending](.github/pending.png)
+
+Updated webmentions appearing in this listing are webmentions that had already been approved earlier, but have since been resent by their author (commonly done by some CMS as a post is updated). Approving the update replaces the previous item on file (incl.  the newly submitted HTML content); similarly, selecting "unapprove" or "delete" removes the updated data and unapproves/deletes the original item.
 
 ## Page methods
 
@@ -573,6 +585,7 @@ The file `commentions.yml` contains the comment data for a page. To add/update e
 | uid        | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text       | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source     |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
+| name       | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | example@example.com                   |
 | email      | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
 | avatar     |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website    | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
@@ -590,6 +603,10 @@ The file `webmentionqueue.yml` contains the data of yet unprocessed, incoming we
 | target    | The URL of the page the webmention claims to mention, as submitted in the webmention request.                                      | https://thisdomain.com/a-mentioned-article |
 | uid       | Randomly generated unique ID, used internally for processing. 10 alphanumeric characters (lower-case letters and numbers).         | h96k730lij                                 |
 | failed    | A string with an error message, in case the parsing failed. This preserves failed requests, but bans them from being parsed again. | Could not verify link to target.           |
+
+### Page settings
+
+Some page-specific settings (such as opening/closing comments for a specific page) are stored in the file `pagesettings.yml` in the same folder. If this file does not exist, the default settings are assumed (comments and webmentions open, approved items shown on the website).
 
 ### Log files
 
