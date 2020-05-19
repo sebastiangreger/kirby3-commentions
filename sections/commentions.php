@@ -101,7 +101,35 @@ return [
             // JavaScript needs a zero-based index for native array,
             // while `$commentions->toArray()` uses UIDs as keys.
             return array_values($commentions->toArray());
-        }
+        },
+
+        'pageSettings' => function () {
+            // page settings only apply on page-specific listings
+            if($this->show() !== 'page') {
+                return [];
+            }
+
+            // retrieve saved values (if exist) and loop to create the array for vue
+            $stored = Commentions::pageSettings($this->model());
+            $array = [
+                'acceptComments' => 'comments',
+                'acceptWebmentions' => 'webmentions',
+                'display' => 'display',
+            ];
+            foreach ($array as $k => $v) {
+                $disabled = is_array(option('sgkirby.commentions.templatesWith' . ucfirst($v))) ? !in_array($this->model()->intendedTemplate(), $array) : false;
+                $settings[$k] = [
+                    'id' => $k,
+                    'text' => [
+                        $disabled ? t('commentions.section.setting.disabledInConfig') : t('commentions.section.setting.' . $v . '.true'),
+                        $disabled ? t('commentions.section.setting.disabledInConfig') : t('commentions.section.setting.' . $v . '.false'),
+                    ],
+                    'value' => $disabled ? false : $stored[$k],
+                    'disabled' => $disabled,
+                ];
+            }
+            return $settings;
+        },
 
     ],
 

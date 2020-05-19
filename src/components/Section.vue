@@ -96,13 +96,10 @@ export default {
       headline: null,
       commentions: [],
       empty: null,
+      show: null,
       errors: [],
       viewSource: false,
-      settings: [
-        {id: "comments", text: ["Accepting comments", "Comments closed"], value: false},
-        {id: "webmentions", text: ["Accepting webmentions", "Webmentions disabled"], value: true},
-        {id: "display", text: ["Showing comments", "Comments hidden"], value: true},
-      ],
+      settings: [],
     }
   },
 
@@ -112,9 +109,9 @@ export default {
       this.commentions             = response.commentions;
       this.empty                   = response.empty;
       this.commentionsSystemErrors = response.commentionsSystemErrors;
+      this.settings                = response.pageSettings;
     });
   },
-
 
   methods: {
     // re-defining load method from Kirby’s section mixin, because
@@ -126,10 +123,6 @@ export default {
 
     toggleViewSource() {
       this.viewSource = !this.viewSource;
-    },
-
-    changePageSetting(key, value) {
-      console.log(key + '=' + value);
     },
 
     action(data, uid, pageid) {
@@ -161,6 +154,13 @@ export default {
       await this.$api.delete(endpoint)
       await this.load().then(response => this.commentions = response.commentions);
       this.$store.dispatch("notification/success", ":)");
+    },
+
+    async changePageSetting(key, value) {
+      console.log(key + '=' + value);
+      const endpoint = `commentions/pagesettings/notes+exploring-the-universe`;
+      const response = await this.$api.patch(endpoint, {key: key, value: value});
+      console.log(response);
     },
 
     refresh() {

@@ -10305,13 +10305,18 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: {
     setting: Object
   },
   computed: {
     label: function label() {
-      return this.setting.value ? this.setting.text[0] : this.setting.text[1];
+      if (Array.isArray(this.setting.text)) {
+        return this.setting.value ? this.setting.text[0] : this.setting.text[1];
+      }
+
+      return this.setting.text;
     }
   },
   methods: {
@@ -10347,24 +10352,35 @@ exports.default = _default;
           },
           [
             _c("span", { staticClass: "k-input-element" }, [
-              _c("label", { staticClass: "k-toggle-input" }, [
-                _c("input", {
-                  ref: "input",
-                  staticClass: "k-toggle-input-native",
-                  attrs: { id: _vm.setting.id, type: "checkbox" },
-                  domProps: { checked: _vm.setting.value },
-                  on: {
-                    change: function($event) {
-                      return _vm.change($event.target.checked)
+              _c(
+                "label",
+                {
+                  staticClass: "k-toggle-input",
+                  attrs: { "data-disabled": _vm.setting.disabled }
+                },
+                [
+                  _c("input", {
+                    ref: "input",
+                    staticClass: "k-toggle-input-native",
+                    attrs: {
+                      id: _vm.setting.id,
+                      disabled: _vm.setting.disabled,
+                      type: "checkbox"
+                    },
+                    domProps: { checked: _vm.setting.value },
+                    on: {
+                      change: function($event) {
+                        return _vm.change($event.target.checked)
+                      }
                     }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", {
-                  staticClass: "k-toggle-input-label",
-                  domProps: { innerHTML: _vm._s(_vm.label) }
-                })
-              ])
+                  }),
+                  _vm._v(" "),
+                  _c("span", {
+                    staticClass: "k-toggle-input-label",
+                    domProps: { innerHTML: _vm._s(_vm.label) }
+                  })
+                ]
+              )
             ])
           ]
         )
@@ -10832,21 +10848,10 @@ var _default = {
       headline: null,
       commentions: [],
       empty: null,
+      show: null,
       errors: [],
       viewSource: false,
-      settings: [{
-        id: "comments",
-        text: ["Accepting comments", "Comments closed"],
-        value: false
-      }, {
-        id: "webmentions",
-        text: ["Accepting webmentions", "Webmentions disabled"],
-        value: true
-      }, {
-        id: "display",
-        text: ["Showing comments", "Comments hidden"],
-        value: true
-      }]
+      settings: []
     };
   },
   created: function created() {
@@ -10857,6 +10862,7 @@ var _default = {
       _this.commentions = response.commentions;
       _this.empty = response.empty;
       _this.commentionsSystemErrors = response.commentionsSystemErrors;
+      _this.settings = response.pageSettings;
     });
   },
   methods: {
@@ -10868,9 +10874,6 @@ var _default = {
     },
     toggleViewSource: function toggleViewSource() {
       this.viewSource = !this.viewSource;
-    },
-    changePageSetting: function changePageSetting(key, value) {
-      console.log(key + '=' + value);
     },
     action: function action(data, uid, pageid) {
       if (data === 'delete') {
@@ -10953,11 +10956,40 @@ var _default = {
         }, _callee2);
       }))();
     },
-    refresh: function refresh() {
+    changePageSetting: function changePageSetting(key, value) {
       var _this4 = this;
 
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        var endpoint, response;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                console.log(key + '=' + value);
+                endpoint = "commentions/pagesettings/notes+exploring-the-universe";
+                _context3.next = 4;
+                return _this4.$api.patch(endpoint, {
+                  key: key,
+                  value: value
+                });
+
+              case 4:
+                response = _context3.sent;
+                console.log(response);
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    refresh: function refresh() {
+      var _this5 = this;
+
       this.load().then(function (response) {
-        return _this4.commentions = response.commentions;
+        return _this5.commentions = response.commentions;
       });
     }
   }

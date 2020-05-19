@@ -14,7 +14,7 @@ export default {
 .k-commentions-pagesettings {
   margin-top: .5rem;
 }
-.k-commentions-section .k-input[data-theme="field"] {
+.k-commentions-pagesettings .k-input[data-theme="field"] {
   border: none;
   background: transparent;
 }

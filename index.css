@@ -246,9 +246,25 @@
   margin-top: 0.5rem;
 }
 
-.k-commentions-section .k-input[data-theme=field] {
+.k-commentions-pagesettings .k-input[data-theme=field] {
   border: none;
   background: transparent;
+}.k-commentions-pagesettings .k-toggle-input .k-toggle-input-label {
+  font-size: 0.875rem;
+}
+
+.k-commentions-pagesettings .k-toggle-input[data-disabled=true] .k-toggle-input-label {
+  color: #ccc;
+}
+
+.k-commentions-pagesettings .k-toggle-input-native:not([disabled]) {
+  border-color: #d16464;
+  background-color: #d16464;
+}
+
+.k-commentions-pagesettings .k-toggle-input-native:checked {
+  border-color: #a7bd68;
+  background-color: #a7bd68;
 }.k-commentions-section .k-button[data-theme=active] {
   position: relative;
 }

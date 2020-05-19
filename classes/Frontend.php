@@ -69,9 +69,11 @@ class Frontend
                 if ($template == 'raw') {
                     // return an array with all comments for this page
                     return $commentions;
-                } elseif ($commentions->count() > 0) {
+                }
 
-                // restructure the data if grouped view
+                elseif ($commentions->count() > 0 && Commentions::pageSettings(page(), 'display')) {
+
+                    // restructure the data if grouped view
                     if ($template == 'grouped') {
 
                     // array of all groups to be pulled out from content list,

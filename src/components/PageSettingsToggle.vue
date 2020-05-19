@@ -3,11 +3,12 @@
     <div class="k-toggle-field k-field">
       <div data-theme="field" data-type="toggle" class="k-input">
         <span class="k-input-element">
-          <label class="k-toggle-input">
+          <label :data-disabled="setting.disabled" class="k-toggle-input">
             <input
               ref="input"
               :checked="setting.value"
               :id="setting.id"
+              :disabled="setting.disabled"
               class="k-toggle-input-native"
               type="checkbox"
               @change="change($event.target.checked)"
@@ -29,7 +30,10 @@ export default {
 
   computed: {
     label() {
-      return this.setting.value ? this.setting.text[0] : this.setting.text[1];
+      if (Array.isArray(this.setting.text)) {
+        return this.setting.value ? this.setting.text[0] : this.setting.text[1];
+      }
+      return this.setting.text;
     },
   },
 
@@ -44,4 +48,18 @@ export default {
 </script>
 
 <style lang="scss">
+.k-commentions-pagesettings .k-toggle-input .k-toggle-input-label {
+  font-size: .875rem;
+}
+.k-commentions-pagesettings .k-toggle-input[data-disabled="true"] .k-toggle-input-label {
+  color: #ccc;
+}
+.k-commentions-pagesettings .k-toggle-input-native:not([disabled]) {
+  border-color: #d16464;
+  background-color: #d16464;
+}
+.k-commentions-pagesettings .k-toggle-input-native:checked {
+  border-color: #a7bd68;
+  background-color: #a7bd68;
+}
 </style>

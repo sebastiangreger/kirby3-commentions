@@ -97,6 +97,15 @@ $translations = [
     'section.button.viewsource'         => 'View source',
     'section.button.refresh'            => 'Refresh',
 
+    // - page setting toggles
+    'section.setting.comments.true'     => 'Comments open',
+    'section.setting.comments.false'    => 'Comments closed',
+    'section.setting.webmentions.true'  => 'Webmentions open',
+    'section.setting.webmentions.false' => 'Webmentions closed',
+    'section.setting.display.true'      => 'Shown on site',
+    'section.setting.display.false'     => 'Hidden from site',
+    'section.setting.disabledInConfig'  => 'Disabled in config',
+
     // - misc
     'section.datetime.format'           => 'YYYY-MM-DD HH:mm',
 
