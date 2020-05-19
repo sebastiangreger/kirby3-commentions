@@ -41,6 +41,15 @@
       {{ empty }}
     </k-empty>
 
+    <k-commentions-pagesettings>
+      <k-commentions-pagesettingstoggle
+        v-for="setting in settings"
+        :key="setting.id"
+        :setting="setting"
+        @change="changePageSetting"
+      />
+    </k-commentions-pagesettings>
+
     <k-commentions-edit-dialog
       ref="edit"
       @submit="updateCommention($event)"
@@ -57,6 +66,8 @@
 <script>
 import Item from "./Item.vue";
 import List from "./List.vue";
+import PageSettings from "./PageSettings.vue";
+import PageSettingsToggle from "./PageSettingsToggle.vue";
 import RemoveDialog from './Dialogs/RemoveDialog.vue';
 import EditDialog from './Dialogs/EditDialog.vue';
 
@@ -66,6 +77,8 @@ export default {
   components: {
     'k-commentions-list': List,
     'k-commentions-item': Item,
+    'k-commentions-pagesettings': PageSettings,
+    'k-commentions-pagesettingstoggle': PageSettingsToggle,
     'k-commentions-remove-dialog': RemoveDialog,
     'k-commentions-edit-dialog': EditDialog,
   },
@@ -85,6 +98,11 @@ export default {
       empty: null,
       errors: [],
       viewSource: false,
+      settings: [
+        {id: "comments", text: ["Accepting comments", "Comments closed"], value: false},
+        {id: "webmentions", text: ["Accepting webmentions", "Webmentions disabled"], value: true},
+        {id: "display", text: ["Showing comments", "Comments hidden"], value: true},
+      ],
     }
   },
 
@@ -108,6 +126,10 @@ export default {
 
     toggleViewSource() {
       this.viewSource = !this.viewSource;
+    },
+
+    changePageSetting(key, value) {
+      console.log(key + '=' + value);
     },
 
     action(data, uid, pageid) {
