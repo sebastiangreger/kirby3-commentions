@@ -694,17 +694,18 @@ By default, failed webmention requests are kept in the queue, marked as "failed"
 'sgkirby.commentions.keepfailed' => false,
 ```
 
-### Saved fields
+### Limiting stored data fields
 
 Since comments and webmentions are personal data, data minmalism and privacy-by-default guidelines instruct to only ever store data that is necessary for the task at hand (this adequacy requirement is for example an important principle when aiming for GDPR compliance of processes). The plugin provides fine-grained control over the data it collects.
 
-#### Comment form fields
+#### Comment fields
 
 By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - as long with the obligatory  `text` field).
 
 To reduce the form fields to the `text` field only (not even requiring an optional name):
 
 ```php
+// empty array = no data beyond the required `text` field
 'sgkirby.commentions.commentfields' => [],
 ```
 
@@ -712,23 +713,37 @@ To keep the default `name` field (but make it a required field; hence the `true`
 
 ```php
 'sgkirby.commentions.commentfields' => [
-  'name' => true,
-  'email' => false,
-  'website' => false,
+  'name' => true,     // use name field and mark as required
+  'email' => false,   // collect email as optional field
+  'website' => false, // provide optional website field
 ],
 ```
 
-### Privacy settings
+### Webmention fields
 
-The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing personal data.
+From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
 
-Since the default presentation does not make use of avatar images, these are not stored. To write avatar URLs from incoming webmention metadata to the comment file, add this setting:
+By default, the plugin further stores the HTML payload (field `text`, the content of the source page), as well as name and homepage URL of the author (fields `name` and `website`, as rendered from HTML microformat data if present). The URL of an avatar image (field `avatar`) is not stored by default, as the built-in template does not make use of that.
+
+For a data-minimalist webmention setup, all optional fields beyond the `source` field could be dropped by providing an empty array as follows:
 
 ```php
-'sgkirby.commentions.avatarurls' => true,
+// empty array = no data beyond the required `source` field
+'sgkirby.commentions.webmentionfields' => [],
 ```
 
-_NB. This setting only ensures that valid avatar URLs from incoming webmentions are stored. Downloading, storing, and displaying theme has to be implemented separately, using the `$page->commentions()` page method described above._
+On the other hand, to store all available fields, the array should feature all four field names:
+
+```php
+'sgkirby.commentions.webmentionfields' => [
+  'text',    // store source HTML
+  'name',    // store author's realname
+  'avatar',  // store author's avatar URL
+  'website', // store author's homepage URL
+],
+```
+
+_NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
 
 ### Collapsible forms (show/hide)
 

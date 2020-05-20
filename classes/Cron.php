@@ -215,11 +215,6 @@ class Cron
 
                 // TODO: potentially implement author discovery from rel-author or author-page URLs; https://indieweb.org/authorship-spec
 
-                // do not keep author avatar URL unless activated in config option
-                if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
-                    $result['author']['photo'] = false;
-                }
-
                 // timestamp the webmention
                 if (!empty($result['published'])) {
                     // use date of source, if available
@@ -292,6 +287,14 @@ class Cron
                 'timestamp' => date('Y-m-d H:i', $result['timestamp']),
                 'status'    => Commentions::defaultstatus($result['type']),
             ];
+
+            // remove any data not present in the data retention setup array
+            $fieldsetup = (array)option('sgkirby.commentions.webmentionfields');
+            foreach (['name', 'website', 'avatar', 'text'] as $field) {
+                if (!in_array($field, $fieldsetup)) {
+                    unset($finaldata[$field]);
+                }
+            }
 
             // add as new webmention
             return Commentions::add($page, $finaldata);
