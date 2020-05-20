@@ -700,7 +700,7 @@ Since comments and webmentions are personal data, data minmalism and privacy-by-
 
 #### Comment fields
 
-By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - as long with the obligatory  `text` field).
+By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - along with the obligatory `text` field).
 
 To reduce the form fields to the `text` field only (not even requiring an optional name):
 
@@ -820,7 +820,7 @@ By default, links in comment bodies are rendered as clickable HTML links and pla
 
 ## Credits
 
-Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, and the Panel section redesign!
+Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, along with the intial Panel section redesign and its development!
 
 Inspiration and code snippets from:
 
