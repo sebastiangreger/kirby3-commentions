@@ -41,6 +41,11 @@
       {{ empty }}
     </k-empty>
 
+    <k-commentions-edit-dialog
+      ref="edit"
+      @submit="updateCommention($event)"
+    />
+
     <k-commentions-remove-dialog
       ref="remove"
       @submit="deleteCommention($event)"
@@ -53,6 +58,7 @@
 import Item from "./Item.vue";
 import List from "./List.vue";
 import RemoveDialog from './Dialogs/RemoveDialog.vue';
+import EditDialog from './Dialogs/EditDialog.vue';
 
 export default {
   extends: "k-info-section",
@@ -61,6 +67,7 @@ export default {
     'k-commentions-list': List,
     'k-commentions-item': Item,
     'k-commentions-remove-dialog': RemoveDialog,
+    'k-commentions-edit-dialog': EditDialog,
   },
 
   props: {
@@ -108,14 +115,19 @@ export default {
         this.$refs.remove.open(this.commentions.find(item => item.uid === uid));
         return;
       }
+      if (data === 'edit') {
+        this.$refs.edit.open(this.commentions.find(item => item.uid === uid), pageid);
+        return;
+      }
 
-      this.updateCommention(pageid, uid, data);
+      this.updateCommention([pageid, uid, data]);
     },
 
-    async updateCommention(pageid, uid, data) {
-      pageid = pageid.replace(/\//s, '+');
+    async updateCommention(vars) {
+      const pageid = vars[0].replace(/\//s, '+');
+      const uid = vars[1];
       const endpoint = `commentions/${pageid}/${uid}`;
-      const response = await this.$api.patch(endpoint, data);
+      const response = await this.$api.patch(endpoint, vars[2]);
 
       await this.load().then(response => this.commentions = response.commentions);
       this.$store.dispatch("notification/success", ":)");
