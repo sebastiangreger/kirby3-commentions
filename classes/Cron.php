@@ -277,12 +277,12 @@ class Cron
 
             // create the commention data
             $finaldata = [
-                'name'      => $result['author']['name'] ?? false,
-                'website'   => $result['author']['url'] ?? false,
-                'avatar'    => $result['author']['photo'] ?? false,
-                'text'      => $result['text'],
-                'source'    => $source,
-                'type'      => $result['type'],
+                'name'      => (string)$result['author']['name'] ?? false,
+                'website'   => (string)$result['author']['url'] ?? false,
+                'avatar'    => (string)$result['author']['photo'] ?? false,
+                'text'      => (string)$result['text'],
+                'source'    => (string)$source,
+                'type'      => (string)$result['type'],
                 'language'  => Commentions::determineLanguage($page, Url::path($target)),
                 'timestamp' => date('Y-m-d H:i', $result['timestamp']),
                 'status'    => Commentions::defaultstatus($result['type']),
