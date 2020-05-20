@@ -1,5 +1,5 @@
 <template>
-  <k-dialog
+  <k-dialog class="k-commentions-editdialog"
     ref="dialog"
     :button="$t('save')"
     size="large"
@@ -36,11 +36,6 @@ export default {
   computed: {
     fields() {
       return {
-        header1: {
-          label: this.$t('commentions.section.edit.author'),
-          type: "headline",
-          numbered: false,
-        },
         name: {
           label: this.$t('commentions.section.edit.name'),
           type: "text",
@@ -58,11 +53,6 @@ export default {
         avatar: {
           label: this.$t('commentions.section.edit.avatar'),
           type: "url",
-        },
-        header2: {
-          label: this.$t('commentions.section.edit.content'),
-          type: "headline",
-          numbered: false,
         },
         timestamp: {
           label: this.$t('commentions.section.edit.timestamp'),
@@ -139,3 +129,9 @@ export default {
 
 };
 </script>
+
+<style lang="scss">
+.k-commentions-editdialog .k-fieldset .k-grid {
+  grid-row-gap: 1rem;
+}
+</style>

@@ -73,15 +73,13 @@ $translations = [
     'section.option.sendemail'          => 'E-Mail senden',
 
     // - dialogs
-    'section.edit.author'               => 'Autor',
     'section.edit.name'                 => 'Name',
     'section.edit.website'              => 'URL Website',
     'section.edit.email'                => 'E-Mail',
     'section.edit.avatar'               => 'URL Avatarbild',
-    'section.edit.content'              => 'Inhalt',
     'section.edit.timestamp'            => 'Zeitstempel',
     'section.edit.type'                 => 'Typ',
-    'section.edit.text'                 => 'Text (HTML/Markdown unterstützt)',
+    'section.edit.text'                 => 'Text',
     'section.edit.source'               => 'URL der Quelle (nur bei Webmentions)',
     'section.delete.webmention.confirm' => 'Willst du diese <strong>Webmention</strong> wirklich löschen?',
     'section.delete.mention.confirm'    => 'Willst du diese <strong>Erwähnung</strong> wirklich löschen?',
