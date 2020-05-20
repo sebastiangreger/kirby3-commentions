@@ -694,27 +694,29 @@ By default, failed webmention requests are kept in the queue, marked as "failed"
 'sgkirby.commentions.keepfailed' => false,
 ```
 
-### Comment form fields
+### Saved fields
 
-By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):
+Since comments and webmentions are personal data, data minmalism and privacy-by-default guidelines instruct to only ever store data that is necessary for the task at hand (this adequacy requirement is for example an important principle when aiming for GDPR compliance of processes). The plugin provides fine-grained control over the data it collects.
+
+#### Comment form fields
+
+By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - as long with the obligatory  `text` field).
+
+To reduce the form fields to the `text` field only (not even requiring an optional name):
 
 ```php
-'sgkirby.commentions.formfields' => [
-  'name',
-  'email',
-  'url'
+'sgkirby.commentions.commentfields' => [],
+```
+
+To keep the default `name` field (but make it a required field; hence the `true` boolean), and add optional fields for `email` and a `website`:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'name' => true,
+  'email' => false,
+  'website' => false,
 ],
 ```
-
-### Collapsible forms (show/hide)
-
-If desired, the following setting triggers additional markup in the included form markup (when using the `commentions('form')` helper) that can be used to hide the forms by default, allowing for an accessible open/close functionality:
-
-```php
-'sgkirby.commentions.hideforms' => true,
-```
-
-_NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required in the frontend template (for example as described in https://inclusive-components.design/collapsible-sections/)._
 
 ### Privacy settings
 
@@ -727,6 +729,16 @@ Since the default presentation does not make use of avatar images, these are not
 ```
 
 _NB. This setting only ensures that valid avatar URLs from incoming webmentions are stored. Downloading, storing, and displaying theme has to be implemented separately, using the `$page->commentions()` page method described above._
+
+### Collapsible forms (show/hide)
+
+If desired, the following setting triggers additional markup in the included form markup (when using the `commentions('form')` helper) that can be used to hide the forms by default, allowing for an accessible open/close functionality:
+
+```php
+'sgkirby.commentions.hideforms' => true,
+```
+
+_NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required in the frontend template (for example as described in https://inclusive-components.design/collapsible-sections/)._
 
 ### Spam protection
 
