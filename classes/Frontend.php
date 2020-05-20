@@ -127,7 +127,7 @@ class Frontend
     public static function processCommentform($page, $path)
     {
         // bounce submissions to pages not allowlisted for comments
-        if(!Commentions::accepted(page(), 'comments')) {
+        if(!Commentions::accepted($page, 'comments')) {
             go($page->url());
             exit;
         }
