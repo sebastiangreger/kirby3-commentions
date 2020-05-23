@@ -81,6 +81,10 @@ return [
             return $errors;
         },
 
+        'pageId' => function () {
+            return $this->model()->id();
+        },
+
         'commentions' => function (): array {
             // retrieve the show property
             switch ($this->show()) {

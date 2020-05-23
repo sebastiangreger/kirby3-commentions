@@ -110,6 +110,7 @@ export default {
       this.empty                   = response.empty;
       this.commentionsSystemErrors = response.commentionsSystemErrors;
       this.settings                = response.pageSettings;
+      this.pageid                  = response.pageId;
     });
   },
 
@@ -143,7 +144,6 @@ export default {
       const uid = vars[1];
       const endpoint = `commentions/${pageid}/${uid}`;
       const response = await this.$api.patch(endpoint, vars[2]);
-
       await this.load().then(response => this.commentions = response.commentions);
       this.$store.dispatch("notification/success", ":)");
     },
@@ -158,7 +158,7 @@ export default {
 
     async changePageSetting(key, value) {
       console.log(key + '=' + value);
-      const endpoint = `commentions/pagesettings/notes+exploring-the-universe`;
+      const endpoint = `commentions/pagesettings/` + this.pageid.replace(/\//s, '+');
       const response = await this.$api.patch(endpoint, {key: key, value: value});
       console.log(response);
     },
