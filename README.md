@@ -696,26 +696,36 @@ By default, failed webmention requests are kept in the queue, marked as "failed"
 
 ### Limiting stored data fields
 
-Since comments and webmentions are personal data, data minmalism and privacy-by-default guidelines instruct to only ever store data that is necessary for the task at hand (this adequacy requirement is for example an important principle when aiming for GDPR compliance of processes). The plugin provides fine-grained control over the data it collects.
+Data minmalism and privacy-by-default guidelines instruct to only ever store data that is necessary for the task at hand (this adequacy requirement is for example an important principle when aiming for GDPR compliance of processes). Since comments and webmentions are personal data, the plugin provides fine-grained control over the data it collects.
 
 #### Comment fields
 
 By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - along with the obligatory `text` field).
 
-To reduce the form fields to the `text` field only (not even requiring an optional name):
+To reduce the form fields to the `text` field only (not even providing the optional name field):
 
 ```php
 // empty array = no data beyond the required `text` field
 'sgkirby.commentions.commentfields' => [],
 ```
 
-To keep the default `name` field (but make it a required field; hence the `true` boolean), and add optional fields for `email` and a `website`:
+To keep the default `name` field, and add fields for `email` and a `website`:
 
 ```php
 'sgkirby.commentions.commentfields' => [
-  'name' => true,     // use name field and mark as required
-  'email' => false,   // collect email as optional field
-  'website' => false, // provide optional website field
+  'name',          // include name field
+  'email',         // include email field
+  'website',       // include website field
+],
+```
+
+To mark a field as required (submission fails unless it is filled in) add a boolean `true` to the field:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'name' => true,  // include name field and mark as required
+  'email',         // include email as optional field
+  'website',       // include optional website field
 ],
 ```
 
@@ -736,10 +746,10 @@ On the other hand, to store all available fields, the array should feature all f
 
 ```php
 'sgkirby.commentions.webmentionfields' => [
-  'text',    // store source HTML
-  'name',    // store author's realname
-  'avatar',  // store author's avatar URL
-  'website', // store author's homepage URL
+  'text',     // store source HTML
+  'name',     // store author's realname
+  'avatar',   // store author's avatar URL
+  'website',  // store author's homepage URL
 ],
 ```
 

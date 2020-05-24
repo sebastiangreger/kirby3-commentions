@@ -291,7 +291,7 @@ class Cron
             // remove any data not present in the data retention setup array
             $fieldsetup = (array)option('sgkirby.commentions.webmentionfields');
             foreach (['name', 'website', 'avatar', 'text'] as $field) {
-                if (!in_array($field, $fieldsetup)) {
+                if (!in_array($field, $fieldsetup) && !array_key_exists($field, $fieldsetup)) {
                     unset($finaldata[$field]);
                 }
             }

@@ -60,7 +60,7 @@ Kirby::plugin('sgkirby/commentions', [
         'expand'              => false,
         'allowlinks'          => true,
         'autolinks'           => true,
-        'commentfields'       => ['name' => false],
+        'commentfields'       => ['name'],
         'webmentionfields'    => ['text', 'name', 'website'],
         'grouped'             => [
             'read'            => 'Read by',

@@ -137,9 +137,9 @@ class Frontend
 
         // assemble the commention data
         $data = [
-            'name' => array_key_exists('name', $fieldsetup) ? get('name') : null,
-            'email' => array_key_exists('email', $fieldsetup) ? get('email') : null,
-            'website' => array_key_exists('website', $fieldsetup) ? get('realwebsite') : null,
+            'name' => (in_array('name', $fieldsetup) || array_key_exists('name', $fieldsetup)) ? get('name') : null,
+            'email' => (in_array('email', $fieldsetup) || array_key_exists('email', $fieldsetup)) ? get('email') : null,
+            'website' => (in_array('website', $fieldsetup) || array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
             'text' => get('message'),
             'timestamp' => date(date('Y-m-d H:i'), time()),
             'language' => Commentions::determineLanguage($page, $path),

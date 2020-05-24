@@ -18,17 +18,17 @@
 
     <form action="<?= $page->url() ?>" method="post" <?= option('sgkirby.commentions.hideforms') ? 'class="expandertarget"' : '' ?>>
 
-      <?php if (array_key_exists('name', $fields)) : ?>
+      <?php if (in_array('name', $fields) || array_key_exists('name', $fields)) : ?>
       <div class="commentions-form-name">
-        <label for="name"><?= t('commentions.snippet.form.name' . (!$fields['name'] ? '.optional' : '')) ?><?= $fields['name'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '' ?></label>
-        <input type="text" id="name" name="name" <?= $fields['name'] ? 'required' : '' ?>>
+        <label for="name"><?= t('commentions.snippet.form.name' . ((!array_key_exists('name', $fields) || $fields['name'] !== true) ? '.optional' : '')) ?><?= (array_key_exists('name', $fields) && $fields['name'] === true) ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '' ?></label>
+        <input type="text" id="name" name="name" <?= (array_key_exists('name', $fields) && $fields['name'] === true) ? 'required' : '' ?>>
       </div>
       <?php endif; ?>
 
-      <?php if (array_key_exists('email', $fields)) : ?>
+      <?php if (in_array('email', $fields) || array_key_exists('email', $fields)) : ?>
       <div class="commentions-form-email">
-        <label for="email"><?= t('commentions.snippet.form.email' . (!$fields['email'] ? '.optional' : '')) ?><?= $fields['email'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '' ?></label>
-        <input type="email" id="email" name="email" <?= $fields['email'] ? 'required' : '' ?>>
+        <label for="email"><?= t('commentions.snippet.form.email' . ((!array_key_exists('email', $fields) || $fields['email'] !== true) ? '.optional' : '')) ?><?= (array_key_exists('email', $fields) && $fields['email'] === true) ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '' ?></label>
+        <input type="email" id="email" name="email" <?= (array_key_exists('email', $fields) && $fields['email'] === true) ? 'required' : '' ?>>
       </div>
       <?php endif; ?>
 
@@ -37,10 +37,10 @@
         <input type="url" id="website" name="website">
       </div>
 
-      <?php if (array_key_exists('website', $fields)) : ?>
+      <?php if (in_array('website', $fields) || array_key_exists('website', $fields)) : ?>
       <div class="commentions-form-website">
-        <label for="realwebsite"><?= t('commentions.snippet.form.website' . (!$fields['website'] ? '.optional' : '')) ?><?= $fields['website'] ? ' <abbr title="requir' . t('commentions.snippet.form.required') . 'ed">*</abbr>' : '' ?></label>
-        <input type="url" id="realwebsite" name="realwebsite" <?= $fields['website'] ? 'required' : '' ?>>
+        <label for="realwebsite"><?= t('commentions.snippet.form.website' . ((!array_key_exists('website', $fields) || $fields['website'] !== true) ? '.optional' : '')) ?><?= (array_key_exists('website', $fields) && $fields['website'] === true) ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '' ?></label>
+        <input type="url" id="realwebsite" name="realwebsite" <?= (array_key_exists('website', $fields) && $fields['website'] === true) ? 'required' : '' ?>>
       </div>
       <?php endif; ?>
 
