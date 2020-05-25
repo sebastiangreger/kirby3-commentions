@@ -54,12 +54,4 @@ export default {
 .k-commentions-pagesettings .k-toggle-input[data-disabled="true"] .k-toggle-input-label {
   color: #ccc;
 }
-.k-commentions-pagesettings .k-toggle-input-native:not([disabled]) {
-  border-color: #d16464;
-  background-color: #d16464;
-}
-.k-commentions-pagesettings .k-toggle-input-native:checked {
-  border-color: #a7bd68;
-  background-color: #a7bd68;
-}
 </style>
