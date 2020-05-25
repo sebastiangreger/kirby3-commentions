@@ -729,6 +729,24 @@ To mark a field as required (submission fails unless it is filled in) add a bool
 ],
 ```
 
+For advanced customization, a callback function can be used to control the array of fields. The following example specifies a different set of fields for pages with template `event`:
+
+```php
+'sgkirby.commentions.commentfields' => function($targetPage){
+  // comment forms on event pages require both name and email
+  if ($targetPage->intendedTemplate()->name() === 'event') {
+    return [
+      'name' => true,
+      'email' => true,
+    ];
+  }
+  // on all other pages, only show optional name field
+  return [
+    'name',
+  ];
+},
+```
+
 ### Webmention fields
 
 From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
@@ -752,6 +770,8 @@ On the other hand, to store all available fields, the array should feature all f
   'website',  // store author's homepage URL
 ],
 ```
+
+As with the [comment fields option](#comment-fields) above, an anonymous callback function may be used for more granular control (see above for example code).
 
 _NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
 

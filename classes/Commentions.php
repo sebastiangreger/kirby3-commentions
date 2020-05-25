@@ -64,6 +64,9 @@ class Commentions
     {
         // retrieve setup from config
         $fieldsetup = option('sgkirby.commentions.' . $type . 'fields');
+        if (is_callable($fieldsetup)) {
+            $fieldsetup = $fieldsetup($page);
+        }
 
         if ($type === 'comment') {
             // loop through all fields
