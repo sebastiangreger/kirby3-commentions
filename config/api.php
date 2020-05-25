@@ -19,6 +19,16 @@ return [
                 return $this->page($pageid)->updateCommention($uid, $this->requestBody());
             }
         ],
+        [
+            'pattern' => 'commentions/pagesettings/(:any)',
+            'method'  => 'PATCH',
+            'action'  => function (string $pageid) {
+                $data = $this->requestBody();
+                $settings = Storage::read($this->page($pageid), 'pagesettings');
+                $settings[$data['key']] = $data['value'];
+                return Storage::write($this->page($pageid), $settings, 'pagesettings');
+            }
+        ],
 
     ]
 

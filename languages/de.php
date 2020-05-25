@@ -15,11 +15,15 @@ $translations = [
     'snippet.form.ctacomment'           => 'Hinterlasse einen Kommentar',
     'snippet.form.ctawebmention'        => 'Auf der eigenen Website geantwortet? Sende eine Webmention!',
     'snippet.form.responseurl'          => 'URL der Antwort auf deiner Website (stelle sicher, dass die Seite einen Link auf diese URL enthält)',
-    'snippet.form.name'                 => 'Name (optional)',
-    'snippet.form.email'                => 'E-Mail (optional; falls du eine persönliche Antwort wünschst)',
+    'snippet.form.name'                 => 'Name',
+    'snippet.form.name.optional'        => 'Name (optional)',
+    'snippet.form.email'                => 'E-Mail (nicht veröffentlicht)',
+    'snippet.form.email.optional'       => 'E-Mail (optional; nicht veröffentlicht)',
     'snippet.form.honeypot'             => 'Bitte lasse dieses Feld leer!',
-    'snippet.form.website'              => 'Website (optional; wird öffentlich verlinkt, falls angegeben)',
+    'snippet.form.website'              => 'Website (öffentlich verlinkt)',
+    'snippet.form.website.optional'     => 'Website (optional; öffentlich verlinkt)',
     'snippet.form.comment'              => 'Kommentar',
+    'snippet.form.required'             => 'erforderlich',
     'snippet.form.help.noformatting'    => 'All HTML tags are removed.',
     'snippet.form.help.title'           => 'Verfügbare Formatierungen',
     'snippet.form.help.intro'           =>
@@ -94,6 +98,15 @@ $translations = [
     // - buttons
     'section.button.viewsource'         => 'Quelltext anzeigen',
     'section.button.refresh'            => 'Aktualisieren',
+
+    // - page setting toggles
+    'section.setting.comments.true'     => 'Kommentare offen',
+    'section.setting.comments.false'    => 'Kommentare aus',
+    'section.setting.webmentions.true'  => 'Webmentions offen',
+    'section.setting.webmentions.false' => 'Webmentions aus',
+    'section.setting.display.true'      => 'Sichtbar',
+    'section.setting.display.false'     => 'Nicht sichtbar',
+    'section.setting.disabledInConfig'  => 'Inaktiv (config)',
 
     // - misc
     'section.datetime.format'           => 'DD.MM.YYYY · HH:mm [Uhr]',

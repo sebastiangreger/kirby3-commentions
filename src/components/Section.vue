@@ -41,6 +41,15 @@
       {{ empty }}
     </k-empty>
 
+    <k-commentions-pagesettings>
+      <k-commentions-pagesettingstoggle
+        v-for="setting in settings"
+        :key="setting.id"
+        :setting="setting"
+        @change="changePageSetting"
+      />
+    </k-commentions-pagesettings>
+
     <k-commentions-edit-dialog
       ref="edit"
       @submit="updateCommention($event)"
@@ -57,6 +66,8 @@
 <script>
 import Item from "./Item.vue";
 import List from "./List.vue";
+import PageSettings from "./PageSettings.vue";
+import PageSettingsToggle from "./PageSettingsToggle.vue";
 import RemoveDialog from './Dialogs/RemoveDialog.vue';
 import EditDialog from './Dialogs/EditDialog.vue';
 
@@ -66,6 +77,8 @@ export default {
   components: {
     'k-commentions-list': List,
     'k-commentions-item': Item,
+    'k-commentions-pagesettings': PageSettings,
+    'k-commentions-pagesettingstoggle': PageSettingsToggle,
     'k-commentions-remove-dialog': RemoveDialog,
     'k-commentions-edit-dialog': EditDialog,
   },
@@ -83,8 +96,10 @@ export default {
       headline: null,
       commentions: [],
       empty: null,
+      show: null,
       errors: [],
       viewSource: false,
+      settings: [],
     }
   },
 
@@ -94,9 +109,10 @@ export default {
       this.commentions             = response.commentions;
       this.empty                   = response.empty;
       this.commentionsSystemErrors = response.commentionsSystemErrors;
+      this.settings                = response.pageSettings;
+      this.pageid                  = response.pageId;
     });
   },
-
 
   methods: {
     // re-defining load method from Kirby’s section mixin, because
@@ -128,7 +144,6 @@ export default {
       const uid = vars[1];
       const endpoint = `commentions/${pageid}/${uid}`;
       const response = await this.$api.patch(endpoint, vars[2]);
-
       await this.load().then(response => this.commentions = response.commentions);
       this.$store.dispatch("notification/success", ":)");
     },
@@ -139,6 +154,11 @@ export default {
       await this.$api.delete(endpoint)
       await this.load().then(response => this.commentions = response.commentions);
       this.$store.dispatch("notification/success", ":)");
+    },
+
+    async changePageSetting(key, value) {
+      const endpoint = `commentions/pagesettings/` + this.pageid.replace(/\//s, '+');
+      const response = await this.$api.patch(endpoint, {key: key, value: value});
     },
 
     refresh() {

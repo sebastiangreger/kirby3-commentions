@@ -54,9 +54,59 @@ class Commentions
     }
 
     /**
-     * Checks if a page accepts comments/webmentions based on its template
+     * Returns the form field setup for a page
      *
      * @param \Kirby\Cms\Page $page The page object
+     * @param string $type The type of comment ('webmention' or 'comment')
+     * @return bool
+     */
+    public static function fields($page, string $type = "comment")
+    {
+        // retrieve setup from config
+        $fieldsetup = option('sgkirby.commentions.' . $type . 'fields');
+        if (is_callable($fieldsetup)) {
+            $fieldsetup = $fieldsetup($page);
+        }
+
+        if ($type === 'comment') {
+            // loop through all fields
+            foreach ((array)$fieldsetup as $k => $v) {
+                if (is_string($k)) {
+                    $fields[$k] = [
+                        'required' => $v,
+                        'label' => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : '')) . ($v ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
+                    ];
+                } else {
+                    $fields[$v] = [
+                        'required' => false,
+                        'label' => t('commentions.snippet.form.' . $v . '.optional'),
+                    ];
+                }
+            }
+            // add the compulsory message field
+            $fields['message'] = [
+                'required' => true,
+                'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
+            ];
+        }
+
+        elseif ($type === 'webmention') {
+            $fields = (array)$fieldsetup;
+        }
+
+        else {
+            return false;
+        }
+
+        // return fields array
+        return $fields;
+    }
+
+    /**
+     * Checks if a page accepts comments/webmentions based on template or settings
+     *
+     * @param \Kirby\Cms\Page $page The page object
+     * @param string $type The type of comment ('webmentions' or 'comments')
      * @return bool
      */
     public static function accepted($page, string $type)
@@ -67,17 +117,13 @@ class Commentions
 
         $allowlist = option('sgkirby.commentions.templatesWith' . ucfirst($type));
 
-        // if no allowlist is set, comments and webmentions are allowed on all pages
-        if (!is_array($allowlist)) {
-            return true;
+        // if applicable template is not in allowlist, return false
+        if (is_array($allowlist) && !in_array($page->intendedTemplate()->name(), $allowlist)) {
+            return false;
         }
 
-        // if applicable template is in allowlist, return true
-        if (in_array($page->intendedTemplate(), $allowlist)) {
-            return true;
-        }
-
-        return false;
+        // the page-specific setting has the final say
+        return static::pageSettings($page, 'accept' . ucfirst($type));
     }
 
     /**
@@ -487,6 +533,41 @@ class Commentions
 
         // not identified as spam
         return false;
+    }
+
+    /**
+     * Returns all or one page-specific commention setting(s)
+     *
+     * @param \Kirby\Cms\Page $page The page object
+     * @param string $path The key of a specific page setting
+     * @return bool|array Array of all settings or boolean value for the queried setting
+     */
+    public static function pageSettings($page, string $key = null )
+    {
+        $stored = Storage::read($page, 'pagesettings');
+        $defaults = [
+            'acceptComments' => true,
+            'acceptWebmentions' => true,
+            'display' => true,
+        ];
+        foreach($defaults as $k => $v) {
+            $settings[$k] = $stored[$k] ?? $v;
+            /*
+            if ($settings[$k] === 'true') {
+                $settings[$k] = true;
+            } else if ($settings[$k] === 'false') {
+                $settings[$k] = false;
+            }
+            */
+        }
+
+        // if a specific key is given, return the bool value for that key
+        if ($key !== null) {
+            return $settings[$key];
+        }
+
+        // otherwise return associative array
+        return $settings;
     }
 
     /**

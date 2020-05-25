@@ -31,7 +31,7 @@ _NB. The plugin only covers incoming webmentions, i.e. receiving notifications f
 
 **Before implementing the functionalities enabled by this plugin, it is strongly advised to carry out an ethical and legal assessment.** By enabling users to post comments and/or by processing webmentions, a website deals with what is considered personal data in most jurisdictions. The processing of personal data is subject to often very strict privacy laws, coming with a potentially wide range of obligations. Legal aspects aside, dealing with other people's data always comes with ethical implications.
 
-> "GDPR compliance" etc. is never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, responsibility for ethical conduct and compliance with applicable laws ultimately rests with the operator of the website (the data controller). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
+> Data ethics or "GDPR compliance" are never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, responsibility for ethical conduct and compliance with applicable laws ultimately rests with the operator of the website (aka. "the data controller"). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
 
 ## Installation
 
@@ -310,6 +310,16 @@ sections:
 
 ![page](.github/page.png)
 
+Three toggle switches at the bottom of the section provide control over page-specific settings (stored in each page's [`pagesettings.yml`](#page-settings) file):
+- open/close the page for incoming comments and/or webmentions (hides the comment form if using the [`commentions('form')`](#commentionsform) frontend helper and rejects any submissions of the respective type for this page)
+- hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) or [`commentions('grouped')`](#commentionsgrouped) helpers)
+
+_NB. If one or both types of commentions are already disabled in `config.php` using the [limit by template](#limit-by-template) options, they cannot be controlled on a page level and appear greyed out._
+
+![editdialog](.github/editdialog.png)
+
+The context menu of each item gives access to tools to approve/unapprove or delete them, as well as to an editing window. If available, also a direct link to the author's website (or the webmention source where applicable) and their email.
+
 #### Pending
 
 For creating an "inbox" of comments, the property `show: pending` renders a list of all pending comments and webmentions instead.
@@ -322,6 +332,8 @@ sections:
 ```
 
 ![pending](.github/pending.png)
+
+Updated webmentions appearing in this listing are webmentions that had already been approved earlier, but have since been resent by their author (commonly done by some CMS as a post is updated). Approving the update replaces the previous item on file (incl.  the newly submitted HTML content); similarly, selecting "unapprove" or "delete" removes the updated data and unapproves/deletes the original item.
 
 ## Page methods
 
@@ -476,9 +488,9 @@ Adding the following code to `site/config.php` or in a plugin would stop the add
 
 ```php
 'hooks' => [
-  'commentions.add:before' => function ( $page, $data ) {
-    if( $data['name'] == 'John Doe' ) {
-      throw new Exception( "John Doe is not allowed to comment." );
+  'commentions.add:before' => function ($page, $data) {
+    if($data['name'] == 'John Doe') {
+      throw new Exception("John Doe is not allowed to comment.");
     }
   }
 ],
@@ -573,6 +585,7 @@ The file `commentions.yml` contains the comment data for a page. To add/update e
 | uid        | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text       | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source     |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
+| name       | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | example@example.com                   |
 | email      | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
 | avatar     |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website    | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
@@ -590,6 +603,10 @@ The file `webmentionqueue.yml` contains the data of yet unprocessed, incoming we
 | target    | The URL of the page the webmention claims to mention, as submitted in the webmention request.                                      | https://thisdomain.com/a-mentioned-article |
 | uid       | Randomly generated unique ID, used internally for processing. 10 alphanumeric characters (lower-case letters and numbers).         | h96k730lij                                 |
 | failed    | A string with an error message, in case the parsing failed. This preserves failed requests, but bans them from being parsed again. | Could not verify link to target.           |
+
+### Page settings
+
+Some page-specific settings (such as opening/closing comments for a specific page) are stored in the file `pagesettings.yml` in the same folder. If this file does not exist, the default settings are assumed (comments and webmentions open, approved items shown on the website).
 
 ### Log files
 
@@ -677,17 +694,86 @@ By default, failed webmention requests are kept in the queue, marked as "failed"
 'sgkirby.commentions.keepfailed' => false,
 ```
 
-### Comment form fields
+### Limiting stored data fields
 
-By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):
+Data minmalism and privacy-by-default guidelines instruct to only ever store data that is necessary for the task at hand (this adequacy requirement is for example an important principle when aiming for GDPR compliance of processes). Since comments and webmentions are personal data, the plugin provides fine-grained control over the data it collects.
+
+#### Comment fields
+
+By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - along with the obligatory `text` field).
+
+To reduce the form fields to the `text` field only (not even providing the optional name field):
 
 ```php
-'sgkirby.commentions.formfields' => [
-  'name',
-  'email',
-  'url'
+// empty array = no data beyond the required `text` field
+'sgkirby.commentions.commentfields' => [],
+```
+
+To keep the default `name` field, and add fields for `email` and a `website`:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'name',          // include name field
+  'email',         // include email field
+  'website',       // include website field
 ],
 ```
+
+To mark a field as required (submission fails unless it is filled in) add a boolean `true` to the field:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'name' => true,  // include name field and mark as required
+  'email',         // include email as optional field
+  'website',       // include optional website field
+],
+```
+
+For advanced customization, a callback function can be used to control the array of fields. The following example specifies a different set of fields for pages with template `event`:
+
+```php
+'sgkirby.commentions.commentfields' => function($targetPage){
+  // comment forms on event pages require both name and email
+  if ($targetPage->intendedTemplate()->name() === 'event') {
+    return [
+      'name' => true,
+      'email' => true,
+    ];
+  }
+  // on all other pages, only show optional name field
+  return [
+    'name',
+  ];
+},
+```
+
+### Webmention fields
+
+From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
+
+By default, the plugin further stores the HTML payload (field `text`, the content of the source page), as well as name and homepage URL of the author (fields `name` and `website`, as rendered from HTML microformat data if present). The URL of an avatar image (field `avatar`) is not stored by default, as the built-in template does not make use of that.
+
+For a data-minimalist webmention setup, all optional fields beyond the `source` field could be dropped by providing an empty array as follows:
+
+```php
+// empty array = no data beyond the required `source` field
+'sgkirby.commentions.webmentionfields' => [],
+```
+
+On the other hand, to store all available fields, the array should feature all four field names:
+
+```php
+'sgkirby.commentions.webmentionfields' => [
+  'text',     // store source HTML
+  'name',     // store author's realname
+  'avatar',   // store author's avatar URL
+  'website',  // store author's homepage URL
+],
+```
+
+As with the [comment fields option](#comment-fields) above, an anonymous callback function may be used for more granular control (see above for example code).
+
+_NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
 
 ### Collapsible forms (show/hide)
 
@@ -698,18 +784,6 @@ If desired, the following setting triggers additional markup in the included for
 ```
 
 _NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required in the frontend template (for example as described in https://inclusive-components.design/collapsible-sections/)._
-
-### Privacy settings
-
-The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing personal data.
-
-Since the default presentation does not make use of avatar images, these are not stored. To write avatar URLs from incoming webmention metadata to the comment file, add this setting:
-
-```php
-'sgkirby.commentions.avatarurls' => true,
-```
-
-_NB. This setting only ensures that valid avatar URLs from incoming webmentions are stored. Downloading, storing, and displaying theme has to be implemented separately, using the `$page->commentions()` page method described above._
 
 ### Spam protection
 
@@ -776,7 +850,7 @@ By default, links in comment bodies are rendered as clickable HTML links and pla
 
 ## Credits
 
-Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, and the Panel section redesign!
+Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, along with the intial Panel section redesign and its development!
 
 Inspiration and code snippets from:
 

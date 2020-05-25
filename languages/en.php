@@ -15,11 +15,15 @@ $translations = [
     'snippet.form.ctacomment'          => 'Leave a comment',
     'snippet.form.ctawebmention'       => 'Replied on your own website? Send a Webmention!',
     'snippet.form.responseurl'         => 'URL of the response on your site (make sure it has a hyperlink to this page)',
-    'snippet.form.name'                => 'Name (optional)',
-    'snippet.form.email'               => 'Email (optional; if you’d like a personal reply)',
+    'snippet.form.name'                => 'Name',
+    'snippet.form.name.optional'       => 'Name (optional)',
+    'snippet.form.email'               => 'Email',
+    'snippet.form.email.optional'      => 'Email (optional; not displayed)',
     'snippet.form.honeypot'            => 'Please leave this field empty!',
-    'snippet.form.website'             => 'Website (optional; publicly linked if provided)',
+    'snippet.form.website'             => 'Website (public if provided)',
+    'snippet.form.website.optional'    => 'Website (optional; public if provided)',
     'snippet.form.comment'             => 'Comment',
+    'snippet.form.required'            => 'required',
     'snippet.form.help.noformatting'   => 'HTML-Formatierungen werden entfernt.',
     'snippet.form.help.title'          => 'Available formatting commands',
     'snippet.form.help.intro'          =>
@@ -94,6 +98,15 @@ $translations = [
     // - buttons
     'section.button.viewsource'         => 'View source',
     'section.button.refresh'            => 'Refresh',
+
+    // - page setting toggles
+    'section.setting.comments.true'     => 'Comments open',
+    'section.setting.comments.false'    => 'Comments closed',
+    'section.setting.webmentions.true'  => 'Webmentions open',
+    'section.setting.webmentions.false' => 'Webmentions closed',
+    'section.setting.display.true'      => 'Shown on site',
+    'section.setting.display.false'     => 'Hidden from site',
+    'section.setting.disabledInConfig'  => 'Disabled in config',
 
     // - misc
     'section.datetime.format'           => 'YYYY-MM-DD HH:mm',

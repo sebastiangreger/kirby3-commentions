@@ -215,11 +215,6 @@ class Cron
 
                 // TODO: potentially implement author discovery from rel-author or author-page URLs; https://indieweb.org/authorship-spec
 
-                // do not keep author avatar URL unless activated in config option
-                if (isset($result['author']['photo']) && (bool)option('sgkirby.commentions.avatarurls')) {
-                    $result['author']['photo'] = false;
-                }
-
                 // timestamp the webmention
                 if (!empty($result['published'])) {
                     // use date of source, if available
@@ -282,16 +277,24 @@ class Cron
 
             // create the commention data
             $finaldata = [
-                'name'      => $result['author']['name'] ?? false,
-                'website'   => $result['author']['url'] ?? false,
-                'avatar'    => $result['author']['photo'] ?? false,
-                'text'      => $result['text'],
-                'source'    => $source,
-                'type'      => $result['type'],
+                'name'      => (string)$result['author']['name'] ?? false,
+                'website'   => (string)$result['author']['url'] ?? false,
+                'avatar'    => (string)$result['author']['photo'] ?? false,
+                'text'      => (string)$result['text'],
+                'source'    => (string)$source,
+                'type'      => (string)$result['type'],
                 'language'  => Commentions::determineLanguage($page, Url::path($target)),
                 'timestamp' => date('Y-m-d H:i', $result['timestamp']),
                 'status'    => Commentions::defaultstatus($result['type']),
             ];
+
+            // remove any data not present in the data retention setup array
+            $fieldsetup = Commentions::accepted($page, 'webmentions');
+            foreach (['name', 'website', 'avatar', 'text'] as $field) {
+                if (!array_key_exists($field, Commentions::fields($page, 'webmention'))) {
+                    unset($finaldata[$field]);
+                }
+            }
 
             // add as new webmention
             return Commentions::add($page, $finaldata);
