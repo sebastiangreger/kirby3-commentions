@@ -157,10 +157,8 @@ export default {
     },
 
     async changePageSetting(key, value) {
-      console.log(key + '=' + value);
       const endpoint = `commentions/pagesettings/` + this.pageid.replace(/\//s, '+');
       const response = await this.$api.patch(endpoint, {key: key, value: value});
-      console.log(response);
     },
 
     refresh() {
