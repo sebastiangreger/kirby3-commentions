@@ -488,9 +488,9 @@ Adding the following code to `site/config.php` or in a plugin would stop the add
 
 ```php
 'hooks' => [
-  'commentions.add:before' => function ( $page, $data ) {
-    if( $data['name'] == 'John Doe' ) {
-      throw new Exception( "John Doe is not allowed to comment." );
+  'commentions.add:before' => function ($page, $data) {
+    if($data['name'] == 'John Doe') {
+      throw new Exception("John Doe is not allowed to comment.");
     }
   }
 ],
