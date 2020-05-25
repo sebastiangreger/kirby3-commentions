@@ -42,7 +42,7 @@ class Frontend
             case 'form':
                 if (!get('thx') && Commentions::accepted(page(), 'comments')) {
                     snippet('commentions-form', [
-                        'fields' => (array)option('sgkirby.commentions.commentfields'),
+                        'fields' => Commentions::fields(page()),
                     ]);
                 }
                 break;
@@ -133,13 +133,13 @@ class Frontend
         }
 
         // retrieve the settings array of allowed fields
-        $fieldsetup = (array)option('sgkirby.commentions.commentfields');
+        $fieldsetup = Commentions::fields($page);
 
         // assemble the commention data
         $data = [
-            'name' => (in_array('name', $fieldsetup) || array_key_exists('name', $fieldsetup)) ? get('name') : null,
-            'email' => (in_array('email', $fieldsetup) || array_key_exists('email', $fieldsetup)) ? get('email') : null,
-            'website' => (in_array('website', $fieldsetup) || array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
+            'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,
+            'email' => (array_key_exists('email', $fieldsetup)) ? get('email') : null,
+            'website' => (array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
             'text' => get('message'),
             'timestamp' => date(date('Y-m-d H:i'), time()),
             'language' => Commentions::determineLanguage($page, $path),

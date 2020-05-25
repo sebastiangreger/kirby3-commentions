@@ -54,9 +54,56 @@ class Commentions
     }
 
     /**
+     * Returns the form field setup for a page
+     *
+     * @param \Kirby\Cms\Page $page The page object
+     * @param string $type The type of comment ('webmention' or 'comment')
+     * @return bool
+     */
+    public static function fields($page, string $type = "comment")
+    {
+        // retrieve setup from config
+        $fieldsetup = option('sgkirby.commentions.' . $type . 'fields');
+
+        if ($type === 'comment') {
+            // loop through all fields
+            foreach ((array)$fieldsetup as $k => $v) {
+                if (is_string($k)) {
+                    $fields[$k] = [
+                        'required' => $v,
+                        'label' => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : '')) . ($v ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
+                    ];
+                } else {
+                    $fields[$v] = [
+                        'required' => false,
+                        'label' => t('commentions.snippet.form.' . $v . '.optional'),
+                    ];
+                }
+            }
+            // add the compulsory message field
+            $fields['message'] = [
+                'required' => true,
+                'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
+            ];
+        }
+
+        elseif ($type === 'webmention') {
+            $fields = (array)$fieldsetup;
+        }
+
+        else {
+            return false;
+        }
+
+        // return fields array
+        return $fields;
+    }
+
+    /**
      * Checks if a page accepts comments/webmentions based on template or settings
      *
      * @param \Kirby\Cms\Page $page The page object
+     * @param string $type The type of comment ('webmentions' or 'comments')
      * @return bool
      */
     public static function accepted($page, string $type)
