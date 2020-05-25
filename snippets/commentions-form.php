@@ -18,17 +18,17 @@
 
     <form action="<?= $page->url() ?>" method="post" <?= option('sgkirby.commentions.hideforms') ? 'class="expandertarget"' : '' ?>>
 
-      <?php if (in_array('name', $fields)) : ?>
+      <?php if (array_key_exists('name', $fields)) : ?>
       <div class="commentions-form-name">
-        <label for="name"><?= t('commentions.snippet.form.name') ?></label>
-        <input type="text" id="name" name="name">
+        <label for="name"><?= $fields['name']['label'] ?></label>
+        <input type="text" id="name" name="name" <?= $fields['name']['required'] ? 'required' : '' ?>>
       </div>
       <?php endif; ?>
 
-      <?php if (in_array('email', $fields)) : ?>
+      <?php if (array_key_exists('email', $fields)) : ?>
       <div class="commentions-form-email">
-        <label for="email"><?= t('commentions.snippet.form.email') ?></label>
-        <input type="email" id="email" name="email">
+        <label for="email"><?= $fields['email']['label'] ?></label>
+        <input type="email" id="email" name="email" <?= $fields['email']['required'] ? 'required' : '' ?>>
       </div>
       <?php endif; ?>
 
@@ -37,15 +37,15 @@
         <input type="url" id="website" name="website">
       </div>
 
-      <?php if (in_array('url', $fields)) : ?>
+      <?php if (array_key_exists('website', $fields)) : ?>
       <div class="commentions-form-website">
-        <label for="realwebsite"><?= t('commentions.snippet.form.website') ?></label>
-        <input type="url" id="realwebsite" name="realwebsite">
+        <label for="realwebsite"><?= $fields['website']['label'] ?></label>
+        <input type="url" id="realwebsite" name="realwebsite" <?= $fields['website']['required'] ? 'required' : '' ?>>
       </div>
       <?php endif; ?>
 
       <div class="commentions-form-message">
-        <label for="message"><?= t('commentions.snippet.form.comment') ?> <abbr title="required">*</abbr></label>
+        <label for="message"><?= $fields['message']['label'] ?></label>
         <textarea id="message" name="message" rows="8" required></textarea>
         <?php commentions('help') ?>
       </div>

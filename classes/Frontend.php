@@ -42,7 +42,7 @@ class Frontend
             case 'form':
                 if (!get('thx') && Commentions::accepted(page(), 'comments')) {
                     snippet('commentions-form', [
-                        'fields' => (array)option('sgkirby.commentions.formfields'),
+                        'fields' => Commentions::fields(page()),
                     ]);
                 }
                 break;
@@ -127,16 +127,19 @@ class Frontend
     public static function processCommentform($page, $path)
     {
         // bounce submissions to pages not allowlisted for comments
-        if(!Commentions::accepted(page(), 'comments')) {
+        if(!Commentions::accepted($page, 'comments')) {
             go($page->url());
             exit;
         }
 
+        // retrieve the settings array of allowed fields
+        $fieldsetup = Commentions::fields($page);
+
         // assemble the commention data
         $data = [
-            'name' => get('name'),
-            'email' => get('email'),
-            'website' => get('realwebsite'),
+            'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,
+            'email' => (array_key_exists('email', $fieldsetup)) ? get('email') : null,
+            'website' => (array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
             'text' => get('message'),
             'timestamp' => date(date('Y-m-d H:i'), time()),
             'language' => Commentions::determineLanguage($page, $path),

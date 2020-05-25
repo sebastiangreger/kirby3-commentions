@@ -488,9 +488,9 @@ Adding the following code to `site/config.php` or in a plugin would stop the add
 
 ```php
 'hooks' => [
-  'commentions.add:before' => function ( $page, $data ) {
-    if( $data['name'] == 'John Doe' ) {
-      throw new Exception( "John Doe is not allowed to comment." );
+  'commentions.add:before' => function ($page, $data) {
+    if($data['name'] == 'John Doe') {
+      throw new Exception("John Doe is not allowed to comment.");
     }
   }
 ],
@@ -694,17 +694,86 @@ By default, failed webmention requests are kept in the queue, marked as "failed"
 'sgkirby.commentions.keepfailed' => false,
 ```
 
-### Comment form fields
+### Limiting stored data fields
 
-By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. To modify, add this array to `site/config/config.php` and remove the undesired field names (the form is rendered to only include the fields present in this array):
+Data minmalism and privacy-by-default guidelines instruct to only ever store data that is necessary for the task at hand (this adequacy requirement is for example an important principle when aiming for GDPR compliance of processes). Since comments and webmentions are personal data, the plugin provides fine-grained control over the data it collects.
+
+#### Comment fields
+
+By default, only an optional name field and a textarea for the comment are shown in the form rendered with the `commentions('form')` helper. This setting can be used to add or remove fields from the comment form (it only renders the fields present in this array - the options are `name`, `email`, and `website` - along with the obligatory `text` field).
+
+To reduce the form fields to the `text` field only (not even providing the optional name field):
 
 ```php
-'sgkirby.commentions.formfields' => [
-  'name',
-  'email',
-  'url'
+// empty array = no data beyond the required `text` field
+'sgkirby.commentions.commentfields' => [],
+```
+
+To keep the default `name` field, and add fields for `email` and a `website`:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'name',          // include name field
+  'email',         // include email field
+  'website',       // include website field
 ],
 ```
+
+To mark a field as required (submission fails unless it is filled in) add a boolean `true` to the field:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'name' => true,  // include name field and mark as required
+  'email',         // include email as optional field
+  'website',       // include optional website field
+],
+```
+
+For advanced customization, a callback function can be used to control the array of fields. The following example specifies a different set of fields for pages with template `event`:
+
+```php
+'sgkirby.commentions.commentfields' => function($targetPage){
+  // comment forms on event pages require both name and email
+  if ($targetPage->intendedTemplate()->name() === 'event') {
+    return [
+      'name' => true,
+      'email' => true,
+    ];
+  }
+  // on all other pages, only show optional name field
+  return [
+    'name',
+  ];
+},
+```
+
+### Webmention fields
+
+From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
+
+By default, the plugin further stores the HTML payload (field `text`, the content of the source page), as well as name and homepage URL of the author (fields `name` and `website`, as rendered from HTML microformat data if present). The URL of an avatar image (field `avatar`) is not stored by default, as the built-in template does not make use of that.
+
+For a data-minimalist webmention setup, all optional fields beyond the `source` field could be dropped by providing an empty array as follows:
+
+```php
+// empty array = no data beyond the required `source` field
+'sgkirby.commentions.webmentionfields' => [],
+```
+
+On the other hand, to store all available fields, the array should feature all four field names:
+
+```php
+'sgkirby.commentions.webmentionfields' => [
+  'text',     // store source HTML
+  'name',     // store author's realname
+  'avatar',   // store author's avatar URL
+  'website',  // store author's homepage URL
+],
+```
+
+As with the [comment fields option](#comment-fields) above, an anonymous callback function may be used for more granular control (see above for example code).
+
+_NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
 
 ### Collapsible forms (show/hide)
 
@@ -715,18 +784,6 @@ If desired, the following setting triggers additional markup in the included for
 ```
 
 _NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required in the frontend template (for example as described in https://inclusive-components.design/collapsible-sections/)._
-
-### Privacy settings
-
-The plugin is designed with data minimalism in mind; storing more than the absolutely necessary data is possible, but please consider the ethical and possibly legal implications of processing personal data.
-
-Since the default presentation does not make use of avatar images, these are not stored. To write avatar URLs from incoming webmention metadata to the comment file, add this setting:
-
-```php
-'sgkirby.commentions.avatarurls' => true,
-```
-
-_NB. This setting only ensures that valid avatar URLs from incoming webmentions are stored. Downloading, storing, and displaying theme has to be implemented separately, using the `$page->commentions()` page method described above._
 
 ### Spam protection
 
@@ -793,7 +850,7 @@ By default, links in comment bodies are rendered as clickable HTML links and pla
 
 ## Credits
 
-Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, and the Panel section redesign!
+Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, along with the intial Panel section redesign and its development!
 
 Inspiration and code snippets from:
 
