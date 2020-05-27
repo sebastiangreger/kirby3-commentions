@@ -2,6 +2,7 @@
   <k-dialog class="k-commentions-editdialog"
     ref="dialog"
     :button="$t('save')"
+    :notification="notification"
     size="large"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -10,6 +11,7 @@
       ref="form"
       :fields="fields"
       v-model="commention"
+      @input="input"
       @submit="submit"
     />
   </k-dialog>
@@ -19,6 +21,7 @@
 export default {
   data() {
     return {
+      notification: null,
       commention: {
         uid: null,
         name: null,
@@ -108,9 +111,25 @@ export default {
         source: item.source,
       };
       this.$refs.dialog.open();
+      this.input(item);
+      console.log(this.notification);
+    },
+
+    input(formdata) {
+      if (formdata.type === 'comment') {
+        this.fields.source.disabled = true;
+        this.fields.source.required = false;
+      } else {
+        this.fields.source.disabled = false;
+        this.fields.source.required = true;
+      }
     },
 
     submit() {
+      if (this.fields.source.required && !this.commention.source) {
+        this.$refs.dialog.error("Source URL is required for webmentions");
+        return;
+      }
       const data = {
         name: this.commention.name,
         timestamp: this.commention.timestamp,
