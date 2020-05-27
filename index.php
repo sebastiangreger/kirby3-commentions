@@ -19,19 +19,19 @@ if (F::exists(__DIR__ . '/vendor/autoload.php') === false) {
     // Fallback to manual autoloading via class map, if composer
     // autoloader is not present
     load([
-        'sgkirby\\commentions\\Commention' => 'classes/Commention.php',
-        'sgkirby\\commentions\\Commentions' => 'classes/Commentions.php',
-        'sgkirby\\commentions\\Cron' => 'classes/Cron.php',
-        'sgkirby\\commentions\\Endpoint' => 'classes/Endpoint.php',
-        'sgkirby\\commentions\\Frontend' => 'classes/Frontend.php',
-        'sgkirby\\commentions\\Migration' => 'classes/Migration.php',
-        'sgkirby\\commentions\\Formatter' => 'classes/Formatter.php',
-        'sgkirby\\commentions\\Formatter\\CacheAdapter' => 'classes/Formatter/CacheAdapter.php',
-        'sgkirby\\commentions\\Formatter\\CodeClassAttrDef' => 'classes/Formatter/CodeClassAttrDef.php',
-        'sgkirby\\commentions\\Formatter\\LinkTransformer' => 'classes/Formatter/LinkTransformer.php',
-        'sgkirby\\commentions\\Formatter\\RemoveEmptyLinksInjector' => 'classes/Formatter/RemoveEmptyLinksInjector.php',
-        'sgkirby\\commentions\\Storage' => 'classes/Storage.php',
-        'sgkirby\\commentions\\Structure' => 'classes/Structure.php',
+        'sgkirby\\commentions\\Commention' => 'lib/Commention.php',
+        'sgkirby\\commentions\\Commentions' => 'lib/Commentions.php',
+        'sgkirby\\commentions\\Cron' => 'lib/Cron.php',
+        'sgkirby\\commentions\\Endpoint' => 'lib/Endpoint.php',
+        'sgkirby\\commentions\\Frontend' => 'lib/Frontend.php',
+        'sgkirby\\commentions\\Migration' => 'lib/Migration.php',
+        'sgkirby\\commentions\\Formatter' => 'lib/Formatter.php',
+        'sgkirby\\commentions\\Formatter\\CacheAdapter' => 'lib/Formatter/CacheAdapter.php',
+        'sgkirby\\commentions\\Formatter\\CodeClassAttrDef' => 'lib/Formatter/CodeClassAttrDef.php',
+        'sgkirby\\commentions\\Formatter\\LinkTransformer' => 'lib/Formatter/LinkTransformer.php',
+        'sgkirby\\commentions\\Formatter\\RemoveEmptyLinksInjector' => 'lib/Formatter/RemoveEmptyLinksInjector.php',
+        'sgkirby\\commentions\\Storage' => 'lib/Storage.php',
+        'sgkirby\\commentions\\Structure' => 'lib/Structure.php',
     ], __DIR__);
 }
 
