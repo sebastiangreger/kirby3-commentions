@@ -25,7 +25,7 @@
           <p v-if="item.email" class="k-commentions-item-email">
             <a :href="`mailto:${item.email}`">{{ item.email }}</a>
           </p>
-          <p class="k-commentions-item-target">
+          <p v-if="show !== 'page'" class="k-commentions-item-target">
             → {{ item.pageid }}
           </p>
         </div>
@@ -69,6 +69,7 @@ export default {
 
   props: {
     status: String,
+    show: String,
     viewSource: {
       type: Boolean,
       default: false,
@@ -256,10 +257,6 @@ $breakpoint-huge: 120em;
   width:100%;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.k-commentions-section[show="page"] .k-commentions-item-target {
-  display: none;
 }
 
 .k-commentions-item-source {

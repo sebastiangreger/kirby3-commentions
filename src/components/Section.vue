@@ -27,6 +27,7 @@
           v-for="item in commentions"
           :key="item.uid"
           :item="item"
+          :show="show"
           :view-source="viewSource"
           @action="action"
         />
@@ -111,6 +112,7 @@ export default {
       this.commentionsSystemErrors = response.commentionsSystemErrors;
       this.settings                = response.pageSettings;
       this.pageid                  = response.pageId;
+      this.show                    = response.show;
     });
   },
 
