@@ -18,7 +18,7 @@ class Endpoint
     public static function route()
     {
         // bounce any submissions if no template accepts webmentions
-        if (is_array(option('sgkirby.commentions.templatesWithWebmentions')) && sizeof(option('sgkirby.commentions.templatesWithWebmentions')) === 0) {
+        if (!is_array(option('sgkirby.commentions.templatesWithWebmentions')) || sizeof(option('sgkirby.commentions.templatesWithWebmentions')) === 0) {
             return new Response('<p>Error: This website does not accept webmentions.</p>', 'text/html', 400);
         }
 
