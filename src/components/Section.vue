@@ -151,7 +151,7 @@ export default {
     },
 
     async deleteCommention(item) {
-      const pageid = item.pageid.replace(/\//s, '+');
+      const pageid = item.pageid.replace(/\//g, '+');
       const endpoint = `commentions/${pageid}/${item.uid}`;
       await this.$api.delete(endpoint)
       await this.load().then(response => this.commentions = response.commentions);
