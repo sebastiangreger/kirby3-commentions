@@ -59,7 +59,18 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ## Setup
 
-### Step 1: Adding the Commentions UIs to the Panel blueprints
+### Step 1: Template-based activation
+
+The plugin only accepts incoming comments and/or webmentions for page templates defined setup. To activate the plugin for certain templates, add their names to either or both of the [template-specific configuration arrays](#activate-by-template) in the `site/config/config.php`:
+
+```php
+'sgkirby.commentions.templatesWithComments' => ['note', 'article'],
+'sgkirby.commentions.templatesWithWebmentions' => ['note'],
+```
+
+_NB. Not setting either of these leads to a "configuratin error" message in the panel. If not accepting any comments or webmentions is your intention, setting these as empty arrays removes the error message._
+
+### Step 2: Adding the Commentions UIs to the Panel blueprints
 
 All comments are stored in small text files attached to each page in the Kirby CMS. In order to display and manage them, it is required to add [panel sections](#panel-sections) to your panel blueprints (general instructions about blueprints in the [Kirby guide](https://getkirby.com/docs/guide/blueprints/introduction)).
 
@@ -100,8 +111,7 @@ Alternatively, `pending` can be replaced with `all`, in which case all comments 
 
 _NB. If you leave out the `show` attribute, the comments of the page itself are displayed instead (as described above). If you are embedding the inbox on a page that also receives comments/webmentions itself, you would have to set up two sections of `type: commentions`, one for the page comments and one for the inbox._
 
-
-### Step 2: Adding frontend UIs to your templates
+### Step 3: Adding frontend UIs to your templates
 
 The plugin comes with a set of default snippets to display lists of approved comments and a comment form in the frontend. These are optimized for the Starterkit but might be of use in other themes as well; they can also serve as boilerplates for designing your own (general instructions in the Kirby guide: [templates](https://getkirby.com/docs/guide/templates/basics), [snippets](https://getkirby.com/docs/guide/templates/snippets))
 
@@ -164,7 +174,7 @@ The object returned is a [Kirby Structure object](https://getkirby.com/docs/refe
 
 _NB. The raw data returned by this page method may contain fields with e-mail addresses etc., so make sure to carefully limit what data is being rendered for public display._
 
-### Step 3: Setting up Webmentions (optional)
+### Step 4: Setting up Webmentions (optional)
 
 Support for [Webmentions](https://indieweb.org/webmention) is an integral part of this plugin; i.e. users may submit their comments by sending a webmention request instead of submitting the comment form. The following steps are optional, but required if you want to receive them.
 
@@ -314,7 +324,7 @@ Three toggle switches at the bottom of the section provide control over page-spe
 - open/close the page for incoming comments and/or webmentions (hides the comment form if using the [`commentions('form')`](#commentionsform) frontend helper and rejects any submissions of the respective type for this page)
 - hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) or [`commentions('grouped')`](#commentionsgrouped) helpers)
 
-_NB. If one or both types of commentions are already disabled in `config.php` using the [limit by template](#limit-by-template) options, they cannot be controlled on a page level and appear greyed out._
+_NB. If one or both types of commentions are already disabled in `config.php` using the [limit by template](#activate-by-template) options, they cannot be controlled on a page level and appear greyed out._
 
 ![editdialog](.github/editdialog.png)
 
@@ -621,28 +631,22 @@ The plugin maintains two log files at `site/logs/commentions`.
 
 The plugin can be configured with optional settings in your `site/config/config.php`.
 
-### Limit by template
+### Activate by template
 
-By default, the Commentions plugin accepts incoming comments and webmentions for all content.
+By default, the Commentions plugin does not accept incoming comments and webmentions for any content.
 
-To limit the pages accepting comment submissions (separate setting for comments and webmentions), add arrays of template names allowing for incoming comments to your config:
+To define certain page templates to accept submissions (separate settings for comments and webmentions), add the template names to the respective config arrays:
 
 ```php
 'sgkirby.commentions.templatesWithComments' => ['note', 'article'],
 'sgkirby.commentions.templatesWithWebmentions' => ['note'],
 ```
 
-To disable a type of comments entirely, provide an empty array. For example, to allow comments on all pages with template `note` but disable webmentions entirely:
+To keep one submission type (comments/webmentions) entirely, do not set the config or provide an empty array. For example, to allow comments on all pages with template `note` but disable webmentions globally:
 
 ```php
 'sgkirby.commentions.templatesWithComments' => ['note'],
 'sgkirby.commentions.templatesWithWebmentions' => [],
-```
-
-To limit comments to template `note` but allow webmentions across the entire website, omit the `'sgkirby.commentions.templatesWithWebmentions'` setting:
-
-```php
-'sgkirby.commentions.templatesWithComments' => ['note'],
 ```
 
 _NB. This only affects incoming comments and/or webmentions; existing content and its display is not affected by this setting._

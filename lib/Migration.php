@@ -234,6 +234,7 @@ class Migration
             <h2>Things to update manually:</h2>
             <!--
             <ul>
+            <li>While the old plugin was "on for all templates" by default, the new version is "off for all templates". Make sure to add the sgkirby.commentions.templatesWithComments and sgkirby.commentions.templatesWithWebmentions arrays to your config.php</li>
             <li>Check your templates/snippets for use of the now deprecated helper commentionsList(\'raw\'). Change this to the page method $page->commentions(), which returns a similar array.</li>
             <li>commentionsList(\'raw\') and $page->commentions() return slightly different fields: the \'message\' field for comments is now \'text\' (as it has always been for webmentions) and the boolean value \'approved\' has changed to a string field \'status\' (values: approved, unapproved, pending).</li>
             </ul>

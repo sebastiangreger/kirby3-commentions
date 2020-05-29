@@ -115,7 +115,7 @@ class Commentions
             return false;
         }
 
-        $allowlist = option('sgkirby.commentions.templatesWith' . ucfirst($type));
+        $allowlist = option('sgkirby.commentions.templatesWith' . ucfirst($type)) ?? [];
 
         // if applicable template is not in allowlist, return false
         if (is_array($allowlist) && !in_array($page->intendedTemplate()->name(), $allowlist)) {

@@ -78,6 +78,14 @@ return [
                 ];
             }
 
+            if (option('sgkirby.commentions.templatesWithComments') === null || option('sgkirby.commentions.templatesWithWebmentions') === null) {
+                $errors[] = [
+                    'id' => 'no-templates-defined',
+                    'message' => t('commentions.section.error.no-templates-defined'),
+                    'theme' => 'negative',
+                ];
+            }
+
             return $errors;
         },
 
@@ -116,17 +124,26 @@ return [
             // retrieve saved values (if exist) and loop to create the array for vue
             $stored = Commentions::pageSettings($this->model());
             $array = [
-                'acceptComments' => 'comments',
-                'acceptWebmentions' => 'webmentions',
-                'display' => 'display',
+                'acceptComments' => [
+                    'comments',
+                    !in_array($this->model()->intendedTemplate(), (option('sgkirby.commentions.templatesWithComments') ?? [])),
+                ],
+                'acceptWebmentions' => [
+                    'webmentions',
+                    !in_array($this->model()->intendedTemplate(), (option('sgkirby.commentions.templatesWithWebmentions') ?? [])),
+                ],
+                'display' => [
+                    'display',
+                    false,
+                ],
             ];
             foreach ($array as $k => $v) {
-                $disabled = is_array(option('sgkirby.commentions.templatesWith' . ucfirst($v))) ? !in_array($this->model()->intendedTemplate(), $array) : false;
+                $disabled = $v[1];
                 $settings[$k] = [
                     'id' => $k,
                     'text' => [
-                        $disabled ? t('commentions.section.setting.disabledInConfig') : t('commentions.section.setting.' . $v . '.true'),
-                        $disabled ? t('commentions.section.setting.disabledInConfig') : t('commentions.section.setting.' . $v . '.false'),
+                        $disabled ? t('commentions.section.setting.disabledInConfig') : t('commentions.section.setting.' . $v[0] . '.true'),
+                        $disabled ? t('commentions.section.setting.disabledInConfig') : t('commentions.section.setting.' . $v[0] . '.false'),
                     ],
                     'value' => $disabled ? false : $stored[$k],
                     'disabled' => $disabled,
