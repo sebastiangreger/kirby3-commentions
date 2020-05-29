@@ -142,7 +142,7 @@ export default {
     },
 
     async updateCommention(vars) {
-      const pageid = vars[0].replace(/\//s, '+');
+      const pageid = vars[0].replace(/\//g, '+');
       const uid = vars[1];
       const endpoint = `commentions/${pageid}/${uid}`;
       const response = await this.$api.patch(endpoint, vars[2]);
