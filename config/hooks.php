@@ -7,7 +7,6 @@ use Exception;
 return [
 
     'route:after' => function ($route, $path, $method, $page) {
-
         // create the feedback message
         if (get('thx')) {
             if (Commentions::defaultstatus('comment') != 'approved') {
@@ -21,6 +20,11 @@ return [
 
         // process form submission
         if (get('commentions') && get('submit')) {
+            // fail if page does not exist
+            if ($page === null) {
+                throw new Exception('Target page does not exist.');
+            }
+
             $return = Frontend::processCommentform($page, $path);
             if (isset($return['uid'])) {
                 // return to the post page and display success message
