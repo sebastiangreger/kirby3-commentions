@@ -43,26 +43,27 @@ if (F::exists(__DIR__ . '/vendor/autoload.php') === false) {
 Kirby::plugin('sgkirby/commentions', [
 
     'options' => [
-        'cache'               => [
-            'sanitized-text' => true,
+        'cache'                     => [
+            'sanitized-text'       => true,
             'purifier-definitions' => true,
         ],
-
-        'secret'              => '',
-        'keepfailed'          => true,
-        'defaultstatus'       => 'pending',
-        'endpoint'            => 'webmention-endpoint',
-        'spamprotection'      => [ 'honeypot', 'timemin', 'timemax' ],
-        'spamtimemin'         => 5,
-        'spamtimemax'         => 86400,
-        'avatarurls'          => false,
-        'hideforms'           => false,
-        'expand'              => false,
-        'allowlinks'          => true,
-        'autolinks'           => true,
-        'commentfields'       => ['name'],
-        'webmentionfields'    => ['text', 'name', 'website'],
-        'grouped'             => [
+        'templatesWithComments'     => null,
+        'templatesWithWebmentions'  => null,
+        'secret'                    => '',
+        'keepfailed'                => true,
+        'defaultstatus'             => 'pending',
+        'endpoint'                  => 'webmention-endpoint',
+        'spamprotection'            => [ 'honeypot', 'timemin', 'timemax' ],
+        'spamtimemin'               => 5,
+        'spamtimemax'               => 86400,
+        'avatarurls'                => false,
+        'hideforms'                 => false,
+        'expand'                    => false,
+        'allowlinks'                => true,
+        'autolinks'                 => true,
+        'commentfields'             => ['name'],
+        'webmentionfields'          => ['text', 'name', 'website'],
+        'grouped'                   => [
             'read'            => 'Read by',
             'like'            => 'Likes',
             'repost'          => 'Reposts',

@@ -8,6 +8,17 @@ This leads to some update requirements on your website when upgrading.
 
 Various APIs and practices have changed with the introduction of version 1.0. In order to ensure full functionality, and avoid data loss, after upgrading, the following changes have to be carried out:
 
+## In your config
+
+While version 0.x was "on for all templates" by default, the new version is "off for all templates"; this is to support the data minimalist approach (as it avoids collecting data that is not used). Make sure to add the names of templates you want to use with comments and/or webmentions to either or both of the template-specific configuration arrays in `site/config/config.php`:
+
+```php
+'sgkirby.commentions.templatesWithComments' => ['note', 'article'],
+'sgkirby.commentions.templatesWithWebmentions' => ['note'],
+```
+
+If you don't want to use either or both the formats, provide an empty array for the corresponding variable.
+
 ## In your templates
 
 Both the names of the snippets for rendering plugin output and the means to directly access stored comments for advanced use have changed.

@@ -22,7 +22,7 @@ class Frontend
             // output html head tags for webmention endpoint discovery
             case 'endpoints':
                 // display whenever any template is allowlisted for webmentions (regardless of current page; needed for discovery)
-                if (!is_array(option('sgkirby.commentions.templatesWithWebmentions')) || sizeof(option('sgkirby.commentions.templatesWithWebmentions')) > 0) {
+                if (is_array(option('sgkirby.commentions.templatesWithWebmentions')) && sizeof(option('sgkirby.commentions.templatesWithWebmentions')) > 0) {
                     $endpoint = kirby()->urls()->base() . '/' . option('sgkirby.commentions.endpoint');
                     echo '
                         <link rel="webmention" href="' . $endpoint . '" />
