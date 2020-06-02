@@ -1,6 +1,6 @@
 {
     "name": "sgkirby/commentions",
-    "description": "Receive and display comments and webmentions",
+    "description": "A versatile comment system and integrated Webmention endpoint for Kirby 3.",
     "version": "1.0.0-rc.1",
     "type": "kirby-plugin",
     "license": "MIT",
