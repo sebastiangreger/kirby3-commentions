@@ -1,28 +1,5 @@
+# DEPRECATED as of 1.0.0: replaced with section 'commentions'
 label: Comments
-type: structure
-sortable: false
-sortBy: timestamp
-fields:
-  approved:
-    label: Status
-    type: toggle
-    text:
-      - pending
-      - approved
-  timestamp:
-    label: Date
-    type: date
-    time: true
-  name:
-    label: Name
-    type: text
-  message:
-    label: Comment
-    type: textarea
-columns:
-  name:
-    width: 1/4
-  message:
-    width: 1/2
-  timestamp:
-    width: 1/4
+type: info
+theme: negative
+text: '<strong>Action required!</strong> You updated the <em>Kirby3-Commentions</em> plugin to version 1.x, but your setup is still in the (now incompatible) 0.x format! Worry not: no data has been lost, but you will have to use the <a href="/commentions-migrationassistant" target="_blank">Migration assistant</a> to get things running again!'

@@ -7,4 +7,16 @@ debug.txt
 
 # temp stuff
 *.bak
+*.cache
 
+# local stuff
+.screenshots
+*.geany
+*.code-workspace
+
+# vendor folders
+/vendor/
+/node_modules
+
+# parcel cache
+.cache/

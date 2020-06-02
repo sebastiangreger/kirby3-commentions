@@ -1,7 +1,7 @@
 {
     "name": "sgkirby/commentions",
     "description": "Receive and display comments and webmentions",
-    "version": "0.3.2",
+    "version": "1.0.0-rc.1",
     "type": "kirby-plugin",
     "license": "MIT",
     "authors": [
@@ -16,6 +16,18 @@
         "kirby3-plugin"
     ],
     "require": {
-        "getkirby/composer-installer": "^1.1"
+        "getkirby/composer-installer": "^1.1",
+        "masterminds/html5": "^2.7",
+        "ezyang/htmlpurifier": "^4.12"
+    },
+    "autoload": {
+        "psr-4": {
+            "sgkirby\\Commentions\\": "lib/"
+        },
+        "files": [
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true
     }
 }

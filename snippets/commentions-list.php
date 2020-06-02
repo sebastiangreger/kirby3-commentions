@@ -1,108 +1,43 @@
+<div class="commentions-list">
 
-	<div class="commentions-list">
+  <?php foreach ($reactions as $type => $group) : ?>
+    <h3><?= $group->label() ?></h3>
 
-		<?php if ( sizeof( $reactions ) > 0 ) : ?>
+    <ul class="commentions-list-reactions commentions-list-reactions-<?= $type ?>">
+      <?php foreach ($group->items() as $comment) : ?>
 
-			<?php foreach ( $reactions as $groupname => $group ) : ?>
+        <li>
+          <a href="<?= $comment->source() ?>"><?= $comment->name()->html() ?></a>
+        </li>
 
-				<?php if ( is_array( $group ) ) : ?>
+      <?php endforeach ?>
+    </ul>
+  <?php endforeach ?>
 
-					<h3><?= $groupname ?></h3>
+  <?php if ($comments->count() > 0) : ?>
+    <h3><?= t('commentions.snippet.list.comments') ?></h3>
 
-					<ul class="commentions-list-reactions">
+    <ul>
+        <?php foreach ($comments as $comment) : ?>
 
-						<?php foreach ( $group as $comment ) : ?>
+        <li class="commentions-list-item commentions-list-item-<?= $comment->type() ?><?= r($comment->isAuthenticated(), ' commentions-list-item-authenticated') ?>">
+          <h4>
+            <?= $comment->sourceFormatted() ?>
+          </h4>
 
-							<li>
-								<a href="<?= $comment['source'] ?>">
-									<?=
-										(
-											( isset( $comment['name'] ) && $comment['name'] != null )
-											? htmlspecialchars( $comment['name'] )
-											: 'Anonymous'
-										) ?>
-								</a>
-							</li>
+          <p class="commentions-list-date">
+            <?= $comment->dateFormatted() ?>
+          </p>
 
-						<?php endforeach; ?>
+          <?php if ($comment->text()->isNotEmpty()): ?>
+            <div class="commentions-list-message">
+              <?= $comment->text() ?>
+            </div>
+          <?php endif ?>
+          </li>
 
-					</ul>
+        <?php endforeach ?>
+    </ul>
+  <?php endif ?>
 
-				<?php endif; ?>
-
-			<?php endforeach; ?>
-
-		<?php endif; ?>
-
-		<?php if ( sizeof( $comments ) > 0 ) : ?>
-		
-			<h3>Comments</h3>
-		   
-			<ul>
-
-			   <?php foreach ( $comments as $comment ) : ?>
-
-					<li class="commentions-list-type-<?= $comment['type'] ?><?php if ( isset( $comment['authenticated'] ) && $comment['authenticated'] == 'true' ) echo ' authenticated' ?>">
-
-						<h4>
-
-							<?php $name = (
-								( isset( $comment['name'] ) && $comment['name'] != null )
-								? htmlspecialchars( $comment['name'] )
-								: 'Anonymous'
-							) ?>
-
-							<?php if ( isset( $comment['website'] ) && $comment['website'] != '' ) : ?>
-								<a href="<?= $comment['website'] ?>" rel="noopener"><?= $name ?></a>
-							<?php else : ?>
-								<?= $name ?>
-							<?php endif;
-							if ( isset( $comment['source'] ) )
-								$domain = str_replace( 'www.', '', parse_url( $comment['source'], PHP_URL_HOST ) );
-							
-							switch ( $comment['type'] ) {
-								case 'webmention':
-								case 'mention':
-								case 'trackback':
-								case 'pingback':
-									echo 'mentioned this';
-									if ( isset( $domain ) )
-										echo' at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
-									break;
-								case 'like':
-									echo 'liked this at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
-									break;
-								case 'bookmark':
-									echo 'bookmarked this at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>';
-									break;
-								case 'reply':
-									echo 'replied at <a href="' . $comment['source'] . '" rel="noopener">' . $domain . '</a>:';
-									break;
-								default:
-									echo ":";
-									break;
-							}
-						
-							?>
-						
-						</h4>
-
-						<p class="commentions-list-date">
-							<?= date ( 'Y-m-d H:i', strtotime( $comment['timestamp'] ) ) ?>
-						</p>
-
-						<?php if ( $comment['type'] == 'reply' || $comment['type'] == 'comment' ) : ?>
-						<div class="commentions-list-message">
-							<?= strip_tags( kirbytext( $comment['message'] ), '<br><p><ul><ol><li><em><strong><i><b><blockquote><q>' ) ?>
-						</div>
-						<?php endif; ?>
-
-				   </li>
-
-			   <?php endforeach; ?>
-
-			</ul>
-
-		<?php endif; ?>
-
-	</div>
+</div>

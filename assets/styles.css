@@ -18,7 +18,12 @@
 
 /* the form */
 
-.commentions-form form {
+.commentions-form {
+  margin:0 auto;
+	line-height:1.5em;
+  max-width:35rem;
+}
+.commentions-form h3 {
 	margin-top:4em;
 }
 .commentions-form form > div {
@@ -40,17 +45,22 @@
 	border:2px solid black;
 	padding:.5em;
 	font-size:100%;
+	font-family:inherit;
 }
 .commentions-form input[type="submit"] {
 	background:black;
 	color:white;
+	font-weight:bold;
+	width:33%;
 }
 
 
 /* the list of comments */
 
 .commentions-list {
-	margin-top:4em;
+	margin:4em auto 0;
+  line-height:1.5em;
+  max-width:35rem;
 }
 .commentions-list h3 {
 	margin-bottom:2em;
@@ -70,8 +80,10 @@
 	flex-basis:200px;
 }
 .commentions-list h4 {
-	font-weight:normal;
 	margin-bottom:0;
+}
+.commentions-list a {
+	text-decoration:underline;
 }
 p.commentions-list-date {
 	font-size:80%;

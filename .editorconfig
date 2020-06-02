@@ -12,6 +12,9 @@ trim_trailing_whitespace = true
 [*.php]
 indent_size = 4
 
+[snippets/*.php]
+indent_size = 2
+
 [*.md,*.txt]
 trim_trailing_whitespace = false
 insert_final_newline = false
