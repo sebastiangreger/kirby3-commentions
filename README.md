@@ -1,5 +1,7 @@
 # Kirby 3 Commentions
 
+⚠⚠⚠ **Please note: Due to the "Release Candidate" flag on the 2 June 2020 version, the composer command described below fetched an outdated "stable" version. Please [update your copy of the plugin](#installation) to the latest v1.0.0 (now available on Composer as stable).** ⚠⚠⚠
+
 A versatile comment system and integrated Webmention endpoint for [Kirby CMS](https://getkirby.com).
 
 - Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention)
@@ -63,7 +65,7 @@ Download and copy this repository to `/site/plugins/kirby3-commentions`.
 
 ### Step 1: Template-based activation
 
-The plugin only accepts incoming comments and/or webmentions for page templates defined setup. To activate the plugin for certain templates, add their names to either or both of the [template-specific configuration arrays](#activate-by-template) in the `site/config/config.php`:
+The plugin only accepts incoming comments and/or webmentions for page templates defined in setup. To activate the plugin for certain templates, add their names to either or both of the [template-specific configuration arrays](#activate-by-template) in the `site/config/config.php`:
 
 ```php
 'sgkirby.commentions.templatesWithComments' => ['note', 'article'],
@@ -597,7 +599,7 @@ The file `commentions.yml` contains the comment data for a page. To add/update e
 | uid        | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text       | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source     |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
-| name       | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | example@example.com                   |
+| name       | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
 | email      | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
 | avatar     |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website    | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
