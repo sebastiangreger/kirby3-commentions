@@ -837,6 +837,12 @@ _NB. Sometimes webmentions of these types may contain a text body regardless. By
 
 ### Translations
 
+The plugin currently contains translations in English (en) and German (de), displayed based on the site's [language setup](https://getkirby.com/docs/guide/languages/introduction); PRs for additional languages welcome! Due to a [known issue](https://github.com/getkirby/ideas/issues/459) in Kirby ([fix](https://github.com/getkirby/kirby/pull/2490) expected in v3.5), single-language sites do not communicate the language setting to plugins. For a temporary fix, add the following to the _template_ that contains the calls to the Commentions helpers:
+
+```php
+<?php Kirby\Toolkit\I18n::$locale = 'de'; ?>
+```
+
 To override the translation strings of the Plugin UI, any string from `languages/*.php` can be replaced with a config variable. For example, the bundled translation of the string `sgkirby.commentions.t.en.snippet.list.comments` (in English, as indicated by the `en` part), can be replaced by adding this config variable:
 
 ```php
