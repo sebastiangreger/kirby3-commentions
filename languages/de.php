@@ -53,8 +53,8 @@ $translations = [
     'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir“ auf { link }',
     'snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
     'snippet.list.replies'              => '{ author } antwortete auf { link }',
-    'snippet.list.dateFormat.date'      => 'd.m.Y H:i Uhr',
-    'snippet.list.dateFormat.strftime'  => '%d.%m.%Y %H:%M Uhr',
+    'snippet.list.dateFormat.date'      => 'd.m.Y H:i \U\h\r',
+    'snippet.list.dateFormat.strftime'  => '%d.%m.%Y %H:%M \U\h\r',
 
 
     // panel sections
