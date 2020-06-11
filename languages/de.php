@@ -54,7 +54,7 @@ $translations = [
     'snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
     'snippet.list.replies'              => '{ author } antwortete auf { link }',
     'snippet.list.dateFormat.date'      => 'd.m.Y H:i \U\h\r',
-    'snippet.list.dateFormat.strftime'  => '%d.%m.%Y %H:%M \U\h\r',
+    'snippet.list.dateFormat.strftime'  => '%d.%m.%Y %H:%M Uhr',
 
 
     // panel sections
