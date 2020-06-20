@@ -540,9 +540,9 @@ Adding the following code to `site/config.php` or in a plugin would email a summ
 
 ```php
 'hooks' => [
-  'commentions.add:after' => function ( $page, $data ) {
+  'commentions.add:after' => function ($page, $data) {
     try {
-      $kirby->email([
+      kirby()->email([
         'from' => 'webserver@example.com',
         'to' => 'admin@example.com',
         'subject' => 'New comment/webmention on ' . $page->title(),
