@@ -152,7 +152,7 @@ class Migration
             // check for any content files that contain a comments field with a data pattern as used in Commentions
             $pageswithcomments = 0;
             foreach (site()->index()->pluck('comments') as $probe) {
-                $probe = Data::decode($probe->comments(), 'yaml');
+                $probe = Data::decode($probe->comments()->toString(), 'yaml');
                 // type, timestamp, and approved are the smallest common denominator of v0.x comments
                 if (sizeof($probe) > 0 && isset($probe[0]['type'], $probe[0]['timestamp'], $probe[0]['approved'])) {
                     $pageswithcomments++;

@@ -171,7 +171,7 @@ class Commentions
         }
 
         // trigger a hook that would allow to stop processing by throwing an exception
-        kirby()->trigger('commentions.add:before', $page, $data);
+        static::triggerHook('commentions.add:before', ['page' => $page, 'data' => $data]);
 
         // if webmention with this source url exists, this is an update
         if ($data['type'] !== 'comment' && $page->commentions('all')->filterBy('source', $data['source'])->count() != 0) {
@@ -207,7 +207,7 @@ class Commentions
         }
 
         // trigger a hook that allows further processing of the data
-        kirby()->trigger('commentions.add:after', $page, $saved);
+        static::triggerHook('commentions.add:after', ['page' => $page, 'data' => $saved]);
 
         return $saved;
     }
@@ -259,13 +259,13 @@ class Commentions
         }
 
         // trigger a hook that would allow to stop processing by throwing an exception
-        kirby()->trigger('commentions.update:before', $page, $data);
+        static::triggerHook('commentions.update:before', ['page' => $page, 'data' => $data]);
 
         // update commention in the according txt file
         $saved = Storage::update($page, $uid, $data, 'commentions');
 
         // trigger a hook that allows further processing of the data
-        kirby()->trigger('commentions.update:after', $page, $saved);
+        static::triggerHook('commentions.update:after', ['page' => $page, 'data' => $saved]);
 
         return $saved;
     }
@@ -598,5 +598,18 @@ class Commentions
         // installed.
         $suffix = Formatter::available() ? 'sanitized' : 'escaped';
         return "{$pageId}-{$suffix}";
+    }
+
+    /**
+     * Helper function to trigger custom hooks in both Kirby 3.3 and 3.4 syntax;
+     * translates vars array into variables for <v3.4, hands on array for v3.4+
+     */
+    protected static function triggerHook(string $hook, array $vars)
+    {
+        if (version_compare(\Kirby\Cms\App::version(), '3.4.0-rc.1', '<') === true) {
+            kirby()->trigger($hook, ...array_values($vars));
+        } else {
+            kirby()->trigger($hook, $vars);
+        }
     }
 }

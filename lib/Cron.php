@@ -99,7 +99,7 @@ class Cron
                             Storage::update($page, $queueitem['uid'], 'delete', 'webmentionqueue');
 
                             // trigger a hook that allows further processing of the data
-                            kirby()->trigger('commentions.webmention:after', $page, $result);
+                            Commentions::triggerHook('commentions.webmention:after', ['page' => $page, 'data' => $result]);
 
                         // if parsing led to an error, $result is a string with the error message
                         } else {
