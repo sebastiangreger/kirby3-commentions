@@ -229,6 +229,10 @@ class Commentions
             unset($data['uid']);
         }
 
+        // retrieve and reduce the old data; keep for later use in :after hook
+        $before = static::get($page, 'all')->filterBy('uid', $uid)->first()->toArray();
+        unset($before['name_formatted'], $before['pageid'], $before['source_formatted'], $before['text_sanitized']);
+
         // special treatment for status change if item has status 'update'
         if ($page->commentions('update')->filterBy('uid', $uid)->count() != 0) {
             $update = $page->commentions($uid);
@@ -265,7 +269,7 @@ class Commentions
         $saved = Storage::update($page, $uid, $data, 'commentions');
 
         // trigger a hook that allows further processing of the data
-        static::triggerHook('commentions.update:after', ['page' => $page, 'data' => $saved]);
+        static::triggerHook('commentions.update:after', ['page' => $page, 'data' => $saved, 'olddata' => $before]);
 
         return $saved;
     }

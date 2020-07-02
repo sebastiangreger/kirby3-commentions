@@ -125,7 +125,7 @@ class Storage
      *                           - Array: The fields of the entry that are to be replaced
      *                           - String: A predefined action (currently only valid: 'delete', to delete the complete entry)
      * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
-     * @return bool True on success, false on failure
+     * @return array|bool Array with updated data on successful update, true on successful delete, false on failure
      */
     public static function update($page, $uid, $data = [], $filename)
     {

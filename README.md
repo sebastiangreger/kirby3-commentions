@@ -559,12 +559,29 @@ Adding the following code to `site/config.php` or in a plugin would email a summ
 
 This hook is triggered after a comment/webmention is updated.
 
+Both the data before and after the update are accessible through this hook, allowing to write custom routines that compare the two versions and trigger some action based on the differences.
+
 #### Variables
 
-| Name  | Type   | Description                                                                                                                    |
-|-------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| $page | object | The Kirby page object the comment was added to                                                                                 |
-| $data | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+| Name     | Type   | Description                                                                                                                    |
+|----------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| $page    | object | The Kirby page object the comment was added to                                                                                 |
+| $data    | string | The complete data array as it was saved to the text file (includes the UID required for futher processing using page methods). |
+| $olddata | string | The data array retrieved from the text file before the update was carried out.                                                 |
+
+#### Example
+
+Adding the following code to `site/config.php` or in a plugin would call the hypothetical function someCustomFunction() whenever a commention is updated from status `pending` to `published`:
+
+```php
+'hooks' => [
+  'commentions.update:after' => function ($page, $data, $olddata) {
+    if ($data['status'] === 'approved' && $olddata['status'] === 'pending') {
+      someCustomFunction();
+    }
+  }
+],
+```
 
 ### commentions.webmention:after
 
