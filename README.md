@@ -571,7 +571,7 @@ Both the data before and after the update are accessible through this hook, allo
 
 #### Example
 
-Adding the following code to `site/config.php` or in a plugin would call the hypothetical function someCustomFunction() whenever a commention is updated from status `pending` to `published`:
+Adding the following code to `site/config.php` or in a plugin would call the hypothetical function `someCustomFunction()` whenever a commention is updated from status `pending` to `approved`:
 
 ```php
 'hooks' => [
