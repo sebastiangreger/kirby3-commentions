@@ -10,12 +10,12 @@ return [
         // create the feedback message
         if (get('thx')) {
             if (Commentions::defaultstatus('comment') != 'approved') {
-                Commentions::$feedback = [ 'success' => 'Thank you! Please be patient, your comment has has to be approved by the editor.' ];
+                Commentions::$feedback = ['success' => t('commentions.feedback.comment.queued')];
             } else {
-                Commentions::$feedback = [ 'success' => 'Thank you for your comment!' ];
+                Commentions::$feedback = ['success' => t('commentions.feedback.comment.thankyou')];
             }
 
-            Commentions::$feedback['accepted'] = 'Thank you, your webmention has been queued for processing. Please be patient, your comment has has to be approved by the editor.';
+            Commentions::$feedback['accepted'] = t('commentions.feedback.webmention.queued');
         }
 
         // process form submission

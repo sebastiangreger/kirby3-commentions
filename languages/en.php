@@ -44,6 +44,8 @@ $translations = [
         '<dd><code>[Link text](https://example.com)</code></dd>',
     'snippet.form.help.autolinks'      =>
         '<dd>Full URLs are automatically converted into links.</dd>',
+    'snippet.form.submitcomment'       => 'Submit',
+    'snippet.form.submitwebmention'    => 'Submit webmention',
 
     // - list
     'snippet.list.comments'            => 'Comments',
@@ -56,6 +58,13 @@ $translations = [
     'snippet.list.replies'             => '{ author } replied at { link }',
     'snippet.list.dateFormat.date'     => 'Y-m-d H:i',
     'snippet.list.dateFormat.strftime' => '%Y-%m-%d %H:%M',
+
+
+    // feedback
+
+    'feedback.comment.queued'           => 'Thank you! Please be patient, your comment has has to be approved by the editor.',
+    'feedback.comment.thankyou'         => 'Thank you for your comment!',
+    'feedback.webmention.queued'        => 'Thank you, your webmention has been queued for processing. Please be patient, your comment has has to be approved by the editor.',
 
 
     // panel sections

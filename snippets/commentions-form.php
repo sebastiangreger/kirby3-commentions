@@ -53,7 +53,7 @@
       <?php /* "commentions" value enables identifying commentions submissions in route:before hook + creation timestamp is used for spam protection */ ?>
       <input type="hidden" name="commentions" value="<?php e(!$page->isCacheable(), time(), 0) ?>">
 
-      <input type="submit" name="submit" value="Submit">
+      <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
 
     </form>
 
@@ -84,7 +84,7 @@
       <input type="hidden" name="target" value="<?= $page->url() ?>">
       <input type="hidden" name="manualmention" value="true">
 
-      <input type="submit" name="submit" value="Send webmention">
+      <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitwebmention') ?>">
 
     </form>
 
