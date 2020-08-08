@@ -1,7 +1,5 @@
 # Kirby 3 Commentions
 
-⚠⚠⚠ **Please note: Due to the "Release Candidate" flag on the 2 June 2020 version, the composer command described below fetched an outdated "stable" version. Please [update your copy of the plugin](#installation) to the latest v1.0.0 (now available on Composer as stable).** ⚠⚠⚠
-
 A versatile comment system and integrated Webmention endpoint for [Kirby CMS](https://getkirby.com).
 
 - Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention)
@@ -10,7 +8,7 @@ A versatile comment system and integrated Webmention endpoint for [Kirby CMS](ht
 - A range of methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
 - Supports multilingual sites and virtual pages
 
-For more background and the philosophy behind this solution, read ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethic).
+For more background and the philosophy behind this solution, read ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
 
 > Versions 1.x (June 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new storage format.
 
