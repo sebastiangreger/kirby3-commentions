@@ -58,7 +58,7 @@ class Commentions
      *
      * @param \Kirby\Cms\Page $page The page object
      * @param string $type The type of comment ('webmention' or 'comment')
-     * @return bool
+     * @return array Array of allowed fields for this type
      */
     public static function fields($page, string $type = "comment")
     {
@@ -68,7 +68,7 @@ class Commentions
             $fieldsetup = $fieldsetup($page);
         }
 
-        if ($type === 'comment') {
+        if ($type == 'comment') {
             // loop through all fields
             foreach ((array)$fieldsetup as $k => $v) {
                 if (is_string($k)) {
@@ -90,8 +90,19 @@ class Commentions
             ];
         }
 
-        elseif ($type === 'webmention') {
-            $fields = (array)$fieldsetup;
+        elseif ($type == 'webmention' && is_array($fieldsetup)) {
+            // loop through all fields
+            foreach ((array)$fieldsetup as $k => $v) {
+                if (is_string($k)) {
+                    $fields[$k] = [
+                        'required' => $v,
+                    ];
+                } else {
+                    $fields[$v] = [
+                        'required' => false,
+                    ];
+                }
+            }
         }
 
         else {

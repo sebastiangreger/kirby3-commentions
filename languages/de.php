@@ -51,6 +51,7 @@ $translations = [
     'snippet.list.mentioned'            => '{ author } erwähnte dies',
     'snippet.list.mentionedAt'          => '{ author } erwähnte dies auf { link }',
     'snippet.list.liked'                => '{ author } gab diesem Beitrag ein „Gefällt mir“ auf { link }',
+    'snippet.list.reposted'             => '{ author } hat diesen Beitrag auf { link } geteilt',
     'snippet.list.bookmarked'           => '{ author } fügte ein Lesezeichen hinzu auf { link }',
     'snippet.list.replies'              => '{ author } antwortete auf { link }',
     'snippet.list.dateFormat.date'      => 'd.m.Y H:i \U\h\r',

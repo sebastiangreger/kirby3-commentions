@@ -91,21 +91,14 @@ class Commention extends StructureObject
         $translation = '';
 
         switch ($this->type()->toString()) {
-            case 'webmention':
-            case 'mention':
-            case 'trackback':
-            case 'pingback':
-                if (empty($domain) === false) {
-                    $translation = t('commentions.snippet.list.mentionedAt');
-                } else {
-                    $translation = t('commentions.snippet.list.mentioned');
-                }
-                break;
             case 'like':
                 $translation = t('commentions.snippet.list.liked');
                 break;
             case 'bookmark':
                 $translation = t('commentions.snippet.list.bookmarked');
+                break;
+            case 'repost':
+                $translation = t('commentions.snippet.list.reposted');
                 break;
             case 'reply':
                 $translation = t('commentions.snippet.list.replies');
@@ -114,8 +107,11 @@ class Commention extends StructureObject
                 $translation = t('commentions.snippet.list.comment');
                 break;
             default:
-                // Unknown type
-                return null;
+                if (empty($domain) === false) {
+                    $translation = t('commentions.snippet.list.mentionedAt');
+                } else {
+                    $translation = t('commentions.snippet.list.mentioned');
+                }
         }
 
         $replace = [

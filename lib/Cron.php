@@ -180,34 +180,36 @@ class Cron
                     $result['author']['url'] = false;
                 }
 
-                // php-comments does not do rel=author
-                if (array_key_exists('url', $result['author']) && $result['author']['url'] === false && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
-                    $result['author']['url'] = $mf2['rels']['author'][0];
-                }
+                if (empty($result['author']['name'])) {
+                    // php-comments does not do rel=author
+                    if (array_key_exists('url', $result['author']) && array_key_exists('rels', $mf2) && array_key_exists('author', $mf2['rels']) && array_key_exists(0, $mf2['rels']['author']) && is_string($mf2['rels']['author'][0])) {
+                        $result['author']['url'] = $mf2['rels']['author'][0];
+                    }
 
-                // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
-                $hcardfound = false;
-                foreach ($mf2['items'] as $mf2item) {
-                    if ($mf2item['type'][0] == 'h-card') {
-                        $hcardfound = true;
-                        if (empty($result['author']['name'])  && !empty($mf2item['properties']['name'][0])) {
-                            $result['author']['name'] = $mf2item['properties']['name'][0];
-                        }
-                        if (empty($result['author']['photo']) && !empty($mf2item['properties']['photo'][0])) {
-                            $result['author']['photo'] = $mf2item['properties']['photo'][0];
-                        }
-                        if (empty($result['author']['url']) && !empty($mf2item['properties']['url'][0])) {
-                            $result['author']['url'] = $mf2item['properties']['url'][0];
+                    // if h-card is not embedded in h-entry, php-comments returns no author; check for h-card in mf2 output and fill in missing
+                    $hcardfound = false;
+                    foreach ($mf2['items'] as $mf2item) {
+                        if ($mf2item['type'][0] == 'h-card') {
+                            $hcardfound = true;
+                            if (empty($result['author']['name'])  && !empty($mf2item['properties']['name'][0])) {
+                                $result['author']['name'] = $mf2item['properties']['name'][0];
+                            }
+                            if (empty($result['author']['photo']) && !empty($mf2item['properties']['photo'][0])) {
+                                $result['author']['photo'] = $mf2item['properties']['photo'][0];
+                            }
+                            if (empty($result['author']['url']) && !empty($mf2item['properties']['url'][0])) {
+                                $result['author']['url'] = $mf2item['properties']['url'][0];
+                            }
                         }
                     }
-                }
 
-                // if no h-card was found, try to use 'author' property of h-entry instead
-                if (!$hcardfound) {
-                    foreach ($mf2['items'] as $mf2item) {
-                        if ($mf2item['type'][0] == 'h-entry') {
-                            if (empty($result['author']['name'])  && !empty($mf2item['properties']['author'][0])) {
-                                $result['author']['name'] = $mf2item['properties']['author'][0];
+                    // if no h-card was found, try to use 'author' property of h-entry instead
+                    if (!$hcardfound) {
+                        foreach ($mf2['items'] as $mf2item) {
+                            if ($mf2item['type'][0] == 'h-entry') {
+                                if (!empty($mf2item['properties']['author'][0]) && is_string($mf2item['properties']['author'][0])) {
+                                    $result['author']['name'] = $mf2item['properties']['author'][0];
+                                }
                             }
                         }
                     }
@@ -289,7 +291,6 @@ class Cron
             ];
 
             // remove any data not present in the data retention setup array
-            $fieldsetup = Commentions::accepted($page, 'webmentions');
             foreach (['name', 'website', 'avatar', 'text'] as $field) {
                 if (!array_key_exists($field, Commentions::fields($page, 'webmention'))) {
                     unset($finaldata[$field]);
