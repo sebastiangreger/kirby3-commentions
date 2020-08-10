@@ -91,6 +91,11 @@ Kirby::plugin('sgkirby/commentions', [
     'routes' => require __DIR__ . '/config/routes.php',
 
     'snippets' => [
+        'commentions/list'     => __DIR__ . '/snippets/commentions-list.php',
+        'commentions/form'     => __DIR__ . '/snippets/commentions-form.php',
+        'commentions/help'     => __DIR__ . '/snippets/commentions-help.php',
+        'commentions/feedback' => __DIR__ . '/snippets/commentions-feedback.php',
+        /* DEPRECATED: keeping old snippet names below for compatibility while on 1.x */
         'commentions-list'     => __DIR__ . '/snippets/commentions-list.php',
         'commentions-form'     => __DIR__ . '/snippets/commentions-form.php',
         'commentions-help'     => __DIR__ . '/snippets/commentions-help.php',

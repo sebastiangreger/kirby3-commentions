@@ -3,6 +3,7 @@
 namespace sgkirby\Commentions;
 
 use Kirby\Cms\Collection;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Obj;
 
 class Frontend
@@ -12,6 +13,14 @@ class Frontend
      */
     public static function render($template = null)
     {
+        // checks if custom snippets exist in a subfolder and sets snippet accordingly
+        if (Dir::exists(kirby()->root('snippets') . DS . 'commentions')) {
+            $snippetprefix = 'commentions/';
+        } else {
+            // DEPRECATED: snippets were not in a separate folder until v1.0
+            $snippetprefix = 'commentions-';
+        }
+
         switch ($template) {
 
             // output html head tag for default style sheet
@@ -34,21 +43,21 @@ class Frontend
             // display ui feedback after form submission
             case 'feedback':
                 if (isset(Commentions::$feedback)) {
-                    snippet('commentions-feedback', Commentions::$feedback);
+                    snippet($snippetprefix . 'feedback', Commentions::$feedback);
                 }
                 break;
 
             // display comment form
             case 'form':
                 if (!get('thx')) {
-                    snippet('commentions-form', [
+                    snippet($snippetprefix . 'form', [
                         'fields' => Commentions::fields(page()),
                     ]);
                 }
                 break;
 
             case 'help':
-                snippet('commentions-help', [
+                snippet($snippetprefix . 'help', [
                     'formattingEnabled' => Formatter::available(),
                     'allowlinks' => option('sgkirby.commentions.allowlinks'),
                     'autolinks' => option('sgkirby.commentions.autolinks'),
@@ -101,7 +110,7 @@ class Frontend
                     }
 
                     // return selected markup
-                    snippet('commentions-list', [
+                    snippet($snippetprefix . 'list', [
                         'comments' => $comments,
                         'reactions' => $reactions,
                     ]);
