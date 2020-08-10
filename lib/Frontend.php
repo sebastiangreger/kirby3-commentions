@@ -40,7 +40,7 @@ class Frontend
 
             // display comment form
             case 'form':
-                if (!get('thx') && Commentions::accepted(page(), 'comments')) {
+                if (!get('thx')) {
                     snippet('commentions-form', [
                         'fields' => Commentions::fields(page()),
                     ]);

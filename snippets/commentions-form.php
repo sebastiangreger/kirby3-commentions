@@ -1,6 +1,8 @@
 
   <div class="commentions-form">
 
+    <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'comments')) : ?>
+
     <?php if (option('sgkirby.commentions.hideforms')) : ?>
 
     <h3 class="expander" id="commentions-form-comment">
@@ -56,6 +58,8 @@
       <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
 
     </form>
+
+    <?php endif; ?>
 
     <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'webmentions')) : ?>
 
