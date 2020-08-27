@@ -80,7 +80,7 @@ $translations = [
 
     //  -options buttons
     'section.option.unapprove'          => 'Ablehnen',
-    'section.option.approve'            => 'Akzteptieren',
+    'section.option.approve'            => 'Akzeptieren',
     'section.option.delete'             => 'Löschen',
     'section.option.edit'               => 'Bearbeiten',
     'section.option.openwebsite'        => 'Website öffnen',
