@@ -74,7 +74,7 @@
 
     <?php else : ?>
 
-    <h3 id="commentions-form-comment"><?= t('commentions.snippet.form.ctawebmention') ?></h3>
+    <h3 id="commentions-form-webmention"><?= t('commentions.snippet.form.ctawebmention') ?></h3>
 
     <?php endif; ?>
 
