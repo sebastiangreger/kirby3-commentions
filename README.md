@@ -661,7 +661,7 @@ To define certain page templates to accept submissions (separate settings for co
 'sgkirby.commentions.templatesWithWebmentions' => ['note'],
 ```
 
-To keep one submission type (comments/webmentions) entirely, do not set the config or provide an empty array. For example, to allow comments on all pages with template `note` but disable webmentions globally:
+To keep one submission type (comments/webmentions) deactivated entirely, do not set the config at all or provide an empty array. For example, to allow comments on all pages with template `note` but disable webmentions globally:
 
 ```php
 'sgkirby.commentions.templatesWithComments' => ['note'],
