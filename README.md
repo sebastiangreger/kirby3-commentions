@@ -373,7 +373,7 @@ The page method returns a [Structure-like object](https://getkirby.com/docs/refe
 When looping through the returned structure object, the comment data can be retrieved in various ways:
 
 ```
-foreach ( $testpage->commentions('all') as $item ) {
+foreach ($testpage->commentions('all') as $item) {
   print_r($item->content());
 }
 ```
