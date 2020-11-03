@@ -3,10 +3,10 @@
 /**
  * Kirby 3 "Commentions" - Comments and Mentions Plugin
  *
- * @version   1.0.2
+ * @version   1.0.3
  * @author    Sebastian Greger <msg@sebastiangreger.net>
  * @copyright Sebastian Greger <msg@sebastiangreger.net>
- * @link      https://github.com/sebastiangreger/kirby3-sendmentions
+ * @link      https://github.com/sebastiangreger/kirby3-commentions
  * @license   MIT
  */
 

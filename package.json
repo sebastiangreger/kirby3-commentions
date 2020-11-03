@@ -1,6 +1,6 @@
 {
   "name": "kirby3-commentions",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A versatile comment system and integrated Webmention endpoint for Kirby 3.",
   "repository": {
     "type": "git",
@@ -20,16 +20,16 @@
   },
   "homepage": "https://github.com/sebastiangreger/kirby3-commentions#readme",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.12.3",
     "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/component-compiler-utils": "^3.1.2",
+    "@vue/component-compiler-utils": "^3.2.0",
     "cssnano": "^4.1.10",
-    "sass": "^1.26.5",
-    "vue-template-compiler": "^2.6.11"
+    "sass": "^1.28.0",
+    "vue-template-compiler": "^2.6.12"
   },
   "dependencies": {
-    "regenerator-runtime": "^0.13.5",
-    "vue": "^2.6.11",
+    "regenerator-runtime": "^0.13.7",
+    "vue": "^2.6.12",
     "vue-hot-reload-api": "^2.3.4"
   },
   "eslintConfig": {
