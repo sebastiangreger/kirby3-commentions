@@ -1,4 +1,4 @@
-<div class="commentions-feedback">
+<div class="commentions-feedback" id="commentions-feedback">
 
   <?php if (isset($alert)): ?>
     <?php foreach ($alert as $message): ?>
