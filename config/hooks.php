@@ -28,7 +28,7 @@ return [
             $return = Frontend::processCommentform($result, $path);
             if (isset($return['uid'])) {
                 // return to the post page and display success message
-                go($result->url() . '?thx=queued');
+                go($result->url() . '?thx=queued#commentions-feedback');
             } else {
                 throw new Exception('Could not process comment.');
             }
