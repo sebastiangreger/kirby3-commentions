@@ -37,6 +37,8 @@ _NB. The plugin only covers incoming webmentions, i.e. receiving notifications f
 
 ## Installation
 
+While Kirby supports PHP 8 as of version 3.5, the Commentions plugin has not yet been tested for compatibility with PHP 8. See [issue #91](https://github.com/sebastiangreger/kirby3-commentions/issues/91) for the current progress and/or to report any PHP 8 problem.
+
 ### Recommended: Composer
 
 ```bash
