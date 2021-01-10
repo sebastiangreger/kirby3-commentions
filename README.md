@@ -380,7 +380,7 @@ foreach ($testpage->commentions('all') as $item) {
 }
 ```
 
-`$item->content()` returns a content object with all the fields stored for the comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->content()->get('text')`.
+In the loop, `$item->content()` returns a content object with all the fields stored for each comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->content()->get('text')`.
 
 If preferred, `$item->content()->toArray()` transforms the return object into an array.
 
@@ -394,7 +394,7 @@ For use in frontend templates, the method `$item->content()->sourceFormatted($an
 
 Adds a comment entry to the page.
 
-`$page->addCommentions( $data )`
+`$page->addCommention( $data )`
 
 #### Parameters
 
@@ -410,7 +410,7 @@ Array with the data as saved, including the assigned UID, or boolean `false` if 
 
 Updates a comment entry on the page.
 
-`$page->updateCommentions($uid, $data)`
+`$page->updateCommention($uid, $data)`
 
 #### Parameters
 
@@ -427,7 +427,7 @@ Array with the data as saved, or boolean `false` if failed.
 
 Deletes a comment entry from the page.
 
-`$page->deleteCommentions($uid)`
+`$page->deleteCommention($uid)`
 
 #### Parameters
 
