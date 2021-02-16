@@ -8,11 +8,11 @@ A versatile comment system and integrated Webmention endpoint for [Kirby CMS](ht
 - A range of methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
 - Supports multilingual sites and virtual pages
 
-For more background and the philosophy behind this solution, read ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
+For more background and the philosophy behind this solution, see ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
 
 > Versions 1.x (June 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new storage format.
 
-_NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions) (which has recently been updated as well)._
+_NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
 ## Table of contents
 
@@ -37,7 +37,7 @@ _NB. The plugin only covers incoming webmentions, i.e. receiving notifications f
 
 ## Installation
 
-While Kirby supports PHP 8 as of version 3.5, the Commentions plugin has not yet been tested for compatibility with PHP 8. See [issue #91](https://github.com/sebastiangreger/kirby3-commentions/issues/91) for the current progress and/or to report any PHP 8 problem.
+While Kirby supports PHP 8 as of version 3.5, the Commentions plugin has not yet been thoroughly tested for compatibility with PHP 8. See [issue #91](https://github.com/sebastiangreger/kirby3-commentions/issues/91) for the current progress and/or to report any PHP 8 problems.
 
 ### Recommended: Composer
 
@@ -883,6 +883,9 @@ By default, links in comment bodies are rendered as clickable HTML links and pla
 
 Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, along with the intial Panel section redesign and its development!
 
+Translation contributors:
+- French: [jbidoret](https://github.com/jbidoret/)
+
 Inspiration and code snippets from:
 
 - https://github.com/bastianallgeier/kirby-webmentions
@@ -898,6 +901,6 @@ Included vendor libraries:
 
 Kirby 3 Commentions is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-Copyright © 2020 [Sebastian Greger](https://sebastiangreger.net)
+Copyright © 2021 [Sebastian Greger](https://sebastiangreger.net)
 
 It is discouraged to use this plugin in any project that promotes the destruction of our planet, racism, sexism, homophobia, animal abuse, violence or any other form of hate speech.

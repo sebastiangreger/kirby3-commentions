@@ -3,7 +3,7 @@
 /**
  * Kirby 3 "Commentions" - Comments and Mentions Plugin
  *
- * @version   1.0.3
+ * @version   1.0.4
  * @author    Sebastian Greger <msg@sebastiangreger.net>
  * @copyright Sebastian Greger <msg@sebastiangreger.net>
  * @link      https://github.com/sebastiangreger/kirby3-commentions
