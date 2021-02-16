@@ -130,6 +130,7 @@ Kirby::plugin('sgkirby/commentions', [
     'translations' => [
         'de' => require __DIR__ . '/languages/de.php',
         'en' => require __DIR__ . '/languages/en.php',
+        'fr' => require __DIR__ . '/languages/fr.php',
     ],
 
 ]);
