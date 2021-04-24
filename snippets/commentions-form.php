@@ -36,7 +36,7 @@
 
       <div class="commentions-form-honeypot">
         <label for="website"><?= t('commentions.snippet.form.honeypot') ?></label>
-        <input type="url" id="website" name="website">
+        <input type="url" id="website" name="website" tabindex="-1">
       </div>
 
       <?php if (array_key_exists('website', $fields)) : ?>

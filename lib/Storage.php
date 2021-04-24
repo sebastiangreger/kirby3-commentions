@@ -103,7 +103,7 @@ class Storage
      * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
      * @return array
      */
-    public static function add($page, $entry = [], string $filename)
+    public static function add($page, array $entry, string $filename)
     {
         // attach new data set to array of existing comments
         $data = static::read($page, $filename);
@@ -127,7 +127,7 @@ class Storage
      * @param string $filename The file name, without the .yml ending (commonly either 'commentions' or 'webmentionqueue')
      * @return array|bool Array with updated data on successful update, true on successful delete, false on failure
      */
-    public static function update($page, $uid, $data = [], $filename)
+    public static function update($page, $uid, $data, $filename)
     {
         // loop through array of all comments
         $output = [];

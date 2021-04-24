@@ -8,11 +8,11 @@ A versatile comment system and integrated Webmention endpoint for [Kirby CMS](ht
 - A range of methods, API endpoints and hooks allow to build custom frontends, applications, and flows on top
 - Supports multilingual sites and virtual pages
 
-For more background and the philosophy behind this solution, read ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
+For more background and the philosophy behind this solution, see ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
 
 > Versions 1.x (June 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new storage format.
 
-_NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions) (which has recently been updated as well)._
+_NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
 ## Table of contents
 
@@ -36,6 +36,8 @@ _NB. The plugin only covers incoming webmentions, i.e. receiving notifications f
 > Data ethics or "GDPR compliance" are never created by software, but by the way it is used. While this plugin aims to provide means for its responsible and legally compliant use, responsibility for ethical conduct and compliance with applicable laws ultimately rests with the operator of the website (aka. "the data controller"). If in doubt, always ask a qualified lawyer - and if this plugin does not meet your requirements, create a Github issue, don't use it, or adapt it to your needs.
 
 ## Installation
+
+While Kirby supports PHP 8 as of version 3.5, the Commentions plugin has not yet been thoroughly tested for compatibility with PHP 8. See [issue #91](https://github.com/sebastiangreger/kirby3-commentions/issues/91) for the current progress and/or to report any PHP 8 problems.
 
 ### Recommended: Composer
 
@@ -378,7 +380,7 @@ foreach ($testpage->commentions('all') as $item) {
 }
 ```
 
-`$item->content()` returns a content object with all the fields stored for the comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->content()->get('text')`.
+In the loop, `$item->content()` returns a content object with all the fields stored for each comment; each field within can also be accessed by its name, e.g. `$item->name()` etc. The HTML stored in field `$item->text()` has been cleaned up with HTML Purifier; the originally submitted HTML (NB. This may contain malicious code, never use without appropriate filtering) is stored in field `$item->content()->get('text')`.
 
 If preferred, `$item->content()->toArray()` transforms the return object into an array.
 
@@ -392,7 +394,7 @@ For use in frontend templates, the method `$item->content()->sourceFormatted($an
 
 Adds a comment entry to the page.
 
-`$page->addCommentions( $data )`
+`$page->addCommention( $data )`
 
 #### Parameters
 
@@ -408,7 +410,7 @@ Array with the data as saved, including the assigned UID, or boolean `false` if 
 
 Updates a comment entry on the page.
 
-`$page->updateCommentions($uid, $data)`
+`$page->updateCommention($uid, $data)`
 
 #### Parameters
 
@@ -425,7 +427,7 @@ Array with the data as saved, or boolean `false` if failed.
 
 Deletes a comment entry from the page.
 
-`$page->deleteCommentions($uid)`
+`$page->deleteCommention($uid)`
 
 #### Parameters
 
@@ -607,19 +609,19 @@ In addition, log files are maintained in a folder `site/logs/commentions`.
 The file `commentions.yml` contains the comment data for a page. To add/update entries, e.g. using the [`page()->addCommention()`](#page-addcommention) or [`page()->updateCommention()`](#page-updatecommention) methods, or the [API](#api), the `$data` array may contain most of these fields and then overwrites the previous value (the `uid` can not be changed, and will be ignored in any update commands).
 
 | Field      | Comment  | Webment. | Description                                                                                                                                        | Example                               |
-|------------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
-| timestamp  | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
-| type       | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
-| status     | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                        | approved                              |
-| uid        | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
-| text       | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
-| source     |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
-| name       | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
-| email      | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
-| avatar     |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
-| website    | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
-| language   | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
-| authorized | optional |          | This boolean value is set to true if the comment was submitted by a logged-in user                                                           | true                             |
+|---------------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
+| timestamp     | required | required | Time of the comment; for webmentions, either the date of the source page (where available) or the time the webmention was submitted is used.       | 2020-04-01 12:00                      |
+| type          | required | required | The type of comment. Possible values: 'comment' (regular comment), 'webmention' (unspecified webmention), 'like', 'bookmark', etc.                 | comment                               |
+| status        | required | required | Status of the comment; possible values: 'approved', 'pending', 'unapproved'                                                                        | approved                              |
+| uid           | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
+| text          | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
+| source        |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
+| name          | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
+| email         | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
+| avatar        |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
+| website       | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
+| language      | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
+| authenticated | optional |          | This boolean value is set to true if the comment was submitted by a logged-in user                                                           | true                             |
 
 ### Queue
 
@@ -881,6 +883,9 @@ By default, links in comment bodies are rendered as clickable HTML links and pla
 
 Special thanks to [Fabian Michael](https://fabianmichael.de) for invaluable contributions; in particular the code for returning commentions as Structure objects, along with the intial Panel section redesign and its development!
 
+Translation contributors:
+- French: [jbidoret](https://github.com/jbidoret/)
+
 Inspiration and code snippets from:
 
 - https://github.com/bastianallgeier/kirby-webmentions
@@ -896,6 +901,6 @@ Included vendor libraries:
 
 Kirby 3 Commentions is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-Copyright © 2020 [Sebastian Greger](https://sebastiangreger.net)
+Copyright © 2021 [Sebastian Greger](https://sebastiangreger.net)
 
 It is discouraged to use this plugin in any project that promotes the destruction of our planet, racism, sexism, homophobia, animal abuse, violence or any other form of hate speech.
