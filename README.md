@@ -616,12 +616,13 @@ The file `commentions.yml` contains the comment data for a page. To add/update e
 | uid           | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text          | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source        |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
-| name          | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
+| name          | optional | optional | The author's name (if entered in the comment form or available from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
 | email         | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
 | avatar        |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website       | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
 | language      | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
 | authenticated | optional |          | This boolean value is set to true if the comment was submitted by a logged-in user                                                           | true                             |
+| custom        | optional | optional | An array of custom field values, if applicable (key = field name, value = field content)                                                           |                              |
 
 ### Queue
 

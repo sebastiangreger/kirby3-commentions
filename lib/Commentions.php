@@ -81,7 +81,7 @@ class Commentions
                         'id' => ($k === 'website' ? 'realwebsite' : $k),
                         'required' => $v['required'] ?? false,
                         'label' => ($v['label'] ?? $k) . ($v['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
-                        'type' => in_array(($v['type'] ?? 'text'), $allowedtypes) ? $v['type'] : 'text',
+                        'type' => (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : 'text',
                     ];
                 }
 
