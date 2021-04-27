@@ -4,6 +4,7 @@ namespace sgkirby\Commentions;
 
 use Kirby\Cms\Collection;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Obj;
 
 class Frontend
@@ -50,8 +51,17 @@ class Frontend
             // display comment form
             case 'form':
                 if (!get('thx')) {
-                    snippet($snippetprefix . 'form', [
-                        'fields' => Commentions::fields(page()),
+                    // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
+                    $fields = Commentions::fields(page());
+                    if (array_key_exists('text', $fields) && F::exists(kirby()->root('snippets') . DS . 'commentions-form.php')) {
+                        $keys = array_keys($fields);
+                        $keys[array_search('text', $keys)] = 'message';
+                        $fields = array_combine($keys, $fields);
+                        $fields['message']['id'] = 'message';
+                    }
+
+                    snippet('commentions-form', [
+                        'fields' => $fields,
                     ]);
                 }
                 break;
@@ -149,7 +159,8 @@ class Frontend
             'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,
             'email' => (array_key_exists('email', $fieldsetup)) ? get('email') : null,
             'website' => (array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
-            'text' => get('message'),
+            // LEGACY: until v1.0.4, the `text` field was `message`; keeping this check for compatibility with older customized snippets
+            'text' => !empty(get('message')) ? get('message') : get('text'),
             'timestamp' => date(date('Y-m-d H:i'), time()),
             'language' => Commentions::determineLanguage($page, $path),
             'type' => 'comment',

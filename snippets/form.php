@@ -20,40 +20,7 @@
 
     <form action="<?= $page->url() ?>" method="post" <?= option('sgkirby.commentions.hideforms') ? 'class="expandertarget"' : '' ?>>
 
-      <?php if (array_key_exists('name', $fields)) : ?>
-      <div class="commentions-form-name">
-        <label for="name"><?= $fields['name']['label'] ?></label>
-        <input type="text" id="name" name="name" <?= $fields['name']['required'] ? 'required' : '' ?>>
-      </div>
-      <?php endif; ?>
-
-      <?php if (array_key_exists('email', $fields)) : ?>
-      <div class="commentions-form-email">
-        <label for="email"><?= $fields['email']['label'] ?></label>
-        <input type="email" id="email" name="email" <?= $fields['email']['required'] ? 'required' : '' ?>>
-      </div>
-      <?php endif; ?>
-
-      <div class="commentions-form-honeypot">
-        <label for="website"><?= t('commentions.snippet.form.honeypot') ?></label>
-        <input type="url" id="website" name="website" tabindex="-1">
-      </div>
-
-      <?php if (array_key_exists('website', $fields)) : ?>
-      <div class="commentions-form-website">
-        <label for="realwebsite"><?= $fields['website']['label'] ?></label>
-        <input type="url" id="realwebsite" name="realwebsite" <?= $fields['website']['required'] ? 'required' : '' ?>>
-      </div>
-      <?php endif; ?>
-
-      <div class="commentions-form-message">
-        <label for="message"><?= $fields['message']['label'] ?></label>
-        <textarea id="message" name="message" rows="8" required></textarea>
-        <?php commentions('help') ?>
-      </div>
-
-      <?php /* "commentions" value enables identifying commentions submissions in route:before hook + creation timestamp is used for spam protection */ ?>
-      <input type="hidden" name="commentions" value="<?php e(!$page->isCacheable(), time(), 0) ?>">
+      <?php snippet('commentions/form-fields',  ['fields' => $fields]); ?>
 
       <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
 

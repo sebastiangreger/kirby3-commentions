@@ -730,7 +730,7 @@ By default, only an optional name field and a textarea for the comment are shown
 To reduce the form fields to the `text` field only (not even providing the optional name field):
 
 ```php
-// empty array = no data beyond the required `text` field
+// empty array = no data beyond the always required `text` field
 'sgkirby.commentions.commentfields' => [],
 ```
 
@@ -751,6 +751,15 @@ To mark a field as required (submission fails unless it is filled in) add a bool
   'name' => true,  // include name field and mark as required
   'email',         // include email as optional field
   'website',       // include optional website field
+],
+```
+
+To change the position of the compulsory text field (by default rendered after the fields from this array), the value `text` can be used to indicate its position; e.g. to put the message field before the name field:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'text',          // show obligatory text field first
+  'name',          // include name field
 ],
 ```
 

@@ -91,15 +91,16 @@ Kirby::plugin('sgkirby/commentions', [
     'routes' => require __DIR__ . '/config/routes.php',
 
     'snippets' => [
-        'commentions/list'     => __DIR__ . '/snippets/list.php',
-        'commentions/form'     => __DIR__ . '/snippets/form.php',
-        'commentions/help'     => __DIR__ . '/snippets/help.php',
-        'commentions/feedback' => __DIR__ . '/snippets/feedback.php',
+        'commentions/list'          => __DIR__ . '/snippets/list.php',
+        'commentions/form'          => __DIR__ . '/snippets/form.php',
+        'commentions/form-fields'   => __DIR__ . '/snippets/form-fields.php',
+        'commentions/help'          => __DIR__ . '/snippets/help.php',
+        'commentions/feedback'      => __DIR__ . '/snippets/feedback.php',
         /* DEPRECATED: keeping old snippet names below for compatibility while on 1.x */
-        'commentions-list'     => __DIR__ . '/snippets/list.php',
-        'commentions-form'     => __DIR__ . '/snippets/form.php',
-        'commentions-help'     => __DIR__ . '/snippets/help.php',
-        'commentions-feedback' => __DIR__ . '/snippets/feedback.php',
+        'commentions-list'          => __DIR__ . '/snippets/list.php',
+        'commentions-form'          => __DIR__ . '/snippets/form.php',
+        'commentions-help'          => __DIR__ . '/snippets/help.php',
+        'commentions-feedback'      => __DIR__ . '/snippets/feedback.php',
     ],
 
     'pageMethods' => [

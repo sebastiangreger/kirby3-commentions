@@ -58,7 +58,7 @@ class Commentions
      *
      * @param \Kirby\Cms\Page $page The page object
      * @param string $type The type of comment ('webmention' or 'comment')
-     * @return array Array of allowed fields for this type
+     * @return array Complete array of valid field names (keys) and their setup (value array)
      */
     public static function fields($page, string $type = "comment")
     {
@@ -71,22 +71,64 @@ class Commentions
         if ($type == 'comment') {
             // loop through all fields
             foreach ((array)$fieldsetup as $k => $v) {
-                if (is_string($k)) {
+                // case 1: field name in key, plus complete setup in value array
+                if (is_string($k) && is_array($v)) {
+                    // TODO: test this
                     $fields[$k] = [
-                        'required' => $v,
-                        'label' => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : '')) . ($v ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
+                        'id' => ($k === 'website' ? 'realwebsite' : $k),
+                        'required' => $v['required'] ?? false,
+                        'label' => ($v['label'] ?? $k) . ($v['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
+                        'type' => $v['type'] ?? 'text',
                     ];
-                } else {
+                }
+
+                // case 2: field name in key, plus true/false bool for "required"
+                elseif (is_string($k)) {
+                    $fields[$k] = [
+                        'id' => ($k === 'website' ? 'realwebsite' : $k),
+                        'required' => $v ?? false,
+                        'label' => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : ''), $k) . ($v ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
+                        'type' => 'text',
+                    ];
+                }
+
+                // case 3: unnamed item, i.e. field name is the value
+                else {
                     $fields[$v] = [
+                        'id' => ($v === 'website' ? 'realwebsite' : $v),
                         'required' => false,
-                        'label' => t('commentions.snippet.form.' . $v . '.optional'),
+                        'label' => t('commentions.snippet.form.' . $v . '.optional', $v),
+                        'type' => 'text',
                     ];
                 }
             }
-            // add the compulsory message field
-            $fields['message'] = [
-                'required' => true,
-                'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
+
+            // add the honeypot field
+            if (in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
+                $fields['honeypot'] = [
+                    'id' => 'website',
+                    'required' => false,
+                    'label' => t('commentions.snippet.form.honeypot'),
+                    'type' => 'url',
+                ];
+            }
+
+            // add the compulsory message field, if not already included in the earlier array setup
+            if (!array_key_exists('text', $fields)) {
+                $fields['text'] = [
+                    'id' => 'text',
+                    'required' => true,
+                    'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
+                    'type' => 'textarea',
+                ];
+            }
+
+            // add the hidden timestamp field for spam control
+            $fields['commentions'] = [
+                'id' => 'commentions',
+                'required' => false,
+                'type' => 'hidden',
+                'value' => !$page->isCacheable() ? time() : 0,
             ];
         }
 
