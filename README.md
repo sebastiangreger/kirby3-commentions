@@ -166,7 +166,7 @@ As with option A, you may want to include [`commentions('css')`](#commentionscss
 
 #### Option C. Create your own frontend presentation
 
-Since above snippets are mainly provided to enable a quick start, you may of course design your own frontend logic entirely. If you'd like to build on the templates, you can find them in the `site/plugins/kirby3-commentions/snippets` folder.
+Since above snippets are mainly provided to enable a quick start, you may of course design your own frontend logic entirely. If you'd like to build on the templates, you can find them in the `site/plugins/kirby3-commentions/snippets` folder. To override the built-in snippets, place your modified version in a folder `site/snippets/commentions`, e.g. `site/snippets/commentions/form.php` to replace the original form snippet.
 
 While it may be advisable to use the `commentions('form')` helper, as its markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting the feedback box and your list of comments and webmentions.
 
