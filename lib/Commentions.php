@@ -151,10 +151,14 @@ class Commentions
             if (!array_key_exists('text', $fields)) {
                 $fields['text'] = [
                     'id' => 'text',
-                    'required' => true,
+                    'required' => 'required',
                     'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
                     'type' => 'textarea',
                 ];
+            }
+            // if the text field was already added via config array, ensure it is required
+            else {
+                $fields['text']['required'] = 'required';
             }
 
             // add the hidden timestamp field for spam control
