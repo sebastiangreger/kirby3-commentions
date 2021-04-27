@@ -6,10 +6,25 @@
         <?php endif; ?>
 
           <?php if ($data['type'] === 'textarea'): ?>
-            <textarea id="<?= $data['id'] ?>" name="<?= $data['id'] ?>" rows="8" required></textarea>
+            <textarea
+              id="<?= $data['id'] ?>"
+              name="<?= $data['id'] ?>"
+              rows="8"
+              required
+            ></textarea>
             <?php if($name === 'text') commentions('help'); ?>
+
           <?php else: ?>
-            <input type="<?= $data['type'] ?>" id="<?= $data['id'] ?>" name="<?= $data['id'] ?>"<?= $data['required'] ? ' required' : '' ?><?php if(!empty($data['value'])): ?> value="<?= $data['value'] ?>"<?php endif; ?>>
+            <input
+              type="<?= $data['type'] ?>"
+              id="<?= $data['id'] ?>"
+              name="<?= $data['id'] ?>"
+              <?= $data['required'] ? ' required' : '' ?>
+              <?php foreach(['value', 'autocomplete'] as $attribute): ?>
+                <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
+              <?php endforeach ?>
+            >
+
           <?php endif; ?>
 
         <?php if ($data['type'] != 'hidden'): ?>

@@ -81,12 +81,15 @@ class Commentions
         $fielddefaults = [
             'name' => [
                 'type'          => 'text',
+                'autocomplete'  => 'name',
             ],
             'email' => [
                 'type'          => 'email',
+                'autocomplete'  => 'email',
             ],
             'website' => [
                 'type'          => 'url',
+                'autocomplete'  => 'url',
             ],
         ];
 
@@ -108,14 +111,26 @@ class Commentions
                     ];
                 }
 
+                // autocomplete defaults
+                if (!isset($v['autocomplete'])) {
+                    $v['autocomplete'] = $fielddefaults[$k]['autocomplete'] ?? null;
+                }
+                if ($v['autocomplete'] === false) {
+                    $v['autocomplete'] = null;
+                }
+                if ($v['autocomplete'] === true) {
+                    $v['autocomplete'] = 'on';
+                }
+
                 // translating the config settings into the fields array
                 $fields[$k] = [
                     'id'            => ($k === 'website' ? 'realwebsite' : $k),
                     'required'      => ($v['required'] === true) ?? false,
                     'label'         => ($v['label'] ?? $k) . ($v['required'] === true ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
                     'type'          => (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : ($fielddefaults[$k]['type'] ?? 'text'),
-                    ];
-                }
+                    'autocomplete'  => $v['autocomplete'],
+                ];
+            }
 
             // add the honeypot field
             if (in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
