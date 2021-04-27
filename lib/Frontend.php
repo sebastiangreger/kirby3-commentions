@@ -167,6 +167,13 @@ class Frontend
             'status' => Commentions::defaultstatus('comment'),
         ];
 
+        // discover any custom fields submitted and store them in the custom fields array
+        foreach($fieldsetup as $fieldname => $fieldvalue) {
+            if(!in_array($fieldname, ['name','email','website','realwebsite','text','commentions','honeypot'])) {
+                $data['custom'][$fieldname] = get($fieldname);
+            }
+        }
+
         // run a spam check
         $spam = Commentions::spamcheck($data, kirby()->request()->get());
         if ($spam === true) {

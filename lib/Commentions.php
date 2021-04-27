@@ -4,6 +4,7 @@ namespace sgkirby\Commentions;
 
 use Kirby\Cache\Cache;
 use Kirby\Cms\Page;
+use Kirby\Data\Data;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -73,7 +74,6 @@ class Commentions
             foreach ((array)$fieldsetup as $k => $v) {
                 // case 1: field name in key, plus complete setup in value array
                 if (is_string($k) && is_array($v)) {
-                    // TODO: test this
                     $fields[$k] = [
                         'id' => ($k === 'website' ? 'realwebsite' : $k),
                         'required' => $v['required'] ?? false,
@@ -400,7 +400,7 @@ class Commentions
 
         foreach ($data as $key => $value) {
             // remove fields that are not allowed
-            $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid', 'authenticated' ];
+            $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid', 'authenticated', 'custom' ];
             if (!in_array($key, $allowlist)) {
                 unset($data[ $key ]);
             }
@@ -408,6 +408,16 @@ class Commentions
             // remove empty fields
             if ($value == null) {
                 unset($data[ $key ]);
+            }
+
+            // ensure that custom field is yaml
+            if ($key == 'custom') {
+                if(is_array($value)) {
+                    $data[ $key ] = Data::encode($data[ $key ], "yaml");
+                }
+                elseif (!is_array(Data::decode($data[ $key ], "yaml")) || sizeof(Data::decode($data[ $key ], "yaml") == 0)) {
+                    unset($data[ $key ]);
+                }
             }
         }
 
