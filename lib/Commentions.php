@@ -107,29 +107,34 @@ class Commentions
                     $v = [
                         'label'         => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : ''), $k),
                         'type'          => $fielddefaults[$k]['type'] ?? 'text',
-                        'required'      => $v,
                     ];
                 }
 
-                // autocomplete defaults
-                if (!isset($v['autocomplete'])) {
-                    $v['autocomplete'] = $fielddefaults[$k]['autocomplete'] ?? null;
-                }
-                if ($v['autocomplete'] === false) {
-                    $v['autocomplete'] = null;
-                }
-                if ($v['autocomplete'] === true) {
-                    $v['autocomplete'] = 'on';
+                // compute defaults for additional attributes
+                $allowedattributes = [
+                    'required'      => 'required',
+                    'autocomplete'  => 'on',
+                    'placeholder'   => null,
+                ];
+                // the array value is the string to be used for true in the markup
+                foreach ($allowedattributes as $attr => $truestring) {
+                    // get the default if no value is given in config
+                    if (!isset($v[$attr])) {
+                        $v[$attr] = $fielddefaults[$k][$attr] ?? null;
+                    }
+                    // true translates into specific default value for some attributes
+                    if ($truestring && $v[$attr] === true) {
+                        $v[$attr] = $truestring;
+                    }
+                    if (!empty($v[$attr])) {
+                        $fields[$k][$attr] = $v[$attr];
+                    }
                 }
 
                 // translating the config settings into the fields array
-                $fields[$k] = [
-                    'id'            => ($k === 'website' ? 'realwebsite' : $k),
-                    'required'      => ($v['required'] === true) ?? false,
-                    'label'         => ($v['label'] ?? $k) . ($v['required'] === true ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
-                    'type'          => (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : ($fielddefaults[$k]['type'] ?? 'text'),
-                    'autocomplete'  => $v['autocomplete'],
-                ];
+                $fields[$k]['id'] = ($k === 'website' ? 'realwebsite' : $k);
+                $fields[$k]['label'] = ($v['label'] ?? $k) . ($v['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '');
+                $fields[$k]['type'] = (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : ($fielddefaults[$k]['type'] ?? 'text');
             }
 
             // add the honeypot field

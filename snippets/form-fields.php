@@ -19,8 +19,7 @@
               type="<?= $data['type'] ?>"
               id="<?= $data['id'] ?>"
               name="<?= $data['id'] ?>"
-              <?= $data['required'] ? ' required' : '' ?>
-              <?php foreach(['value', 'autocomplete'] as $attribute): ?>
+              <?php foreach(['required', 'value', 'autocomplete', 'placeholder'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>
             >
