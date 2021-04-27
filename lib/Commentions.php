@@ -69,42 +69,53 @@ class Commentions
             $fieldsetup = $fieldsetup($page);
         }
 
+        // if the setup is not a valid array, fall back to the default
+        if (!is_array($fieldsetup)) {
+            $fieldsetup = ['name'];
+        }
+
         // limit possible field types
         $allowedtypes = ['text','email','url','textarea','hidden'];
 
+        // fallback defaults for standard fields
+        $fielddefaults = [
+            'name' => [
+                'type'          => 'text',
+            ],
+            'email' => [
+                'type'          => 'email',
+            ],
+            'website' => [
+                'type'          => 'url',
+            ],
+        ];
+
         if ($type == 'comment') {
             // loop through all fields
-            foreach ((array)$fieldsetup as $k => $v) {
-                // case 1: field name in key, plus complete setup in value array
-                if (is_string($k) && is_array($v)) {
-                    $fields[$k] = [
-                        'id' => ($k === 'website' ? 'realwebsite' : $k),
-                        'required' => $v['required'] ?? false,
-                        'label' => ($v['label'] ?? $k) . ($v['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
-                        'type' => (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : 'text',
+            foreach ($fieldsetup as $k => $v) {
+                // if only an array of strings is given, the value is the key
+                if (!is_string($k)) {
+                    $k = $v;
+                    $v = $fielddefaults[$k]['required'] ?? false;
+                }
+
+                // if no config array is given as value, it is implied with defaults
+                if (!is_array($v)) {
+                    $v = [
+                        'label'         => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : ''), $k),
+                        'type'          => $fielddefaults[$k]['type'] ?? 'text',
+                        'required'      => $v,
                     ];
                 }
 
-                // case 2: field name in key, plus true/false bool for "required"
-                elseif (is_string($k)) {
-                    $fields[$k] = [
-                        'id' => ($k === 'website' ? 'realwebsite' : $k),
-                        'required' => $v ?? false,
-                        'label' => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : ''), $k) . ($v ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
-                        'type' => 'text',
+                // translating the config settings into the fields array
+                $fields[$k] = [
+                    'id'            => ($k === 'website' ? 'realwebsite' : $k),
+                    'required'      => ($v['required'] === true) ?? false,
+                    'label'         => ($v['label'] ?? $k) . ($v['required'] === true ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
+                    'type'          => (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : ($fielddefaults[$k]['type'] ?? 'text'),
                     ];
                 }
-
-                // case 3: unnamed item, i.e. field name is the value
-                else {
-                    $fields[$v] = [
-                        'id' => ($v === 'website' ? 'realwebsite' : $v),
-                        'required' => false,
-                        'label' => t('commentions.snippet.form.' . $v . '.optional', $v),
-                        'type' => 'text',
-                    ];
-                }
-            }
 
             // add the honeypot field
             if (in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
