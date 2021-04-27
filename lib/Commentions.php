@@ -482,6 +482,11 @@ class Commentions
                 $item['text_sanitized'] = $sanitizedText[$uid] = $sanitized;
             }
 
+            // return custom fields as array
+            if (array_key_exists('custom', $item)) {
+                $item['custom'] = Data::decode($item['custom'], "yaml");
+            }
+
             return $item;
         }, $data);
 
