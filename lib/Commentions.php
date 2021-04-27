@@ -69,6 +69,9 @@ class Commentions
             $fieldsetup = $fieldsetup($page);
         }
 
+        // limit possible field types
+        $allowedtypes = ['text','email','url','textarea','hidden'];
+
         if ($type == 'comment') {
             // loop through all fields
             foreach ((array)$fieldsetup as $k => $v) {
@@ -78,7 +81,7 @@ class Commentions
                         'id' => ($k === 'website' ? 'realwebsite' : $k),
                         'required' => $v['required'] ?? false,
                         'label' => ($v['label'] ?? $k) . ($v['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : ''),
-                        'type' => $v['type'] ?? 'text',
+                        'type' => in_array(($v['type'] ?? 'text'), $allowedtypes) ? $v['type'] : 'text',
                     ];
                 }
 
