@@ -61,16 +61,6 @@ Kirby::plugin('sgkirby/commentions', [
         'autolinks'                 => true,
         'commentfields'             => ['name'],
         'webmentionfields'          => ['text', 'name', 'website'],
-        'grouped'                   => [
-            'read'            => 'Read by',
-            'like'            => 'Likes',
-            'repost'          => 'Reposts',
-            'bookmark'        => 'Bookmarks',
-            'rsvp:yes'        => 'RSVP: yes',
-            'rsvp:maybe'      => 'RSVP: maybe',
-            'rsvp:interested' => 'RSVP: interested',
-            'rsvp:no'         => 'RSVP: no',
-        ],
     ],
 
     'api' => require __DIR__ . '/config/api.php',

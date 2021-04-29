@@ -157,8 +157,8 @@ Alternatively, you can add the form feedback snippet (error or success message),
 ```
 
 * The helper [`commentions('feedback')`](#commentionsfeedback) renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
-* To render the comment form, include [`commentions('form')`](#commentionsform) in your template.
-* Finally, [`commentions('list')`](#commentionslist) renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use [`commentions('grouped')`](#commentionsgrouped) instead (check options further below for additional control).
+* To render the comment form, include [`commentions('form')`](#commentionsform) in your template; additional configuration options are described [below](#commentionsform).
+* Finally, [`commentions('list')`](#commentionslist) renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, add a `grouped` attribute as described [below](#commentionslist).
 
 (If your are using the Starterkit, place the feedback helper just before the opening `<article>` tag, and the form and list helpers just after the closing `</article>` tag in `site/templates/note.php` for best results.)
 
@@ -256,7 +256,7 @@ Renders the comment form, based on the config settings, for direct use in the te
 
 ![form](.github/form.png)
 
-By adding the optional attribute array `$attrs` to the `commentions()` helper, the rendering and behaviour of the frontend code can be adjusted:
+By adding the optional attribute array `$attrs`, the rendering and behaviour of the frontend forms can be adjusted:
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -283,15 +283,36 @@ Renders a list of comments for display in the frontend.
 
 Markdown in comments is rendered into HTML, and all HTML in the body is sanitized to prevent cross-site scripting attacks; links are rendered as clickable HTML links and plain text URLs are translated into links. The [comment formatting](#comment-formatting) options provide control over this default behaviour.
 
-### commentions('grouped')
+By adding the optional attribute array `$attrs`, the rendering of the list can be adjusted:
 
-The option `'list'`, as described above, presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `'grouped'` instead:
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| grouped | array | see below | see below |
 
-`<?php commentions('grouped'); ?>`
+#### The 'grouped' attribute
+
+By default, the option `'list'` presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use the `grouped` attribute in `$attrs`:
 
 ![grouped](.github/grouped.png)
 
-The behaviour of the grouping can be adjusted via the config variable [`sgkirby.commentions.grouped`] described further below.
+Adding the `grouped` attribute gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
+
+```php
+<?= commentions('list', ['grouped' =>
+  [
+    'read'            => 'Read by',
+    'like'            => 'Likes',
+    'repost'          => 'Reposts',
+    'bookmark'        => 'Bookmarks',
+    'rsvp:yes'        => 'RSVP: yes',
+    'rsvp:maybe'      => 'RSVP: maybe',
+    'rsvp:interested' => 'RSVP: interested',
+    'rsvp:no'         => 'RSVP: no',
+  ],
+])
+```
+
+_NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
 
 ### commentions('endpoints')
 
@@ -343,7 +364,7 @@ sections:
 
 Three toggle switches at the bottom of the section provide control over page-specific settings (stored in each page's [`pagesettings.yml`](#page-settings) file):
 - open/close the page for incoming comments and/or webmentions (hides the comment form if using the [`commentions('form')`](#commentionsform) frontend helper and rejects any submissions of the respective type for this page)
-- hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) or [`commentions('grouped')`](#commentionsgrouped) helpers)
+- hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) helper)
 
 _NB. If one or both types of commentions are already disabled in `config.php` using the [limit by template](#activate-by-template) options, they cannot be controlled on a page level and appear greyed out._
 
@@ -849,25 +870,6 @@ When timeout protections are active, comments are rejected if submitted too soon
 ```
 
 _NB. These time settings do not have an effect if Kirby's built-in page cache is used._
-
-### Grouping reactions
-
-When comments are displayed using the `commentions('grouped')` helper, adding the following settings array gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
-
-```php
-'sgkirby.commentions.grouped', [
-  'read'            => 'Read by',
-  'like'            => 'Likes',
-  'repost'          => 'Reposts',
-  'bookmark'        => 'Bookmarks',
-  'rsvp:yes'        => 'RSVP: yes',
-  'rsvp:maybe'      => 'RSVP: maybe',
-  'rsvp:interested' => 'RSVP: interested',
-  'rsvp:no'         => 'RSVP: no',
-],
-```
-
-_NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
 
 ### Translations
 

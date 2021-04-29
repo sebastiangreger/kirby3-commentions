@@ -102,11 +102,20 @@ class Frontend
                 elseif ($commentions->count() > 0 && Commentions::pageSettings(page(), 'display')) {
 
                     // restructure the data if grouped view
-                    if ($template == 'grouped') {
+                    if (!empty($attrs['grouped'])) {
 
                     // array of all groups to be pulled out from content list,
                         // in presentation order
-                        $groups = option('sgkirby.commentions.grouped');
+                        $groups = $attrs['grouped'] ?? [
+                            'read'            => 'Read by',
+                            'like'            => 'Likes',
+                            'repost'          => 'Reposts',
+                            'bookmark'        => 'Bookmarks',
+                            'rsvp:yes'        => 'RSVP: yes',
+                            'rsvp:maybe'      => 'RSVP: maybe',
+                            'rsvp:interested' => 'RSVP: interested',
+                            'rsvp:no'         => 'RSVP: no',
+                        ];
 
                         foreach ($groups as $type => $label) {
                             $groupReactions = $commentions->filterBy('type', $type);
