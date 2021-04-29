@@ -14,7 +14,11 @@
     </summary>
     <?php endif ?>
 
-    <form action="<?= $page->url() ?>" method="post" novalidate>
+    <form
+      action="<?= $page->url() ?><?= !empty($attrs['jump']) ? '#' . $attrs['jump'] : '' ?>"
+      method="post"
+      <?= $attrs['novalidate'] === true ? 'novalidate' : ''?>
+    >
       <?php snippet('commentions/form-fields',  ['fields' => $fields]); ?>
       <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
     </form>

@@ -12,7 +12,7 @@ class Frontend
     /**
      * Called by the frontend helper, echoes the HTML output
      */
-    public static function render($template = null, $attrs = ['collapse' => true])
+    public static function render($template = null, $attrs = null)
     {
         // checks if custom snippets exist in a subfolder and sets snippet accordingly
         if (Dir::exists(kirby()->root('snippets') . DS . 'commentions')) {
@@ -83,6 +83,11 @@ class Frontend
                         if ($dfn['type'] == 'backend') {
                             unset($fields[$fieldname]);
                         }
+                    }
+
+                    // by default the form is always set to novalidate; only overriden by explicit novalidate=false in attrs
+                    if ($attrs['novalidate'] ?? true !== false) {
+                        $attrs['novalidate'] = true;
                     }
 
                     snippet('commentions-form', [
