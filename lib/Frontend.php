@@ -50,7 +50,7 @@ class Frontend
 
             // display comment form
             case 'form':
-                if (!get('thx')) {
+                if (!get('thx') || $attrs['keepvisible'] === true) {
                     $fields = Commentions::fields(page());
 
                     // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location

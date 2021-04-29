@@ -284,6 +284,7 @@ By adding the optional attribute array `$attrs`, the rendering and behaviour of 
 | jump | string | null | An element ID to be added as an anchor attribute to the form URL (to jump to a specific element after submission, e.g. after setting custom IDs for the feedback, form and list elements); by default this anchor is used on both error on success |
 | jump-error | string | null | Like `jump` but as target anchor on errors only |
 | jump-success | string | null | Like `jump` but as target anchor on success only |
+| keepvisible | bool | false | If `true`, the comment form remains visible after successful submission (by default it is not shown) |
 
 For example, to add the `<details>/<summary>` HTML construct, but display the webmention form opened by default:
 
