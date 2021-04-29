@@ -79,10 +79,6 @@ class Commentions
             'name' => [
                 'type'          => 'text',
                 'autocomplete'  => 'name',
-                'validate'      => [
-                    'rules'         => ['min' => 4, 'max' => 160],
-                    'message'       => 'Please enter a name between 4 and 160 characters',
-                ],
             ],
             'email' => [
                 'type'          => 'email',
@@ -95,13 +91,17 @@ class Commentions
             'website' => [
                 'type'          => 'url',
                 'autocomplete'  => 'url',
+                'validate'      => [
+                    'rules'         => ['url'],
+                    'message'       => 'Please enter a valid URL',
+                ],
             ],
             'text' => [
                 'type' => 'textarea',
                 'required'  => true,
                 'validate'      => [
-                    'rules'         => ['required', 'min' => 40, 'max' => 4096],
-                    'message'       => 'Please enter at least 40, but no more than 4096 characters',
+                    'rules'         => ['required', 'min' => 2],
+                    'message'       => 'Please enter a meaningful message',
                 ],
             ],
         ];

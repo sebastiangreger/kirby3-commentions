@@ -6,6 +6,7 @@ use Kirby\Cms\Collection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Obj;
+use Kirby\Toolkit\V;
 
 class Frontend
 {
@@ -65,11 +66,9 @@ class Frontend
                     foreach ($fields as $fieldname => $dfn) {
 
                         // check if an error is present for this field
-                        if (array_key_exists($fieldname, Commentions::$feedback['invalid'] ?? [])) {
+                        if (array_key_exists($dfn['id'], Commentions::$feedback['invalid'] ?? [])) {
                             // add the error message to field
-                            $fields[$fieldname]['error'] = Commentions::$feedback['invalid'][$fieldname];
-                            // fill field with the sanitized values entered by the user
-                            $fields[$fieldname]['value'] = htmlspecialchars($fieldname == 'website' ? get('realwebsite') : get($fieldname));
+                            $fields[$fieldname]['error'] = Commentions::$feedback['invalid'][$dfn['id']];
                             // make sure the form is displayed open regardless of collapse setting
                             $attrs['open'] = true;
                             // add autofocus attribute to the first field with an error
@@ -78,6 +77,9 @@ class Frontend
                                 $errorcount = $errorcount ?? 0 + 1;
                             }
                         }
+
+                        // fill field with any sanitized values already entered by the user
+                        $fields[$fieldname]['value'] = htmlspecialchars(get($dfn['id']));
 
                         // backend fields must not be displayed
                         if ($dfn['type'] == 'backend') {
@@ -220,8 +222,14 @@ class Frontend
             }
         }
 
+        // retrieve submitted data and do some cleanup
+        $formdata = get();
+        if(!V::url($formdata['realwebsite']) && !strpos('://', $formdata['realwebsite'])) {
+            $formdata['realwebsite'] = 'https://' . $formdata['realwebsite'];
+        }
+
         // run validation and return error array if validation fails
-        if (isset($rules) && $invalid = invalid(get(), $rules, $messages)) {
+        if (isset($rules) && $invalid = invalid($formdata, $rules, $messages)) {
             Commentions::$feedback = [
                 'alert'     => ['There are errors in your form'],
                 'invalid'   => $invalid,
@@ -231,11 +239,11 @@ class Frontend
 
         // assemble the commention data
         $data = [
-            'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,
-            'email' => (array_key_exists('email', $fieldsetup)) ? get('email') : null,
-            'website' => (array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
+            'name' => (array_key_exists('name', $fieldsetup)) ? $formdata['name'] : null,
+            'email' => (array_key_exists('email', $fieldsetup)) ? $formdata['email'] : null,
+            'website' => (array_key_exists('website', $fieldsetup)) ? $formdata['realwebsite'] : null,
             // LEGACY: until v1.0.4, the `text` field was `message`; keeping this check for compatibility with older customized snippets
-            'text' => !empty(get('message')) ? get('message') : get('text'),
+            'text' => !empty($formdata['message']) ? $formdata['message'] : $formdata['text'],
             'timestamp' => date(date('Y-m-d H:i'), time()),
             'language' => Commentions::determineLanguage($page, $path),
             'type' => 'comment',
