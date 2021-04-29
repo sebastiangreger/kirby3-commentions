@@ -60,6 +60,13 @@ class Frontend
                         $fields['message']['id'] = 'message';
                     }
 
+                    // inject error messages from validation routine
+                    if (isset(Commentions::$feedback['invalid'])) {
+                        foreach (Commentions::$feedback['invalid'] as $fieldname => $errors) {
+                            $fields[$fieldname]['error'] = implode('<br>', $errors);
+                        }
+                    }
+
                     snippet('commentions-form', [
                         'fields' => $fields,
                     ]);
@@ -166,14 +173,13 @@ class Frontend
 
         // run validation and return error array if validation fails
         if (isset($rules) && $invalid = invalid(get(), $rules, $messages)) {
-            Commentions::$feedback = $invalid;
-            return [
-                'alert' => $invalid,
+            Commentions::$feedback = [
+                'alert'     => ['There are errors in your form'],
+                'invalid'   => $invalid,
             ];
+            return false;
         }
 
-        echo 'ok';
-        die;
         // assemble the commention data
         $data = [
             'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,

@@ -18,7 +18,7 @@
 
     <?php endif; ?>
 
-    <form action="<?= $page->url() ?>" method="post" <?= option('sgkirby.commentions.hideforms') ? 'class="expandertarget"' : '' ?>>
+    <form action="<?= $page->url() ?>" method="post" novalidate <?= option('sgkirby.commentions.hideforms') ? 'class="expandertarget"' : '' ?>>
 
       <?php snippet('commentions/form-fields',  ['fields' => $fields]); ?>
 

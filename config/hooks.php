@@ -29,7 +29,7 @@ return [
             if (isset($return['uid'])) {
                 // return to the post page and display success message
                 go($result->url() . '?thx=queued');
-            } else {
+            } elseif (!isset(Commentions::$feedback['alert'])) {
                 throw new Exception('Could not process comment.');
             }
         }

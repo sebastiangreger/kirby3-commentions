@@ -3,12 +3,14 @@
         <?php if ($data['type'] != 'hidden'): ?>
           <div class="commentions-form-<?= $name ?>">
             <label for="<?= $data['id'] ?>"><?= $data['label'] ?></label>
+            <p class="alert" id="commentions-form-<?= $data['id'] ?>-errors"><?= (isset($data['error'])) ? $data['error'] : '' ?></p>
         <?php endif; ?>
 
           <?php if ($data['type'] === 'textarea'): ?>
             <textarea
               id="<?= $data['id'] ?>"
               name="<?= $data['id'] ?>"
+              aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
               rows="8"
               required
             ></textarea>
@@ -19,6 +21,7 @@
               type="<?= $data['type'] ?>"
               id="<?= $data['id'] ?>"
               name="<?= $data['id'] ?>"
+              aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
               <?php foreach(['required', 'value', 'autocomplete', 'placeholder'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>
