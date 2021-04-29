@@ -131,7 +131,7 @@ class Commentions
                 }
 
                 // if array contains no field type, use defaults
-                $allowedtypes = ['text','email','url','textarea','hidden'];
+                $allowedtypes = ['text','email','url','textarea','hidden','backend'];
                 if (!isset($dfn['type']) || !in_array($dfn['type'], $allowedtypes)) {
                     $dfn['type'] = $fielddefaults[$field]['type'] ?? 'text';
                 }
@@ -164,13 +164,14 @@ class Commentions
                 if (!isset($dfn['label'])) {
                     $dfn['label'] = t('commentions.snippet.form.' . $field . (!$dfn ? '.optional' : ''), $field);
                 }
-                $fields[$field]['label'] = $dfn['label'] . ($dfn['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '');
+                $fields[$field]['label'] = $dfn['label'] . (!empty($dfn['required']) ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '');
 
                 // render additional attributes
                 $allowedattributes = [
                     'required'      => 'required',
                     'autocomplete'  => 'on',
                     'placeholder'   => null,
+                    'value'         => null,
                 ];
                 foreach ($allowedattributes as $attr => $truestring) {
                     // get the default if no value is given in config
@@ -190,30 +191,31 @@ class Commentions
             // add the honeypot field if active
             if (in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
                 $fields['honeypot'] = [
-                    'id' => 'website',
-                    'required' => false,
-                    'label' => t('commentions.snippet.form.honeypot'),
-                    'type' => 'url',
+                    'id'            => 'website',
+                    'required'      => false,
+                    'autocomplete'  => 'url',
+                    'label'         => t('commentions.snippet.form.honeypot'),
+                    'type'          => 'url',
                 ];
             }
 
             // add the compulsory message field, if not already included in the earlier array setup
             if (!array_key_exists('text', $fields)) {
                 $fields['text'] = [
-                    'id' => 'text',
-                    'required' => 'required',
-                    'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
-                    'type' => $fielddefaults['text']['type'],
-                    'validate' => $fielddefaults['text']['validate'],
+                    'id'        => 'text',
+                    'required'  => 'required',
+                    'label'     => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
+                    'type'      => $fielddefaults['text']['type'],
+                    'validate'  => $fielddefaults['text']['validate'],
                 ];
             }
 
             // add the hidden timestamp field for spam control
             $fields['commentions'] = [
-                'id' => 'commentions',
-                'required' => false,
-                'type' => 'hidden',
-                'value' => !$page->isCacheable() ? time() : 0,
+                'id'        => 'commentions',
+                'required'  => false,
+                'type'      => 'hidden',
+                'value'     => !$page->isCacheable() ? time() : 0,
             ];
         }
 

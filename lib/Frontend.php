@@ -51,8 +51,9 @@ class Frontend
             // display comment form
             case 'form':
                 if (!get('thx')) {
-                    // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
                     $fields = Commentions::fields(page());
+
+                    // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
                     if (array_key_exists('text', $fields) && F::exists(kirby()->root('snippets') . DS . 'commentions-form.php')) {
                         $keys = array_keys($fields);
                         $keys[array_search('text', $keys)] = 'message';
@@ -60,18 +61,23 @@ class Frontend
                         $fields['message']['id'] = 'message';
                     }
 
-                    // inject error messages from validation routine and add the "open" attribute
-                    if (isset(Commentions::$feedback['invalid'])) {
-                        // loop through all configured fields
-                        foreach ($fields as $fieldname => $dfn) {
-                            // add the error message for this field, if exists
-                            if (array_key_exists($fieldname, Commentions::$feedback['invalid'])) {
-                                $fields[$fieldname]['error'] = Commentions::$feedback['invalid'][$fieldname];
-                            }
-                            // fill the form with the sanitized values entered by the user
+                    // loop through all configured fields to adjust frontend output
+                    foreach ($fields as $fieldname => $dfn) {
+
+                        // check if an error is present for this field
+                        if (array_key_exists($fieldname, Commentions::$feedback['invalid'] ?? [])) {
+                            // add the error message to field
+                            $fields[$fieldname]['error'] = Commentions::$feedback['invalid'][$fieldname];
+                            // fill field with the sanitized values entered by the user
                             $fields[$fieldname]['value'] = htmlspecialchars($fieldname == 'website' ? get('realwebsite') : get($fieldname));
+                            // make sure the form is displayed open regardless of collapse setting
+                            $attrs['open'] = true;
                         }
-                        $attrs['open'] = true;
+
+                        // backend fields must not be displayed
+                        if ($dfn['type'] == 'backend') {
+                            unset($fields[$fieldname]);
+                        }
                     }
 
                     snippet('commentions-form', [
