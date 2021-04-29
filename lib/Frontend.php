@@ -154,6 +154,26 @@ class Frontend
         // retrieve the settings array of allowed fields
         $fieldsetup = Commentions::fields($page);
 
+        // merge validation arrays for use with invalid() helper
+        foreach($fieldsetup as $field => $dfn) {
+            if(!in_array($field, ['website','commentions','honeypot'])) {
+                if (isset($dfn['validate']) && (isset($dfn['required']) || !empty(get($field)))) {
+                    $rules[$field] = $dfn['validate']['rules'];
+                    $messages[$field] = $dfn['validate']['messages'];
+                }
+            }
+        }
+
+        // run validation and return error array if validation fails
+        if (isset($rules) && $invalid = invalid(get(), $rules, $messages)) {
+            Commentions::$feedback = $invalid;
+            return [
+                'alert' => $invalid,
+            ];
+        }
+
+        echo 'ok';
+        die;
         // assemble the commention data
         $data = [
             'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,
@@ -179,20 +199,6 @@ class Frontend
         if ($spam === true) {
             go($page->url());
             exit;
-        }
-
-        // verify field rules
-        $rules = [
-            'text' => ['required', 'min' => 4, 'max' => 4096],
-        ];
-        $messages = [
-            'text' => 'Please enter a text between 4 and 4096 characters'
-        ];
-        if ($invalid = invalid($data, $rules, $messages)) {
-            Commentions::$feedback = $invalid;
-            return [
-                'alert' => $invalid,
-            ];
         }
 
         // save comment to the according txt file

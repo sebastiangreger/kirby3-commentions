@@ -74,18 +74,23 @@ class Commentions
             $fieldsetup = ['name'];
         }
 
-        // limit possible field types
-        $allowedtypes = ['text','email','url','textarea','hidden'];
-
         // fallback defaults for standard fields
         $fielddefaults = [
             'name' => [
                 'type'          => 'text',
                 'autocomplete'  => 'name',
+                'validate'      => [
+                    'rules'         => ['min' => 4, 'max' => 160],
+                    'messages'      => ['Please enter a name between 4 and 160 characters', 'Please enter a text between 4 and 4096 characters'],
+                ],
             ],
             'email' => [
                 'type'          => 'email',
                 'autocomplete'  => 'email',
+                'validate'      => [
+                    'rules'         => ['email'],
+                    'messages'      => ['Please enter a valid e-mail address'],
+                ],
             ],
             'website' => [
                 'type'          => 'url',
@@ -95,49 +100,79 @@ class Commentions
 
         if ($type == 'comment') {
             // loop through all fields
-            foreach ($fieldsetup as $k => $v) {
+            foreach ($fieldsetup as $field => $dfn) {
                 // if only an array of strings is given, the value is the key
-                if (!is_string($k)) {
-                    $k = $v;
-                    $v = $fielddefaults[$k]['required'] ?? false;
+                if (!is_string($field)) {
+                    $field = $dfn;
+                    $dfn = $fielddefaults[$field]['required'] ?? false;
                 }
 
                 // if no config array is given as value, it is implied with defaults
-                if (!is_array($v)) {
-                    $v = [
-                        'label'         => t('commentions.snippet.form.' . $k . (!$v ? '.optional' : ''), $k),
-                        'type'          => $fielddefaults[$k]['type'] ?? 'text',
+                if (!is_array($dfn)) {
+                    $dfn = [
+                        'type'      => $fielddefaults[$field]['type'] ?? 'text',
+                        'required'  => $dfn === true ? $dfn : ($fielddefaults[$field]['required'] ?? false),
                     ];
                 }
 
-                // compute defaults for additional attributes
+                // at this point we have normalized the dfn variables and can start interpreting
+                $fields[$field]['id'] = $field;
+                // alter id for website field for honeypot use
+                if ($field === 'website') {
+                    $fields[$field]['id'] = 'realwebsite';
+                }
+
+                // if array contains no field type, use defaults
+                $allowedtypes = ['text','email','url','textarea','hidden'];
+                if (!isset($dfn['type']) || !in_array($dfn['type'], $allowedtypes)) {
+                    $dfn['type'] = $fielddefaults[$field]['type'] ?? 'text';
+                }
+                $fields[$field]['type'] = $dfn['type'];
+
+                // if array contains no validation rules, use defaults
+                if (!isset($dfn['validate'])) {
+                    $dfn['validate'] = $fielddefaults[$field]['validate'] ?? null;
+                }
+                $fields[$field]['validate'] = $dfn['validate'] ?? null;
+
+                // add validation boolean if validation rule indicates required
+                if (isset($dfn['validate']['rules']) && in_array('required', $dfn['validate']['rules'])) {
+                    $dfn['required'] = true;
+                }
+                // add validation rule if required boolean present, but no validation rule
+                elseif (isset($dfn['required']) && $dfn['required'] === true && (!isset($dfn['validate']['rules']) || !in_array('required', $dfn['validate']['rules']))) {
+                    $fields[$field]['validate']['rules'] = array_merge(['required'], $dfn['validate']['rules'] ?? []);
+                    $fields[$field]['validate']['messages'] = array_merge(['This field is required'], $dfn['validate']['messages'] ?? []);
+                }
+
+                // if array contains no label, use defaults; add required text if applicable
+                if (!isset($dfn['label'])) {
+                    $dfn['label'] = t('commentions.snippet.form.' . $field . (!$dfn ? '.optional' : ''), $field);
+                }
+                $fields[$field]['label'] = $dfn['label'] . ($dfn['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '');
+
+                // render additional attributes
                 $allowedattributes = [
                     'required'      => 'required',
                     'autocomplete'  => 'on',
                     'placeholder'   => null,
                 ];
-                // the array value is the string to be used for true in the markup
                 foreach ($allowedattributes as $attr => $truestring) {
                     // get the default if no value is given in config
-                    if (!isset($v[$attr])) {
-                        $v[$attr] = $fielddefaults[$k][$attr] ?? null;
+                    if (!isset($dfn[$attr])) {
+                        $dfn[$attr] = $fielddefaults[$field][$attr] ?? null;
                     }
                     // true translates into specific default value for some attributes
-                    if ($truestring && $v[$attr] === true) {
-                        $v[$attr] = $truestring;
+                    if ($truestring && $dfn[$attr] === true) {
+                        $dfn[$attr] = $truestring;
                     }
-                    if (!empty($v[$attr])) {
-                        $fields[$k][$attr] = $v[$attr];
+                    if (!empty($dfn[$attr])) {
+                        $fields[$field][$attr] = $dfn[$attr];
                     }
                 }
-
-                // translating the config settings into the fields array
-                $fields[$k]['id'] = ($k === 'website' ? 'realwebsite' : $k);
-                $fields[$k]['label'] = ($v['label'] ?? $k) . ($v['required'] ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '');
-                $fields[$k]['type'] = (isset($v['type']) && in_array($v['type'], $allowedtypes)) ? $v['type'] : ($fielddefaults[$k]['type'] ?? 'text');
             }
 
-            // add the honeypot field
+            // add the honeypot field if active
             if (in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
                 $fields['honeypot'] = [
                     'id' => 'website',
