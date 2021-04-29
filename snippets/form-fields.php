@@ -13,7 +13,7 @@
               aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
               rows="8"
               required
-            ></textarea>
+            ><?= $data['value'] ?? '' ?></textarea>
             <?php if($name === 'text') commentions('help'); ?>
 
           <?php else: ?>
@@ -25,6 +25,7 @@
               <?php foreach(['required', 'value', 'autocomplete', 'placeholder'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>
+              value="<?= $data['value'] ?? '' ?>"
             >
 
           <?php endif; ?>

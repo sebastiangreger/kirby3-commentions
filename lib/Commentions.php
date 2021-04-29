@@ -81,7 +81,7 @@ class Commentions
                 'autocomplete'  => 'name',
                 'validate'      => [
                     'rules'         => ['min' => 4, 'max' => 160],
-                    'messages'      => ['Please enter a name between 4 and 160 characters', 'Please enter a text between 4 and 4096 characters'],
+                    'message'       => 'Please enter a name between 4 and 160 characters',
                 ],
             ],
             'email' => [
@@ -89,12 +89,20 @@ class Commentions
                 'autocomplete'  => 'email',
                 'validate'      => [
                     'rules'         => ['email'],
-                    'messages'      => ['Please enter a valid e-mail address'],
+                    'message'       => 'Please enter a valid e-mail address',
                 ],
             ],
             'website' => [
                 'type'          => 'url',
                 'autocomplete'  => 'url',
+            ],
+            'text' => [
+                'type' => 'textarea',
+                'required'  => true,
+                'validate'      => [
+                    'rules'         => ['required', 'min' => 40, 'max' => 4096],
+                    'message'       => 'Please enter at least 40, but no more than 4096 characters',
+                ],
             ],
         ];
 
@@ -135,6 +143,11 @@ class Commentions
                 }
                 $fields[$field]['validate'] = $dfn['validate'] ?? null;
 
+                // the text field is always required, this must not be overridden
+                if ($field == 'text') {
+                    $dfn['required'] = true;
+                }
+
                 // add validation boolean if validation rule indicates required
                 if (isset($dfn['validate']['rules']) && in_array('required', $dfn['validate']['rules'])) {
                     $dfn['required'] = true;
@@ -142,7 +155,9 @@ class Commentions
                 // add validation rule if required boolean present, but no validation rule
                 elseif (isset($dfn['required']) && $dfn['required'] === true && (!isset($dfn['validate']['rules']) || !in_array('required', $dfn['validate']['rules']))) {
                     $fields[$field]['validate']['rules'] = array_merge(['required'], $dfn['validate']['rules'] ?? []);
-                    $fields[$field]['validate']['messages'] = array_merge(['This field is required'], $dfn['validate']['messages'] ?? []);
+                    if (empty($fields[$field]['validate']['message'])) {
+                        $fields[$field]['validate']['message'] = 'This field is required';
+                    }
                 }
 
                 // if array contains no label, use defaults; add required text if applicable
@@ -188,12 +203,9 @@ class Commentions
                     'id' => 'text',
                     'required' => 'required',
                     'label' => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
-                    'type' => 'textarea',
+                    'type' => $fielddefaults['text']['type'],
+                    'validate' => $fielddefaults['text']['validate'],
                 ];
-            }
-            // if the text field was already added via config array, ensure it is required
-            else {
-                $fields['text']['required'] = 'required';
             }
 
             // add the hidden timestamp field for spam control

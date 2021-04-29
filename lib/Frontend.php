@@ -62,8 +62,14 @@ class Frontend
 
                     // inject error messages from validation routine and add the "open" attribute
                     if (isset(Commentions::$feedback['invalid'])) {
-                        foreach (Commentions::$feedback['invalid'] as $fieldname => $errors) {
-                            $fields[$fieldname]['error'] = implode('<br>', $errors);
+                        // loop through all configured fields
+                        foreach ($fields as $fieldname => $dfn) {
+                            // add the error message for this field, if exists
+                            if (array_key_exists($fieldname, Commentions::$feedback['invalid'])) {
+                                $fields[$fieldname]['error'] = Commentions::$feedback['invalid'][$fieldname];
+                            }
+                            // fill the form with the sanitized values entered by the user
+                            $fields[$fieldname]['value'] = htmlspecialchars($fieldname == 'website' ? get('realwebsite') : get($fieldname));
                         }
                         $attrs['open'] = true;
                     }
@@ -174,10 +180,14 @@ class Frontend
 
         // merge validation arrays for use with invalid() helper
         foreach($fieldsetup as $field => $dfn) {
-            if(!in_array($field, ['website','commentions','honeypot'])) {
+            if(!in_array($field, ['commentions','honeypot'])) {
+                // process the correct field for website, not the honeypot
+                if ($field == 'website') {
+                    $field = 'realwebsite';
+                }
                 if (isset($dfn['validate']) && (isset($dfn['required']) || !empty(get($field)))) {
                     $rules[$field] = $dfn['validate']['rules'];
-                    $messages[$field] = $dfn['validate']['messages'];
+                    $messages[$field] = $dfn['validate']['message'];
                 }
             }
         }
