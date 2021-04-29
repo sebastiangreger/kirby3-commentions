@@ -197,8 +197,10 @@ class Frontend
     {
         // bounce submissions to pages not allowlisted for comments
         if(!Commentions::accepted($page, 'comments')) {
-            go($page->url());
-            exit;
+            Commentions::$feedback = [
+                'alert'     => ['This page does not accept comments.'],
+            ];
+            return false;
         }
 
         // retrieve the settings array of allowed fields
