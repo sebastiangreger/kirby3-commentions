@@ -189,7 +189,7 @@ class Commentions
             }
 
             // add the honeypot field if active
-            if (in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
+            if (array_key_exists('website', $fields) && in_array('honeypot', option('sgkirby.commentions.spamprotection'))) {
                 $fields['honeypot'] = [
                     'id'            => 'website',
                     'required'      => false,

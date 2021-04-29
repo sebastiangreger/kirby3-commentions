@@ -79,7 +79,9 @@ class Frontend
                         }
 
                         // fill field with any sanitized values already entered by the user
-                        $fields[$fieldname]['value'] = htmlspecialchars(get($dfn['id']));
+                        if(get('submit') && !in_array($fieldname, ['commentions'])) {
+                            $fields[$fieldname]['value'] = htmlspecialchars(get($dfn['id']));
+                        }
 
                         // backend fields must not be displayed
                         if ($dfn['type'] == 'backend') {
@@ -224,7 +226,7 @@ class Frontend
 
         // retrieve submitted data and do some cleanup
         $formdata = get();
-        if(!V::url($formdata['realwebsite']) && !strpos('://', $formdata['realwebsite'])) {
+        if(isset($formdata['realwebsite']) && !V::url($formdata['realwebsite']) && !strpos('://', $formdata['realwebsite'])) {
             $formdata['realwebsite'] = 'https://' . $formdata['realwebsite'];
         }
 
