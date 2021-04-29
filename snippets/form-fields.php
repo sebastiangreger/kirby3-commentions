@@ -12,7 +12,9 @@
               name="<?= $data['id'] ?>"
               aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
               rows="8"
-              required
+              <?php foreach(['required', 'placeholder','autofocus'] as $attribute): ?>
+                <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
+              <?php endforeach ?>
             ><?= $data['value'] ?? '' ?></textarea>
             <?php if($name === 'text') commentions('help'); ?>
 
@@ -22,10 +24,9 @@
               id="<?= $data['id'] ?>"
               name="<?= $data['id'] ?>"
               aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
-              <?php foreach(['required', 'value', 'autocomplete', 'placeholder'] as $attribute): ?>
+              <?php foreach(['required', 'value', 'autocomplete', 'placeholder','autofocus'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>
-              value="<?= $data['value'] ?? '' ?>"
             >
 
           <?php endif; ?>

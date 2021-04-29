@@ -72,6 +72,11 @@ class Frontend
                             $fields[$fieldname]['value'] = htmlspecialchars($fieldname == 'website' ? get('realwebsite') : get($fieldname));
                             // make sure the form is displayed open regardless of collapse setting
                             $attrs['open'] = true;
+                            // add autofocus attribute to the first field with an error
+                            if (empty($errorcount)) {
+                                $fields[$fieldname]['autofocus'] = 'autofocus';
+                                $errorcount = $errorcount ?? 0 + 1;
+                            }
                         }
 
                         // backend fields must not be displayed
