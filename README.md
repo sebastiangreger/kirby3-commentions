@@ -228,7 +228,7 @@ The frontend helper `commentions()` is a PHP function that can be called from wi
 
 ### commentions()
 
-`<?php commentions() ?>` with no arguments is a shorthand for displaying three helpers (described below) in the following order:
+`<?php commentions() ?>` with no arguments (or `<?php commentions('all') ?>` when using additional attributes) is a shorthand for displaying three helpers (described below) in the following order:
 
 ```php
 <?php
@@ -237,6 +237,8 @@ The frontend helper `commentions()` is a PHP function that can be called from wi
   commentions('list');
 ?>
 ```
+
+By adding an optional attribute array `$attrs` to the `commentions()` helper, the rendering and behaviour of the frontend code can be adjusted. The available attributes are listed for each snippet below.
 
 ### commentions('feedback')
 
@@ -254,7 +256,22 @@ Renders the comment form, based on the config settings, for direct use in the te
 
 ![form](.github/form.png)
 
-Using the [collapsible forms](#collapsible-forms-showhide) option, additional HTML can be rendered that allows to add JavaScript-based solutions to show/hide the comment forms.
+By adding the optional attribute array `$attrs` to the `commentions()` helper, the rendering and behaviour of the frontend code can be adjusted:
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| collapse | bool | false | Wraps all forms into a `<detail>/<summary>` construct, to appear collapsed by default |
+| collapse-comments | bool | false | Like `collapse`, but only applies to the comment form |
+| collapse-webmentions | bool | false | Like `collapse`, but only applies to the comment form |
+| open  | bool | false | When using the `collapse` or `collapse-*` attribute, renders the `<detail>/<summary>` construct with the `open` attribute added |
+| open-comments | bool | false   | Like `open`, but only applies to the comment form |
+| open-webmentions | bool | false   | Like `open`, but only applies to the webmention form |
+
+For example, to add the `<details>/<summary>` HTML construct, but display the webmention form opened by default:
+
+```php
+<?= commentions('all', ['collapse' => true, 'open-webmentions' => true]) ?>
+```
 
 ### commentions('list')
 
@@ -809,16 +826,6 @@ On the other hand, to store all available fields, the array should feature all f
 As with the [comment fields option](#comment-fields) above, an anonymous callback function may be used for more granular control (see above for example code).
 
 _NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
-
-### Collapsible forms (show/hide)
-
-If desired, the following setting triggers additional markup in the included form markup (when using the `commentions('form')` helper) that can be used to hide the forms by default, allowing for an accessible open/close functionality:
-
-```php
-'sgkirby.commentions.hideforms' => true,
-```
-
-_NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required in the frontend template (for example as described in https://inclusive-components.design/collapsible-sections/)._
 
 ### Spam protection
 

@@ -57,8 +57,6 @@ Kirby::plugin('sgkirby/commentions', [
         'spamtimemin'               => 5,
         'spamtimemax'               => 86400,
         'avatarurls'                => false,
-        'hideforms'                 => false,
-        'expand'                    => false,
         'allowlinks'                => true,
         'autolinks'                 => true,
         'commentfields'             => ['name'],

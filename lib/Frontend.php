@@ -12,7 +12,7 @@ class Frontend
     /**
      * Called by the frontend helper, echoes the HTML output
      */
-    public static function render($template = null)
+    public static function render($template = null, $attrs = ['collapse' => true])
     {
         // checks if custom snippets exist in a subfolder and sets snippet accordingly
         if (Dir::exists(kirby()->root('snippets') . DS . 'commentions')) {
@@ -60,15 +60,17 @@ class Frontend
                         $fields['message']['id'] = 'message';
                     }
 
-                    // inject error messages from validation routine
+                    // inject error messages from validation routine and add the "open" attribute
                     if (isset(Commentions::$feedback['invalid'])) {
                         foreach (Commentions::$feedback['invalid'] as $fieldname => $errors) {
                             $fields[$fieldname]['error'] = implode('<br>', $errors);
                         }
+                        $attrs['open'] = true;
                     }
 
                     snippet('commentions-form', [
                         'fields' => $fields,
+                        'attrs'  => $attrs,
                     ]);
                 }
                 break;
