@@ -61,6 +61,7 @@ Kirby::plugin('sgkirby/commentions', [
         'autolinks'                 => true,
         'commentfields'             => ['name'],
         'webmentionfields'          => ['text', 'name', 'website'],
+        'storeuserid'               => false,
     ],
 
     'api' => require __DIR__ . '/config/api.php',

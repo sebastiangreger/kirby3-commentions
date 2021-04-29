@@ -434,7 +434,7 @@ The page method returns a [Structure-like object](https://getkirby.com/docs/refe
 When looping through the returned structure object, the comment data can be retrieved in various ways:
 
 ```
-foreach ($testpage->commentions('all') as $item) {
+foreach ($page->commentions('all') as $item) {
   print_r($item->content());
 }
 ```
@@ -448,6 +448,8 @@ For use in frontend templates, the method `$item->content()->nameFormatted($anon
 For use in frontend templates, the method `$item->content()->sourceFormatted($anonymous)` creates a nicely formatted title string for the item, such as "John Doe replied at example.com" in case of a reply webmention; if no name is available, it returns either "Anonymous" or whatever string is given as `$anonymous` (this method internally calls `nameFormatted()`).
 
 `$item->dateFormatted()` returns a nicely formatted string for the timestamp of the item.
+
+_N.B. the returned object contains all the data for a comment, including personal information; do not expose this API publicly, always filter its output before making it available to the outside_
 
 ### $page->addCommention()
 
@@ -680,7 +682,7 @@ The file `commentions.yml` contains the comment data for a page. To add/update e
 | avatar        |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website       | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
 | language      | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
-| authenticated | optional |          | This boolean value is set to true if the comment was submitted by a logged-in user                                                           | true                             |
+| authenticated | optional |          | If the comment was submitted by a logged-in user, this is either a boolean `true` or a string with the Kirby user ID (depending on the [`storinguserid` setting](#storing-id-of-authenticated-users)                                     | true                             |
 | custom        | optional | optional | An array of custom field values, if applicable (key = field name, value = field content)                                                           |                              |
 
 ### Queue
@@ -841,7 +843,7 @@ For advanced customization, a callback function can be used to control the array
 },
 ```
 
-### Webmention fields
+#### Webmention fields
 
 From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
 
@@ -868,6 +870,10 @@ On the other hand, to store all available fields, the array should feature all f
 As with the [comment fields option](#comment-fields) above, an anonymous callback function may be used for more granular control (see above for example code).
 
 _NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
+
+#### Storing ID of authenticated users
+
+Commentions sets a flag for comments submitted by logged-in users. By default this is a boolean, since this is personal data with potential GDPR relevance. In order to store the Kirby user ID of the submitter instead, set `'sgkirby.commentions.storeuserid' => true`.
 
 ### Spam protection
 

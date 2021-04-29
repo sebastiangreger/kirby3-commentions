@@ -307,7 +307,7 @@ class Commentions
 
         // flag comment posted by a logged-in user
         if ($data['type'] === 'comment' && kirby()->user()) {
-            $data['authenticated'] = true;
+            $data['authenticated'] = (bool)option('sgkirby.commentions.storeuserid') ? kirby()->user()->id() : true;
         }
 
         // trigger a hook that would allow to stop processing by throwing an exception
