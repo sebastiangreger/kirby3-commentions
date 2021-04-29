@@ -50,7 +50,7 @@ class Frontend
 
             // display comment form
             case 'form':
-                if (!get('thx') || $attrs['keepvisible'] === true) {
+                if (!get('thx') || (isset($attrs['keepvisible']) && $attrs['keepvisible'] === true)) {
                     $fields = Commentions::fields(page());
 
                     // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
@@ -98,7 +98,7 @@ class Frontend
                             'value' => ($attrs['jump-success'] ?? $attrs['jump']),
                         ];
                     }
-                    $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'];
+                    $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'] ?? null;
 
                     snippet('commentions-form', [
                         'fields' => $fields,
