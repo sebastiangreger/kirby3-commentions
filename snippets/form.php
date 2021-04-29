@@ -1,5 +1,5 @@
 
-  <div class="commentions-form">
+  <div class="commentions-form <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
     <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'comments')) : ?>
 

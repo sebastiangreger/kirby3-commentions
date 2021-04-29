@@ -23,7 +23,9 @@
               type="<?= $data['type'] ?>"
               id="<?= $data['id'] ?>"
               name="<?= $data['id'] ?>"
-              aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
+              <?php if($data['type'] != 'hidden'): ?>
+                aria-describedby="commentions-form-<?= $data['id'] ?>-errors"
+              <?php endif ?>
               <?php foreach(['required', 'value', 'autocomplete', 'placeholder','autofocus'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>

@@ -44,7 +44,7 @@ class Frontend
             // display ui feedback after form submission
             case 'feedback':
                 if (isset(Commentions::$feedback)) {
-                    snippet($snippetprefix . 'feedback', Commentions::$feedback);
+                    snippet($snippetprefix . 'feedback', array_merge(Commentions::$feedback, ['attrs' => $attrs]));
                 }
                 break;
 
@@ -89,6 +89,16 @@ class Frontend
                     if ($attrs['novalidate'] ?? true !== false) {
                         $attrs['novalidate'] = true;
                     }
+
+                    // if set in attrs, forward the jump anchors to the backend via hidden field
+                    if (!empty($attrs['jump']) || !empty($attrs['jump-success']) ) {
+                        $fields['jump'] = [
+                            'id' => 'commentions-jump',
+                            'type' => 'hidden',
+                            'value' => ($attrs['jump-success'] ?? $attrs['jump']),
+                        ];
+                    }
+                    $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'];
 
                     snippet('commentions-form', [
                         'fields' => $fields,

@@ -27,8 +27,12 @@ return [
 
             $return = Frontend::processCommentform($result, $path);
             if (isset($return['uid'])) {
+                // read out the target anchor in case of success
+                if (!empty(get('commentions-jump'))) {
+                    $jump = '#' . get('commentions-jump');
+                }
                 // return to the post page and display success message
-                go($result->url() . '?thx=queued');
+                go($result->url() . '?thx=queued' . ($jump ?? ''));
             } elseif (!isset(Commentions::$feedback['alert'])) {
                 throw new Exception('Could not process comment.');
             }

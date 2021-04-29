@@ -248,6 +248,19 @@ Renders the user feedback UI (error/success message after a user submits the com
 
 ![feedback](.github/feedback.png)
 
+By adding the optional attribute array `$attrs`, the rendering of the feedback element can be adjusted:
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| class | string | '' | Adds additional classes to the `.commentions-feedback` element |
+| id | string | '' | Adds an id attribute to the `.commentions-feedback` element |
+
+For example:
+
+```php
+<?= commentions('feedback', ['class' => 'md-5 medium wide', 'id' => 'formfeedback']) ?>
+```
+
 ### commentions('form')
 
 Renders the comment form, based on the config settings, for direct use in the template.
@@ -266,6 +279,11 @@ By adding the optional attribute array `$attrs`, the rendering and behaviour of 
 | open  | bool | false | When using the `collapse` or `collapse-*` attribute, renders the `<detail>/<summary>` construct with the `open` attribute added |
 | open-comments | bool | false   | Like `open`, but only applies to the comment form |
 | open-webmentions | bool | false   | Like `open`, but only applies to the webmention form |
+| class | string | '' | Adds additional classes to the `.commentions-form` element |
+| id | string | '' | Adds an id attribute to the `.commentions-form` element |
+| jump | string | null | An element ID to be added as an anchor attribute to the form URL (to jump to a specific element after submission, e.g. after setting custom IDs for the feedback, form and list elements); by default this anchor is used on both error on success |
+| jump-error | string | null | Like `jump` but as target anchor on errors only |
+| jump-success | string | null | Like `jump` but as target anchor on success only |
 
 For example, to add the `<details>/<summary>` HTML construct, but display the webmention form opened by default:
 
@@ -288,6 +306,8 @@ By adding the optional attribute array `$attrs`, the rendering of the list can b
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | grouped | array | see below | see below |
+| class | string | '' | Adds additional classes to the `.commentions-list` element |
+| id | string | '' | Adds an id attribute to the `.commentions-list` element |
 
 #### The 'grouped' attribute
 
