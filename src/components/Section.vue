@@ -24,7 +24,7 @@
       v-if="commentions.length > 0"
     >
         <k-commentions-item
-          v-for="item in commentions"
+          v-for="item in paginated"
           :key="item.uid"
           :item="item"
           :show="show"
@@ -41,6 +41,11 @@
     >
       {{ empty }}
     </k-empty>
+
+    <k-pagination
+      v-bind="paginationOptions"
+      @paginate="paginate($event)"
+    />
 
     <k-commentions-pagesettings>
       <k-commentions-pagesettingstoggle
@@ -101,6 +106,8 @@ export default {
       errors: [],
       viewSource: false,
       settings: [],
+      pageNumber: 0,
+      limit: null,
     }
   },
 
@@ -113,7 +120,25 @@ export default {
       this.settings                = response.pageSettings;
       this.pageid                  = response.pageId;
       this.show                    = response.show;
+      this.limit                   = response.limit;
     });
+  },
+
+  computed: {
+    paginationOptions() {
+      return [
+        {
+          total: Object.keys(this.commentions).length,
+          details: true,
+          limit: this.limit,
+        },
+      ];
+    },
+    paginated() {
+      const start = this.pageNumber * this.limit,
+      end = start + this.limit;
+      return this.commentions.slice(start, end);
+    },
   },
 
   methods: {
@@ -122,6 +147,13 @@ export default {
     // which leads to an error during development.
     load() {
       return this.$api.get(this.parent + '/sections/' + this.name);
+    },
+
+    paginate(event) {
+      this.pageNumber = event.page - 1;
+      const start = this.pageNumber * this.limit,
+      end = start + this.limit;
+      this.paginated = this.commentions.slice(start, end);
     },
 
     toggleViewSource() {

@@ -370,6 +370,7 @@ This universal panel section displays either
 | flip     | boolean | false   | Default presentation order (`false`) is latest first; `true` shows comments chronologically                                                                                                           |
 | headline | string  | –       | The headline for the section.                                                                                                                                                                         |
 | show     | string  | 'page'  | Defines what comments are shown; 'page' lists comments for current page, 'pending' lists all pending comments for the entire site (aka. the "Inbox"), and 'all' lists all comments of the entire site |
+| limit    | int     | 20      | The number of items shown in the list, before a pagination element is added at the bottom of the list |
 
 #### Default
 

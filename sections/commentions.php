@@ -19,6 +19,10 @@ return [
             return $flip;
         },
 
+        'limit' => function ($limit = 20) {
+            return $limit;
+        },
+
         'empty' => function ($empty = null) {
             if ($empty === null) {
                 if ($this->show() == 'pending') {

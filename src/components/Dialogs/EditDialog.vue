@@ -93,10 +93,12 @@ export default {
           label: this.$t('commentions.section.edit.source'),
           type: "url",
         },
+        /*
         custom: {
           label: this.$t('commentions.section.edit.custom'),
           type: "structure",
         },
+        */
       };
     }
   },
