@@ -40,6 +40,9 @@
 	display:block;
 	width:100%;
 }
+.commentions-form p.alert {
+	color:#ff0000;
+}
 .commentions-form input,
 .commentions-form textarea {
 	background:white;

@@ -35,6 +35,10 @@
           v-bind:source="item.text"
           v-bind:view-source="viewSource"
         />
+        <details class="k-commentions-item-custom"
+          v-if="item.custom"
+          v-html="customFields"
+        />
       </div>
     </div>
     <nav class="k-commentions-item-options">
@@ -109,6 +113,15 @@ export default {
           default:
               return 'circle-outline';
       }
+    },
+
+    customFields() {
+      let table = '<summary>More (' + Object.keys(this.item.custom).length + ')</summary><div><table>';
+      for (let key in this.item.custom) {
+        table += '<tr><td>' + key + '</td><td>' + this.item.custom[key] + '</td></tr>';
+      }
+      table += '</table></div></summary>';
+      return table;
     },
 
     dateFormatted() {
@@ -238,6 +251,32 @@ $breakpoint-huge: 120em;
 
 .k-commentions-item-header a {
   text-decoration: underline solid #999;
+}
+
+.k-commentions-item-custom table {
+  width:100%;
+  border-collapse:collapse;
+  margin:.3rem 0;
+  overflow-x:auto;
+}
+
+.k-commentions-item-custom tr:nth-child(odd) {
+  background:#f0f0f0;
+}
+
+.k-commentions-item-custom tr:nth-child(even) {
+  background:#f7f7f7;
+}
+
+.k-commentions-item-custom td {
+  padding:.1rem .3rem;
+  border-top:1px solid #ccc;
+  border-bottom:1px solid #ccc;
+}
+
+.k-commentions-item-custom td:first-child {
+  width:25%;
+  font-weight:bold;
 }
 
 .k-commentions-item-update {

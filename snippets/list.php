@@ -1,4 +1,4 @@
-<div class="commentions-list">
+<div class="commentions-list <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
   <?php foreach ($reactions as $type => $group) : ?>
     <h3><?= $group->label() ?></h3>

@@ -4,14 +4,16 @@ namespace sgkirby\Commentions;
 
 use Kirby\Cms\Collection;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Obj;
+use Kirby\Toolkit\V;
 
 class Frontend
 {
     /**
      * Called by the frontend helper, echoes the HTML output
      */
-    public static function render($template = null)
+    public static function render($template = null, $attrs = null)
     {
         // checks if custom snippets exist in a subfolder and sets snippet accordingly
         if (Dir::exists(kirby()->root('snippets') . DS . 'commentions')) {
@@ -43,15 +45,68 @@ class Frontend
             // display ui feedback after form submission
             case 'feedback':
                 if (isset(Commentions::$feedback)) {
-                    snippet($snippetprefix . 'feedback', Commentions::$feedback);
+                    snippet($snippetprefix . 'feedback', array_merge(Commentions::$feedback, ['attrs' => $attrs]));
                 }
                 break;
 
             // display comment form
             case 'form':
-                if (!get('thx')) {
-                    snippet($snippetprefix . 'form', [
-                        'fields' => Commentions::fields(page()),
+                if (!get('thx') || (isset($attrs['keepvisible']) && $attrs['keepvisible'] === true)) {
+                    $fields = Commentions::fields(page());
+
+                    // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
+                    if (array_key_exists('text', $fields) && F::exists(kirby()->root('snippets') . DS . 'commentions-form.php')) {
+                        $keys = array_keys($fields);
+                        $keys[array_search('text', $keys)] = 'message';
+                        $fields = array_combine($keys, $fields);
+                        $fields['message']['id'] = 'message';
+                    }
+
+                    // loop through all configured fields to adjust frontend output
+                    foreach ($fields as $fieldname => $dfn) {
+
+                        // check if an error is present for this field
+                        if (array_key_exists($dfn['id'], Commentions::$feedback['invalid'] ?? [])) {
+                            // add the error message to field
+                            $fields[$fieldname]['error'] = Commentions::$feedback['invalid'][$dfn['id']];
+                            // make sure the form is displayed open regardless of collapse setting
+                            $attrs['open'] = true;
+                            // add autofocus attribute to the first field with an error
+                            if (empty($errorcount)) {
+                                $fields[$fieldname]['autofocus'] = 'autofocus';
+                                $errorcount = $errorcount ?? 0 + 1;
+                            }
+                        }
+
+                        // fill field with any sanitized values already entered by the user
+                        if(get('submit') && !in_array($fieldname, ['commentions'])) {
+                            $fields[$fieldname]['value'] = htmlspecialchars(get($dfn['id']));
+                        }
+
+                        // backend fields must not be displayed
+                        if ($dfn['type'] == 'backend') {
+                            unset($fields[$fieldname]);
+                        }
+                    }
+
+                    // by default the form is always set to novalidate; only overriden by explicit novalidate=false in attrs
+                    if ($attrs['novalidate'] ?? true !== false) {
+                        $attrs['novalidate'] = true;
+                    }
+
+                    // if set in attrs, forward the jump anchors to the backend via hidden field
+                    if (!empty($attrs['jump']) || !empty($attrs['jump-success']) ) {
+                        $fields['jump'] = [
+                            'id' => 'commentions-jump',
+                            'type' => 'hidden',
+                            'value' => ($attrs['jump-success'] ?? $attrs['jump']),
+                        ];
+                    }
+                    $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'] ?? null;
+
+                    snippet('commentions-form', [
+                        'fields' => $fields,
+                        'attrs'  => $attrs,
                     ]);
                 }
                 break;
@@ -83,11 +138,20 @@ class Frontend
                 elseif ($commentions->count() > 0 && Commentions::pageSettings(page(), 'display')) {
 
                     // restructure the data if grouped view
-                    if ($template == 'grouped') {
+                    if (!empty($attrs['grouped'])) {
 
                     // array of all groups to be pulled out from content list,
                         // in presentation order
-                        $groups = option('sgkirby.commentions.grouped');
+                        $groups = $attrs['grouped'] ?? [
+                            'read'            => 'Read by',
+                            'like'            => 'Likes',
+                            'repost'          => 'Reposts',
+                            'bookmark'        => 'Bookmarks',
+                            'rsvp:yes'        => 'RSVP: yes',
+                            'rsvp:maybe'      => 'RSVP: maybe',
+                            'rsvp:interested' => 'RSVP: interested',
+                            'rsvp:no'         => 'RSVP: no',
+                        ];
 
                         foreach ($groups as $type => $label) {
                             $groupReactions = $commentions->filterBy('type', $type);
@@ -137,44 +201,69 @@ class Frontend
     {
         // bounce submissions to pages not allowlisted for comments
         if(!Commentions::accepted($page, 'comments')) {
-            go($page->url());
-            exit;
+            Commentions::$feedback = [
+                'alert'     => ['This page does not accept comments.'],
+            ];
+            return false;
         }
 
         // retrieve the settings array of allowed fields
         $fieldsetup = Commentions::fields($page);
 
+        // merge validation arrays for use with invalid() helper
+        foreach($fieldsetup as $field => $dfn) {
+            if(!in_array($field, ['commentions','honeypot'])) {
+                // process the correct field for website, not the honeypot
+                if ($field == 'website') {
+                    $field = 'realwebsite';
+                }
+                if (isset($dfn['validate']) && (isset($dfn['required']) || !empty(get($field)))) {
+                    $rules[$field] = $dfn['validate']['rules'];
+                    $messages[$field] = $dfn['validate']['message'];
+                }
+            }
+        }
+
+        // retrieve submitted data and do some cleanup
+        $formdata = get();
+        if(isset($formdata['realwebsite']) && !V::url($formdata['realwebsite']) && !strpos('://', $formdata['realwebsite'])) {
+            $formdata['realwebsite'] = 'https://' . $formdata['realwebsite'];
+        }
+
+        // run validation and return error array if validation fails
+        if (isset($rules) && $invalid = invalid($formdata, $rules, $messages)) {
+            Commentions::$feedback = [
+                'alert'     => ['There are errors in your form'],
+                'invalid'   => $invalid,
+            ];
+            return false;
+        }
+
         // assemble the commention data
         $data = [
-            'name' => (array_key_exists('name', $fieldsetup)) ? get('name') : null,
-            'email' => (array_key_exists('email', $fieldsetup)) ? get('email') : null,
-            'website' => (array_key_exists('website', $fieldsetup)) ? get('realwebsite') : null,
-            'text' => get('message'),
+            'name' => (array_key_exists('name', $fieldsetup)) ? $formdata['name'] : null,
+            'email' => (array_key_exists('email', $fieldsetup)) ? $formdata['email'] : null,
+            'website' => (array_key_exists('website', $fieldsetup)) ? $formdata['realwebsite'] : null,
+            // LEGACY: until v1.0.4, the `text` field was `message`; keeping this check for compatibility with older customized snippets
+            'text' => !empty($formdata['message']) ? $formdata['message'] : $formdata['text'],
             'timestamp' => date(date('Y-m-d H:i'), time()),
             'language' => Commentions::determineLanguage($page, $path),
             'type' => 'comment',
             'status' => Commentions::defaultstatus('comment'),
         ];
 
+        // add custom fields submitted
+        foreach($fieldsetup as $fieldname => $fieldvalue) {
+            if(!in_array($fieldname, ['name', 'email', 'website', 'realwebsite', 'text', 'commentions', 'honeypot'])) {
+                $data[$fieldname] = get($fieldname);
+            }
+        }
+
         // run a spam check
         $spam = Commentions::spamcheck($data, kirby()->request()->get());
         if ($spam === true) {
             go($page->url());
             exit;
-        }
-
-        // verify field rules
-        $rules = [
-            'text' => ['required', 'min' => 4, 'max' => 4096],
-        ];
-        $messages = [
-            'text' => 'Please enter a text between 4 and 4096 characters'
-        ];
-        if ($invalid = invalid($data, $rules, $messages)) {
-            Commentions::$feedback = $invalid;
-            return [
-                'alert' => $invalid,
-            ];
         }
 
         // save comment to the according txt file

@@ -32,6 +32,7 @@ export default {
         type: null,
         text: null,
         source: null,
+        custom: null,
       }
     };
   },
@@ -57,12 +58,14 @@ export default {
           label: this.$t('commentions.section.edit.avatar'),
           type: "url",
         },
+        /*
         timestamp: {
           label: this.$t('commentions.section.edit.timestamp'),
           type: "date",
           required: true,
           time: {step: 1}
         },
+        */
         type: {
           label: this.$t('commentions.section.edit.type'),
           type: "select",
@@ -97,7 +100,7 @@ export default {
   },
 
   methods: {
-    open(item, pageid) {
+    open(item, pageid, customfields) {
       this.pageid = pageid;
       this.commention = {
         uid: item.uid,
@@ -110,6 +113,18 @@ export default {
         text: item.text,
         source: item.source,
       };
+      for (let i = 0; i < customfields.length; i++) {
+        let field = customfields[i].id;
+        if (item.custom) {
+          this.commention[field] = item.custom[field];
+        } else {
+          this.commention[field] = null;
+        }
+        this.fields[field] = {
+          label: field,
+          type: customfields[i].type,
+        };
+      }
       this.$refs.dialog.open();
       this.input(item);
       console.log(this.notification);
@@ -130,16 +145,14 @@ export default {
         this.$refs.dialog.error("Source URL is required for webmentions");
         return;
       }
-      const data = {
-        name: this.commention.name,
-        timestamp: this.commention.timestamp,
-        email: this.commention.email,
-        avatar: this.commention.avatar,
-        website: this.commention.website,
-        type: this.commention.type,
-        text: this.commention.text,
-        source: this.commention.source,
-      };
+      // assemble all fields' data in one object
+      const data = {}
+      for (let key in this.commention) {
+        // the uid does not belong here
+        if (key != 'uid') {
+          data[key] = this.commention[key];
+        }
+      }
       this.$refs.dialog.close();
       this.$emit("submit", [this.pageid, this.commention.uid, data]);
       this.commention = null;

@@ -1,84 +1,49 @@
 
-  <div class="commentions-form">
+  <div class="commentions-form <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
     <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'comments')) : ?>
 
-    <?php if (option('sgkirby.commentions.hideforms')) : ?>
-
-    <h3 class="expander" id="commentions-form-comment">
-      <button aria-expanded="false">
-        <svg aria-hidden="true" focusable="false" width="16px" viewBox="0 0 10 10"><rect class="vert" height="8" width="2" y="1" x="4"/><rect height="2" width="8" y="4" x="1"/></svg>
-        <span><?= t('commentions.snippet.form.ctacomment') ?></span>
-      </button>
-    </h3>
-
-    <?php else : ?>
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-comments'])) : ?>
+    <details <?= (!empty($attrs['open']) || !empty($attrs['open-comments'])) ? ' open' : '' ?>>
+    <summary>
+    <?php endif ?>
 
     <h3 id="commentions-form-comment"><?= t('commentions.snippet.form.ctacomment') ?></h3>
 
-    <?php endif; ?>
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-comments'])) : ?>
+    </summary>
+    <?php endif ?>
 
-    <form action="<?= $page->url() ?>" method="post" <?= option('sgkirby.commentions.hideforms') ? 'class="expandertarget"' : '' ?>>
-
-      <?php if (array_key_exists('name', $fields)) : ?>
-      <div class="commentions-form-name">
-        <label for="name"><?= $fields['name']['label'] ?></label>
-        <input type="text" id="name" name="name" <?= $fields['name']['required'] ? 'required' : '' ?>>
-      </div>
-      <?php endif; ?>
-
-      <?php if (array_key_exists('email', $fields)) : ?>
-      <div class="commentions-form-email">
-        <label for="email"><?= $fields['email']['label'] ?></label>
-        <input type="email" id="email" name="email" <?= $fields['email']['required'] ? 'required' : '' ?>>
-      </div>
-      <?php endif; ?>
-
-      <div class="commentions-form-honeypot">
-        <label for="website"><?= t('commentions.snippet.form.honeypot') ?></label>
-        <input type="url" id="website" name="website" tabindex="-1">
-      </div>
-
-      <?php if (array_key_exists('website', $fields)) : ?>
-      <div class="commentions-form-website">
-        <label for="realwebsite"><?= $fields['website']['label'] ?></label>
-        <input type="url" id="realwebsite" name="realwebsite" <?= $fields['website']['required'] ? 'required' : '' ?>>
-      </div>
-      <?php endif; ?>
-
-      <div class="commentions-form-message">
-        <label for="message"><?= $fields['message']['label'] ?></label>
-        <textarea id="message" name="message" rows="8" required></textarea>
-        <?php commentions('help') ?>
-      </div>
-
-      <?php /* "commentions" value enables identifying commentions submissions in route:before hook + creation timestamp is used for spam protection */ ?>
-      <input type="hidden" name="commentions" value="<?php e(!$page->isCacheable(), time(), 0) ?>">
-
+    <form
+      action="<?= $page->url() ?><?= !empty($attrs['jump']) ? '#' . $attrs['jump'] : '' ?>"
+      method="post"
+      <?= $attrs['novalidate'] === true ? 'novalidate' : ''?>
+    >
+      <?php snippet('commentions/form-fields',  ['fields' => $fields]); ?>
       <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
-
     </form>
 
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-comments'])) : ?>
+    </details>
+    <?php endif ?>
+
     <?php endif; ?>
+
 
     <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'webmentions')) : ?>
 
-    <?php if (option('sgkirby.commentions.expand')) : ?>
-
-    <h3 class="expander" id="commentions-form-webmention">
-      <button aria-expanded="false">
-        <svg aria-hidden="true" focusable="false" width="16px" viewBox="0 0 10 10"><rect class="vert" height="8" width="2" y="1" x="4"/><rect height="2" width="8" y="4" x="1"/></svg>
-        <span><?= t('commentions.snippet.form.ctawebmention') ?></span>
-      </button>
-    </h3>
-
-    <?php else : ?>
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-webmentions'])) : ?>
+    <details <?= (!empty($attrs['open']) || !empty($attrs['open-webmentions'])) ? ' open' : '' ?>>
+    <summary>
+    <?php endif ?>
 
     <h3 id="commentions-form-webmention"><?= t('commentions.snippet.form.ctawebmention') ?></h3>
 
-    <?php endif; ?>
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-webmentions'])) : ?>
+    </summary>
+    <?php endif ?>
 
-    <form action="<?= kirby()->urls()->base() . '/' . option('sgkirby.commentions.endpoint') ?>" method="post" <?= option('sgkirby.commentions.expand') ? 'class="expandertarget"' : '' ?>>
+    <form action="<?= kirby()->urls()->base() . '/' . option('sgkirby.commentions.endpoint') ?>" method="post">
 
       <div class="commentions-form-source">
         <label for="source"><?= t('commentions.snippet.form.responseurl') ?></label>
@@ -92,6 +57,11 @@
 
     </form>
 
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-webmentions'])) : ?>
+    </details>
+    <?php endif ?>
+
     <?php endif; ?>
+
 
   </div>

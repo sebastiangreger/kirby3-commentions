@@ -2,9 +2,9 @@
 
 use sgkirby\Commentions\Frontend;
 
-function commentions($template = null)
+function commentions($template = null, $attrs = null)
 {
-    Frontend::render($template);
+    Frontend::render($template, $attrs);
 }
 
 // DEPRECATED as of 1.0.0: separate helpers replaced with commentions() helper + template variable

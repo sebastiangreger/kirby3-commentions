@@ -62,7 +62,7 @@ class Commention extends StructureObject
      */
     public function isAuthenticated(): bool
     {
-        return $this->authenticated()->toBool();
+        return $this->authenticated()->toBool() || strlen($this->authenticated()) == 8;
     }
 
     /**

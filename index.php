@@ -57,22 +57,11 @@ Kirby::plugin('sgkirby/commentions', [
         'spamtimemin'               => 5,
         'spamtimemax'               => 86400,
         'avatarurls'                => false,
-        'hideforms'                 => false,
-        'expand'                    => false,
         'allowlinks'                => true,
         'autolinks'                 => true,
         'commentfields'             => ['name'],
         'webmentionfields'          => ['text', 'name', 'website'],
-        'grouped'                   => [
-            'read'            => 'Read by',
-            'like'            => 'Likes',
-            'repost'          => 'Reposts',
-            'bookmark'        => 'Bookmarks',
-            'rsvp:yes'        => 'RSVP: yes',
-            'rsvp:maybe'      => 'RSVP: maybe',
-            'rsvp:interested' => 'RSVP: interested',
-            'rsvp:no'         => 'RSVP: no',
-        ],
+        'storeuserid'               => false,
     ],
 
     'api' => require __DIR__ . '/config/api.php',
@@ -91,15 +80,16 @@ Kirby::plugin('sgkirby/commentions', [
     'routes' => require __DIR__ . '/config/routes.php',
 
     'snippets' => [
-        'commentions/list'     => __DIR__ . '/snippets/list.php',
-        'commentions/form'     => __DIR__ . '/snippets/form.php',
-        'commentions/help'     => __DIR__ . '/snippets/help.php',
-        'commentions/feedback' => __DIR__ . '/snippets/feedback.php',
+        'commentions/list'          => __DIR__ . '/snippets/list.php',
+        'commentions/form'          => __DIR__ . '/snippets/form.php',
+        'commentions/form-fields'   => __DIR__ . '/snippets/form-fields.php',
+        'commentions/help'          => __DIR__ . '/snippets/help.php',
+        'commentions/feedback'      => __DIR__ . '/snippets/feedback.php',
         /* DEPRECATED: keeping old snippet names below for compatibility while on 1.x */
-        'commentions-list'     => __DIR__ . '/snippets/list.php',
-        'commentions-form'     => __DIR__ . '/snippets/form.php',
-        'commentions-help'     => __DIR__ . '/snippets/help.php',
-        'commentions-feedback' => __DIR__ . '/snippets/feedback.php',
+        'commentions-list'          => __DIR__ . '/snippets/list.php',
+        'commentions-form'          => __DIR__ . '/snippets/form.php',
+        'commentions-help'          => __DIR__ . '/snippets/help.php',
+        'commentions-feedback'      => __DIR__ . '/snippets/feedback.php',
     ],
 
     'pageMethods' => [

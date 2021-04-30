@@ -157,8 +157,8 @@ Alternatively, you can add the form feedback snippet (error or success message),
 ```
 
 * The helper [`commentions('feedback')`](#commentionsfeedback) renders the user feedback UI (error/success message after a user submits the comment form; this might be beneficial to include "above the fold" on your page).
-* To render the comment form, include [`commentions('form')`](#commentionsform) in your template.
-* Finally, [`commentions('list')`](#commentionslist) renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use [`commentions('grouped')`](#commentionsgrouped) instead (check options further below for additional control).
+* To render the comment form, include [`commentions('form')`](#commentionsform) in your template; additional configuration options are described [below](#commentionsform).
+* Finally, [`commentions('list')`](#commentionslist) renders a list of comments. By default, this presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, add a `grouped` attribute as described [below](#commentionslist).
 
 (If your are using the Starterkit, place the feedback helper just before the opening `<article>` tag, and the form and list helpers just after the closing `</article>` tag in `site/templates/note.php` for best results.)
 
@@ -228,7 +228,7 @@ The frontend helper `commentions()` is a PHP function that can be called from wi
 
 ### commentions()
 
-`<?php commentions() ?>` with no arguments is a shorthand for displaying three helpers (described below) in the following order:
+`<?php commentions() ?>` with no arguments (or `<?php commentions('all') ?>` when using additional attributes) is a shorthand for displaying three helpers (described below) in the following order:
 
 ```php
 <?php
@@ -238,6 +238,8 @@ The frontend helper `commentions()` is a PHP function that can be called from wi
 ?>
 ```
 
+By adding an optional attribute array `$attrs` to the `commentions()` helper, the rendering and behaviour of the frontend code can be adjusted. The available attributes are listed for each snippet below.
+
 ### commentions('feedback')
 
 Renders the user feedback UI (error/success message after a user submits the comment form; beneficial to include "above the fold" on your page).
@@ -245,6 +247,19 @@ Renders the user feedback UI (error/success message after a user submits the com
 `<?php commentions('feedback') ?>`
 
 ![feedback](.github/feedback.png)
+
+By adding the optional attribute array `$attrs`, the rendering of the feedback element can be adjusted:
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| class | string | '' | Adds additional classes to the `.commentions-feedback` element |
+| id | string | '' | Adds an id attribute to the `.commentions-feedback` element |
+
+For example:
+
+```php
+<?= commentions('feedback', ['class' => 'md-5 medium wide', 'id' => 'formfeedback']) ?>
+```
 
 ### commentions('form')
 
@@ -254,7 +269,28 @@ Renders the comment form, based on the config settings, for direct use in the te
 
 ![form](.github/form.png)
 
-Using the [collapsible forms](#collapsible-forms-showhide) option, additional HTML can be rendered that allows to add JavaScript-based solutions to show/hide the comment forms.
+By adding the optional attribute array `$attrs`, the rendering and behaviour of the frontend forms can be adjusted:
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| collapse | bool | false | Wraps all forms into a `<detail>/<summary>` construct, to appear collapsed by default |
+| collapse-comments | bool | false | Like `collapse`, but only applies to the comment form |
+| collapse-webmentions | bool | false | Like `collapse`, but only applies to the comment form |
+| open  | bool | false | When using the `collapse` or `collapse-*` attribute, renders the `<detail>/<summary>` construct with the `open` attribute added |
+| open-comments | bool | false   | Like `open`, but only applies to the comment form |
+| open-webmentions | bool | false   | Like `open`, but only applies to the webmention form |
+| class | string | '' | Adds additional classes to the `.commentions-form` element |
+| id | string | '' | Adds an id attribute to the `.commentions-form` element |
+| jump | string | null | An element ID to be added as an anchor attribute to the form URL (to jump to a specific element after submission, e.g. after setting custom IDs for the feedback, form and list elements); by default this anchor is used on both error on success |
+| jump-error | string | null | Like `jump` but as target anchor on errors only |
+| jump-success | string | null | Like `jump` but as target anchor on success only |
+| keepvisible | bool | false | If `true`, the comment form remains visible after successful submission (by default it is not shown) |
+
+For example, to add the `<details>/<summary>` HTML construct, but display the webmention form opened by default:
+
+```php
+<?= commentions('all', ['collapse' => true, 'open-webmentions' => true]) ?>
+```
 
 ### commentions('list')
 
@@ -266,15 +302,38 @@ Renders a list of comments for display in the frontend.
 
 Markdown in comments is rendered into HTML, and all HTML in the body is sanitized to prevent cross-site scripting attacks; links are rendered as clickable HTML links and plain text URLs are translated into links. The [comment formatting](#comment-formatting) options provide control over this default behaviour.
 
-### commentions('grouped')
+By adding the optional attribute array `$attrs`, the rendering of the list can be adjusted:
 
-The option `'list'`, as described above, presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use `'grouped'` instead:
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| grouped | array | see below | see below |
+| class | string | '' | Adds additional classes to the `.commentions-list` element |
+| id | string | '' | Adds an id attribute to the `.commentions-list` element |
 
-`<?php commentions('grouped'); ?>`
+#### The 'grouped' attribute
+
+By default, the option `'list'` presents all comments and mentions in one list; to present certain reactions (e.g. bookmarks, likes, RSVPs) separately, use the `grouped` attribute in `$attrs`:
 
 ![grouped](.github/grouped.png)
 
-The behaviour of the grouping can be adjusted via the config variable [`sgkirby.commentions.grouped`] described further below.
+Adding the `grouped` attribute gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
+
+```php
+<?= commentions('list', ['grouped' =>
+  [
+    'read'            => 'Read by',
+    'like'            => 'Likes',
+    'repost'          => 'Reposts',
+    'bookmark'        => 'Bookmarks',
+    'rsvp:yes'        => 'RSVP: yes',
+    'rsvp:maybe'      => 'RSVP: maybe',
+    'rsvp:interested' => 'RSVP: interested',
+    'rsvp:no'         => 'RSVP: no',
+  ],
+])
+```
+
+_NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
 
 ### commentions('endpoints')
 
@@ -311,6 +370,7 @@ This universal panel section displays either
 | flip     | boolean | false   | Default presentation order (`false`) is latest first; `true` shows comments chronologically                                                                                                           |
 | headline | string  | –       | The headline for the section.                                                                                                                                                                         |
 | show     | string  | 'page'  | Defines what comments are shown; 'page' lists comments for current page, 'pending' lists all pending comments for the entire site (aka. the "Inbox"), and 'all' lists all comments of the entire site |
+| limit    | int     | 20      | The number of items shown in the list, before a pagination element is added at the bottom of the list |
 
 #### Default
 
@@ -326,7 +386,7 @@ sections:
 
 Three toggle switches at the bottom of the section provide control over page-specific settings (stored in each page's [`pagesettings.yml`](#page-settings) file):
 - open/close the page for incoming comments and/or webmentions (hides the comment form if using the [`commentions('form')`](#commentionsform) frontend helper and rejects any submissions of the respective type for this page)
-- hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) or [`commentions('grouped')`](#commentionsgrouped) helpers)
+- hide/show commentions on the website (when using the [`commentions('list')`](#commentionslist) helper)
 
 _NB. If one or both types of commentions are already disabled in `config.php` using the [limit by template](#activate-by-template) options, they cannot be controlled on a page level and appear greyed out._
 
@@ -375,7 +435,7 @@ The page method returns a [Structure-like object](https://getkirby.com/docs/refe
 When looping through the returned structure object, the comment data can be retrieved in various ways:
 
 ```
-foreach ($testpage->commentions('all') as $item) {
+foreach ($page->commentions('all') as $item) {
   print_r($item->content());
 }
 ```
@@ -389,6 +449,8 @@ For use in frontend templates, the method `$item->content()->nameFormatted($anon
 For use in frontend templates, the method `$item->content()->sourceFormatted($anonymous)` creates a nicely formatted title string for the item, such as "John Doe replied at example.com" in case of a reply webmention; if no name is available, it returns either "Anonymous" or whatever string is given as `$anonymous` (this method internally calls `nameFormatted()`).
 
 `$item->dateFormatted()` returns a nicely formatted string for the timestamp of the item.
+
+_N.B. the returned object contains all the data for a comment, including personal information; do not expose this API publicly, always filter its output before making it available to the outside_
 
 ### $page->addCommention()
 
@@ -616,12 +678,13 @@ The file `commentions.yml` contains the comment data for a page. To add/update e
 | uid           | required | required | Randomly generated unique ID, used internally for commands to update/delete comments. 10 alphanumeric characters (lower-case letters and numbers). | 1m6los473p                            |
 | text          | required | optional | The body of the comment; in case of webmentions, this is the content of the source page.                                                           | Lorem ipsum dolor sit amet.           |
 | source        |          | required | The URL where this page was mentioned, as submitted by the webmention request.                                                                     | https://example.com/a-webmention-post |
-| name          | optional | optional | The author's name (if entered in the comment form or availbale from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
+| name          | optional | optional | The author's name (if entered in the comment form or available from an h-card microformat in the webmention source's markup).                                                        | John Doe                             |
 | email         | optional |          | The author's e-mail address (if entered in the comment form).                                                                                      | example@example.com                   |
 | avatar        |          | optional | The URL of the author's avatar image, as submitted in the webmention source metadata.                                                              | https://example.com/portrait.jpg      |
 | website       | optional | optional | The author's website URL (entered in the comment form or from webmention metadata).                                                                | https://example.com                   |
 | language      | optional | optional | Only on multi-language sites: the two-letter language code of the page version this comment/webmention was submitted to.                           | en                                    |
-| authenticated | optional |          | This boolean value is set to true if the comment was submitted by a logged-in user                                                           | true                             |
+| authenticated | optional |          | If the comment was submitted by a logged-in user, this is either a boolean `true` or a string with the Kirby user ID (depending on the [`storinguserid` setting](#storing-id-of-authenticated-users)                                     | true                             |
+| custom        | optional | optional | An array of custom field values, if applicable (key = field name, value = field content)                                                           |                              |
 
 ### Queue
 
@@ -730,7 +793,7 @@ By default, only an optional name field and a textarea for the comment are shown
 To reduce the form fields to the `text` field only (not even providing the optional name field):
 
 ```php
-// empty array = no data beyond the required `text` field
+// empty array = no data beyond the always required `text` field
 'sgkirby.commentions.commentfields' => [],
 ```
 
@@ -754,6 +817,15 @@ To mark a field as required (submission fails unless it is filled in) add a bool
 ],
 ```
 
+To change the position of the compulsory text field (by default rendered after the fields from this array), the value `text` can be used to indicate its position; e.g. to put the message field before the name field:
+
+```php
+'sgkirby.commentions.commentfields' => [
+  'text',          // show obligatory text field first
+  'name',          // include name field
+],
+```
+
 For advanced customization, a callback function can be used to control the array of fields. The following example specifies a different set of fields for pages with template `event`:
 
 ```php
@@ -772,7 +844,7 @@ For advanced customization, a callback function can be used to control the array
 },
 ```
 
-### Webmention fields
+#### Webmention fields
 
 From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
 
@@ -800,15 +872,9 @@ As with the [comment fields option](#comment-fields) above, an anonymous callbac
 
 _NB. When writing a template to display webmentions along with avatar images, keep in mind that loading images from a remote server may have privacy implications as referrer data and potentially existing cookies may reveal sensitive information to a third party (GDPR requirements might apply as well); you may want to cache such images, yet have to consider copyright questions in that case._
 
-### Collapsible forms (show/hide)
+#### Storing ID of authenticated users
 
-If desired, the following setting triggers additional markup in the included form markup (when using the `commentions('form')` helper) that can be used to hide the forms by default, allowing for an accessible open/close functionality:
-
-```php
-'sgkirby.commentions.hideforms' => true,
-```
-
-_NB. This setting only triggers the inclusion of the required HTML markup. In order to create a working open/close toggle, additional JavaScript code is required in the frontend template (for example as described in https://inclusive-components.design/collapsible-sections/)._
+Commentions sets a flag for comments submitted by logged-in users. By default this is a boolean, since this is personal data with potential GDPR relevance. In order to store the Kirby user ID of the submitter instead, set `'sgkirby.commentions.storeuserid' => true`.
 
 ### Spam protection
 
@@ -832,25 +898,6 @@ When timeout protections are active, comments are rejected if submitted too soon
 ```
 
 _NB. These time settings do not have an effect if Kirby's built-in page cache is used._
-
-### Grouping reactions
-
-When comments are displayed using the `commentions('grouped')` helper, adding the following settings array gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
-
-```php
-'sgkirby.commentions.grouped', [
-  'read'            => 'Read by',
-  'like'            => 'Likes',
-  'repost'          => 'Reposts',
-  'bookmark'        => 'Bookmarks',
-  'rsvp:yes'        => 'RSVP: yes',
-  'rsvp:maybe'      => 'RSVP: maybe',
-  'rsvp:interested' => 'RSVP: interested',
-  'rsvp:no'         => 'RSVP: no',
-],
-```
-
-_NB. Sometimes webmentions of these types may contain a text body regardless. By grouping them like this, their content is not shown._
 
 ### Translations
 
