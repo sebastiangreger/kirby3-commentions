@@ -393,6 +393,18 @@ class Commentions
         // sanitize data array, except if string command (like 'delete') given
         if (is_array($data)) {
             $data = Commentions::sanitize($data, true);
+
+            // ensure that update to custom fields array does not erase existing custom fields
+            if (array_key_exists('custom', $before) && array_key_exists('custom', $data)) {
+                foreach ($before['custom'] as $key => $oldvalue) {
+                    if (!array_key_exists($key, $data['custom'])) {
+                        $data['custom'][$key] = $oldvalue;
+                    }
+                    elseif (empty($data['custom'][$key])) {
+                        unset($data['custom'][$key]);
+                    }
+                }
+            }
         }
 
         // also delete any pending webmention updates, if applicable
@@ -486,8 +498,14 @@ class Commentions
         }
 
         foreach ($data as $key => $value) {
+            // move custom fields into array
+            if(!in_array($key, ['name', 'email', 'website', 'realwebsite', 'text', 'commentions', 'honeypot', 'type', 'timestamp'])) {
+                $data['custom'][$key] = $data[$key];
+                unset($data[$key]);
+            }
+
             // remove fields that are not allowed
-            $allowlist = [ 'name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid', 'authenticated', 'custom' ];
+            $allowlist = ['name', 'email', 'website', 'text', 'timestamp', 'language', 'type', 'status', 'source', 'avatar', 'uid', 'authenticated', 'custom'];
             if (!in_array($key, $allowlist)) {
                 unset($data[ $key ]);
             }
@@ -506,6 +524,11 @@ class Commentions
                     unset($data[ $key ]);
                 }
             }
+        }
+
+        // remove empty custom fields array
+        if (array_key_exists('custom', $data) && sizeof($data['custom']) == 0) {
+            unset($data['custom']);
         }
 
         return $data;

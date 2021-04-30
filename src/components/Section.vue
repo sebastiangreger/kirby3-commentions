@@ -108,6 +108,7 @@ export default {
       settings: [],
       pageNumber: 0,
       limit: null,
+      customfields: [],
     }
   },
 
@@ -121,6 +122,7 @@ export default {
       this.pageid                  = response.pageId;
       this.show                    = response.show;
       this.limit                   = response.limit;
+      this.customfields            = response.customFields;
     });
   },
 
@@ -160,13 +162,13 @@ export default {
       this.viewSource = !this.viewSource;
     },
 
-    action(data, uid, pageid) {
+    action(data, uid, pageid, customfields = this.customfields) {
       if (data === 'delete') {
         this.$refs.remove.open(this.commentions.find(item => item.uid === uid));
         return;
       }
       if (data === 'edit') {
-        this.$refs.edit.open(this.commentions.find(item => item.uid === uid), pageid);
+        this.$refs.edit.open(this.commentions.find(item => item.uid === uid), pageid, customfields);
         return;
       }
 

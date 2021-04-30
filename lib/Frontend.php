@@ -252,10 +252,10 @@ class Frontend
             'status' => Commentions::defaultstatus('comment'),
         ];
 
-        // discover any custom fields submitted and store them in the custom fields array
+        // add custom fields submitted
         foreach($fieldsetup as $fieldname => $fieldvalue) {
-            if(!in_array($fieldname, ['name','email','website','realwebsite','text','commentions','honeypot'])) {
-                $data['custom'][$fieldname] = get($fieldname);
+            if(!in_array($fieldname, ['name', 'email', 'website', 'realwebsite', 'text', 'commentions', 'honeypot'])) {
+                $data[$fieldname] = get($fieldname);
             }
         }
 

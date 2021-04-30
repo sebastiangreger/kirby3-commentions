@@ -97,6 +97,19 @@ return [
             return $this->model()->id();
         },
 
+        'customFields' => function () {
+            // retrieve list of fields for this page minus the standard fields
+            $customfields = array_diff_key(Commentions::fields($this->model()), array_flip(['name','email','website','text','honeypot','commentions']));
+            // reduce to an array only containing id and type
+            foreach($customfields as $customfield) {
+                $return[] = [
+                    'id' => $customfield['id'],
+                    'type' => $customfield['type'],
+                ];
+            }
+            return $return;
+        },
+
         'commentions' => function (): array {
             // retrieve the show property
             switch ($this->show()) {
