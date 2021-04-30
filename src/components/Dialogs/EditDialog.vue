@@ -32,6 +32,7 @@ export default {
         type: null,
         text: null,
         source: null,
+        custom: null,
       }
     };
   },
@@ -92,6 +93,10 @@ export default {
           label: this.$t('commentions.section.edit.source'),
           type: "url",
         },
+        custom: {
+          label: this.$t('commentions.section.edit.custom'),
+          type: "structure",
+        },
       };
     }
   },
@@ -109,6 +114,7 @@ export default {
         type: item.type,
         text: item.text,
         source: item.source,
+        custom: item.custom,
       };
       this.$refs.dialog.open();
       this.input(item);
@@ -139,6 +145,7 @@ export default {
         type: this.commention.type,
         text: this.commention.text,
         source: this.commention.source,
+        custom: this.commention.custom,
       };
       this.$refs.dialog.close();
       this.$emit("submit", [this.pageid, this.commention.uid, data]);
