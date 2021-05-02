@@ -65,48 +65,50 @@ class Commentions
     {
         // retrieve setup from config
         $fieldsetup = option('sgkirby.commentions.' . $type . 'fields');
+
+        // the config variable might contain a callable function for advanced setup
         if (is_callable($fieldsetup)) {
             $fieldsetup = $fieldsetup($page);
         }
 
-        // if the setup is not a valid array, fall back to the default
+        // if the setup is not a valid array, fall back to empty array
         if (!is_array($fieldsetup)) {
-            $fieldsetup = ['name'];
+            $fieldsetup = [];
         }
 
-        // fallback defaults for standard fields
-        $fielddefaults = [
-            'name' => [
-                'type'          => 'text',
-                'autocomplete'  => 'name',
-            ],
-            'email' => [
-                'type'          => 'email',
-                'autocomplete'  => 'email',
-                'validate'      => [
-                    'rules'         => ['email'],
-                    'message'       => 'Please enter a valid e-mail address',
-                ],
-            ],
-            'website' => [
-                'type'          => 'url',
-                'autocomplete'  => 'url',
-                'validate'      => [
-                    'rules'         => ['url'],
-                    'message'       => 'Please enter a valid URL',
-                ],
-            ],
-            'text' => [
-                'type' => 'textarea',
-                'required'  => true,
-                'validate'      => [
-                    'rules'         => ['required', 'min' => 2],
-                    'message'       => 'Please enter a meaningful message',
-                ],
-            ],
-        ];
-
         if ($type == 'comment') {
+            // fallback defaults for standard fields
+            $fielddefaults = [
+                'name' => [
+                    'type'          => 'text',
+                    'autocomplete'  => 'name',
+                ],
+                'email' => [
+                    'type'          => 'email',
+                    'autocomplete'  => 'email',
+                    'validate'      => [
+                        'rules'         => ['email'],
+                        'message'       => 'Please enter a valid e-mail address',
+                    ],
+                ],
+                'website' => [
+                    'type'          => 'url',
+                    'autocomplete'  => 'url',
+                    'validate'      => [
+                        'rules'         => ['url'],
+                        'message'       => 'Please enter a valid URL',
+                    ],
+                ],
+                'text' => [
+                    'type' => 'textarea',
+                    'required'  => true,
+                    'validate'      => [
+                        'rules'         => ['required', 'min' => 2],
+                        'message'       => 'Please enter a meaningful message',
+                    ],
+                ],
+            ];
+
             // loop through all fields
             foreach ($fieldsetup as $field => $dfn) {
                 // if only an array of strings is given, the value is the key
