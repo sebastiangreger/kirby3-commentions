@@ -52,7 +52,7 @@ class Frontend
             // display comment form
             case 'form':
                 if (!get('thx') || (isset($attrs['keepvisible']) && $attrs['keepvisible'] === true)) {
-                    $fields = Commentions::fields(page());
+                    $fields = Fields::configuration(page());
 
                     // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
                     if (array_key_exists('text', $fields) && F::exists(kirby()->root('snippets') . DS . 'commentions-form.php')) {
@@ -182,9 +182,18 @@ class Frontend
                 break;
 
             default:
-                commentions('feedback');
-                commentions('form');
-                commentions('list');
+                // id and class attrs cannot be set with the shorthand helper
+                if (array_key_exists('class', $attrs)) {
+                    unset($attrs['class']);
+                }
+                if (array_key_exists('id', $attrs)) {
+                    unset($attrs['id']);
+                }
+
+                // call each helper for this shorthand separately
+                commentions('feedback', $attrs);
+                commentions('form', $attrs);
+                commentions('list', $attrs);
         }
     }
 
@@ -208,7 +217,7 @@ class Frontend
         }
 
         // retrieve the settings array of allowed fields
-        $fieldsetup = Commentions::fields($page);
+        $fieldsetup = Fields::configuration($page);
 
         // merge validation arrays for use with invalid() helper
         foreach($fieldsetup as $field => $dfn) {

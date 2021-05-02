@@ -1,3 +1,17 @@
+<?php
+/*
+ * This snippet displays the list of comments and webmentions, called by the `<?= commentions() ?>`
+ * or `<?= commentions('list') ?>` helpers.
+ *
+ * To modify, copy this file into the folder `site/snippets/commentions` of your Kirby site.
+ * When updating the Commentions plugin to a new version, you may have to implement small changes to your copy
+ * to enable new or modified functionalities.
+ *
+ * You can also access a raw array of comments and webmentions using the `$page->commentions()` page method
+ * and roll your own custom snippet or template instead.
+ */
+?>
+
 <div class="commentions-list <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
   <?php foreach ($reactions as $type => $group) : ?>

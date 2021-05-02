@@ -99,7 +99,7 @@ return [
 
         'customFields' => function () {
             // retrieve list of fields for this page minus the standard fields
-            $customfields = array_diff_key(Commentions::fields($this->model()), array_flip(['name','email','website','text','honeypot','commentions']));
+            $customfields = array_diff_key(Fields::configuration($this->model()), array_flip(['name','email','website','text','honeypot','commentions']));
             // reduce to an array only containing id and type
             foreach($customfields as $customfield) {
                 $return[] = [
