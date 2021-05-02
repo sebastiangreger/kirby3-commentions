@@ -23,6 +23,7 @@ if (F::exists(__DIR__ . '/vendor/autoload.php') === false) {
         'sgkirby\\commentions\\Commentions' => 'lib/Commentions.php',
         'sgkirby\\commentions\\Cron' => 'lib/Cron.php',
         'sgkirby\\commentions\\Endpoint' => 'lib/Endpoint.php',
+        'sgkirby\\commentions\\Fields' => 'lib/Fields.php',
         'sgkirby\\commentions\\Frontend' => 'lib/Frontend.php',
         'sgkirby\\commentions\\Migration' => 'lib/Migration.php',
         'sgkirby\\commentions\\Formatter' => 'lib/Formatter.php',

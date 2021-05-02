@@ -292,7 +292,7 @@ class Cron
 
             // remove any data not present in the data retention setup array
             foreach (['name', 'website', 'avatar', 'text'] as $field) {
-                if (!array_key_exists($field, Commentions::fields($page, 'webmention'))) {
+                if (!array_key_exists($field, Fields::configuration($page, 'webmention'))) {
                     unset($finaldata[$field]);
                 }
             }
