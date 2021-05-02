@@ -145,7 +145,7 @@ If you would like to use basic CSS styles for these prefabricated HTML snippets 
 
 #### Option B. Add three template parts where you see them fit best
 
-Alternatively, you can add the form feedback snippet (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list:
+Alternatively, you can add the form feedback snippet (error or success message), the comment form and the list of comments separately, by adding the following helpers to the according templates in `site/templates` - this for example allows to integrate the feedback element at the top of a template, and changing the default order of form vs. comment list. It also gives access to setting more specific attributes for each of the snippets, most importantly the custom `id` and/or `class` attributes.
 
 ```php
 <?php
@@ -166,9 +166,15 @@ As with option A, you may want to include [`commentions('css')`](#commentionscss
 
 #### Option C. Create your own frontend presentation
 
-Since above snippets are mainly provided to enable a quick start, you may of course design your own frontend logic entirely. If you'd like to build on the templates, you can find them in the `site/plugins/kirby3-commentions/snippets` folder. To override the built-in snippets, place your modified version in a folder `site/snippets/commentions`, e.g. `site/snippets/commentions/form.php` to replace the original form snippet.
+Since above snippets are mainly provided to enable a quick start, you may of course design your own frontend logic entirely.
 
-While it may be advisable to use the `commentions('form')` helper, as its markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting the feedback box and your list of comments and webmentions.
+##### ...by building on top of the default snippets
+
+If you'd like to build on the templates, you can find them in the `site/plugins/kirby3-commentions/snippets` folder. To override the built-in snippets, place your modified version in a folder `site/snippets/commentions`, e.g. `site/snippets/commentions/form.php` to replace the original form snippet.
+
+While it may be advisable to use the `commentions('form')` helper (and it is strongly recommended not to override the default `field.php` snippet due to its close integration with the backend logic), as its markup changes based on the plugin settings (and possibly in future versions, if new features are added), you may want to have more control over presenting the feedback box and your list of comments and webmentions.
+
+##### ...by rendering the raw data in a custom template
 
 The page method [`$page->commentions()`](#page-commentions) on a page object returns an object with all approved comments for that page.
 
@@ -238,7 +244,7 @@ The frontend helper `commentions()` is a PHP function that can be called from wi
 ?>
 ```
 
-By adding an optional attribute array `$attrs` to the `commentions()` helper, the rendering and behaviour of the frontend code can be adjusted. The available attributes are listed for each snippet below.
+By adding an optional attribute array `$attrs` to the `commentions()` helper, the rendering and behaviour of the frontend code can be adjusted. The available attributes are listed for each snippet below, but the `class` and `id` attributes are not available when using this shorthand helper (use the three separate helpers instead, if you want to customize these).
 
 ### commentions('feedback')
 

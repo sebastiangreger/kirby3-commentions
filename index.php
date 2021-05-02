@@ -19,20 +19,20 @@ if (F::exists(__DIR__ . '/vendor/autoload.php') === false) {
     // Fallback to manual autoloading via class map, if composer
     // autoloader is not present
     load([
-        'sgkirby\\commentions\\Commention' => 'lib/Commention.php',
-        'sgkirby\\commentions\\Commentions' => 'lib/Commentions.php',
-        'sgkirby\\commentions\\Cron' => 'lib/Cron.php',
-        'sgkirby\\commentions\\Endpoint' => 'lib/Endpoint.php',
-        'sgkirby\\commentions\\Fields' => 'lib/Fields.php',
-        'sgkirby\\commentions\\Frontend' => 'lib/Frontend.php',
-        'sgkirby\\commentions\\Migration' => 'lib/Migration.php',
-        'sgkirby\\commentions\\Formatter' => 'lib/Formatter.php',
-        'sgkirby\\commentions\\Formatter\\CacheAdapter' => 'lib/Formatter/CacheAdapter.php',
-        'sgkirby\\commentions\\Formatter\\CodeClassAttrDef' => 'lib/Formatter/CodeClassAttrDef.php',
-        'sgkirby\\commentions\\Formatter\\LinkTransformer' => 'lib/Formatter/LinkTransformer.php',
+        'sgkirby\\commentions\\Commention'                          => 'lib/Commention.php',
+        'sgkirby\\commentions\\Commentions'                         => 'lib/Commentions.php',
+        'sgkirby\\commentions\\Cron'                                => 'lib/Cron.php',
+        'sgkirby\\commentions\\Endpoint'                            => 'lib/Endpoint.php',
+        'sgkirby\\commentions\\Fields'                              => 'lib/Fields.php',
+        'sgkirby\\commentions\\Frontend'                            => 'lib/Frontend.php',
+        'sgkirby\\commentions\\Migration'                           => 'lib/Migration.php',
+        'sgkirby\\commentions\\Formatter'                           => 'lib/Formatter.php',
+        'sgkirby\\commentions\\Formatter\\CacheAdapter'             => 'lib/Formatter/CacheAdapter.php',
+        'sgkirby\\commentions\\Formatter\\CodeClassAttrDef'         => 'lib/Formatter/CodeClassAttrDef.php',
+        'sgkirby\\commentions\\Formatter\\LinkTransformer'          => 'lib/Formatter/LinkTransformer.php',
         'sgkirby\\commentions\\Formatter\\RemoveEmptyLinksInjector' => 'lib/Formatter/RemoveEmptyLinksInjector.php',
-        'sgkirby\\commentions\\Storage' => 'lib/Storage.php',
-        'sgkirby\\commentions\\Structure' => 'lib/Structure.php',
+        'sgkirby\\commentions\\Storage'                             => 'lib/Storage.php',
+        'sgkirby\\commentions\\Structure'                           => 'lib/Structure.php',
     ], __DIR__);
 }
 
@@ -83,7 +83,7 @@ Kirby::plugin('sgkirby/commentions', [
     'snippets' => [
         'commentions/list'          => __DIR__ . '/snippets/list.php',
         'commentions/form'          => __DIR__ . '/snippets/form.php',
-        'commentions/form-fields'   => __DIR__ . '/snippets/form-fields.php',
+        'commentions/field'         => __DIR__ . '/snippets/field.php',
         'commentions/help'          => __DIR__ . '/snippets/help.php',
         'commentions/feedback'      => __DIR__ . '/snippets/feedback.php',
         /* DEPRECATED: keeping old snippet names below for compatibility while on 1.x */

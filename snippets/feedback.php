@@ -1,3 +1,13 @@
+<?php
+/*
+ * This snippet displays success and error messages for the comment form.
+ *
+ * To modify, copy this file into the folder `site/snippets/commentions` of your Kirby site.
+ * When updating the Commentions plugin to a new version, you may have to implement small changes to your copy
+ * to enable new or modified functionalities.
+ */
+?>
+
 <div class="commentions-feedback <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
   <?php if (isset($alert)): ?>

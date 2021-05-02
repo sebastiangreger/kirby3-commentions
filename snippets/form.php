@@ -1,3 +1,12 @@
+<?php
+/*
+ * This snippet displays the comment form, called by the `<?= commentions() ?>` or `<?= commentions('form') ?>` helper.
+ *
+ * To modify, copy this file into the folder `site/snippets/commentions` of your Kirby site.
+ * When updating the Commentions plugin to a new version, you may have to implement small changes to your copy
+ * to enable new or modified functionalities.
+ */
+?>
 
   <div class="commentions-form <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
@@ -19,7 +28,11 @@
       method="post"
       <?= $attrs['novalidate'] === true ? 'novalidate' : ''?>
     >
-      <?php snippet('commentions/form-fields',  ['fields' => $fields]); ?>
+
+      <?php foreach($fields as $field):
+        snippet('commentions/field', $field);
+      endforeach; ?>
+
       <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
     </form>
 

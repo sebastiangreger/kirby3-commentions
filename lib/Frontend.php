@@ -182,9 +182,18 @@ class Frontend
                 break;
 
             default:
-                commentions('feedback');
-                commentions('form');
-                commentions('list');
+                // id and class attrs cannot be set with the shorthand helper
+                if (array_key_exists('class', $attrs)) {
+                    unset($attrs['class']);
+                }
+                if (array_key_exists('id', $attrs)) {
+                    unset($attrs['id']);
+                }
+
+                // call each helper for this shorthand separately
+                commentions('feedback', $attrs);
+                commentions('form', $attrs);
+                commentions('list', $attrs);
         }
     }
 
