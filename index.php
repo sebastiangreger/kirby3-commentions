@@ -61,7 +61,7 @@ Kirby::plugin('sgkirby/commentions', [
         'allowlinks'                => true,
         'autolinks'                 => true,
         'commentfields'             => ['name'],
-        'webmentionfields'          => ['text', 'name', 'website'],
+        'webmentionfields'          => [],
         'storeuserid'               => false,
     ],
 

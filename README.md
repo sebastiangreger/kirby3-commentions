@@ -226,6 +226,8 @@ Second, set up a cronjob to call the URL `https://<SITE-URL>/commentions-process
 
 Every time this URL is called, the queue of incoming webmentions is processed; valid webmentions are moved to the comment inbox (or directly approved, if set in the [default status](#default-status) option), while invalid ones are silently marked as failed or deleted (depending on the [failed webmentions](#failed-webmentions) option).
 
+_N.B. The default setting of the plugin only stores the source URL of incoming webmentions. To also keep the name and other meta data, you need to adjust the [`sgkirby.commentions.webmentionfields` config setting](#webmention-fields)._
+
 > If you have reached this point, your setup should be complete. **Everything beyond here represents the detailed documentation of the features and settings this plugin provides.**
 
 ## Frontend helper
@@ -854,16 +856,25 @@ For advanced customization, a callback function can be used to control the array
 
 From a technical perspective, the only strictly necessary data point of a webmention is the URL of the page that linked back to a page (the `source` field); in addition, the webmention type is stored as meta data in the commention `type` field.
 
-By default, the plugin further stores the HTML payload (field `text`, the content of the source page), as well as name and homepage URL of the author (fields `name` and `website`, as rendered from HTML microformat data if present). The URL of an avatar image (field `avatar`) is not stored by default, as the built-in template does not make use of that.
-
-For a data-minimalist webmention setup, all optional fields beyond the `source` field could be dropped by providing an empty array as follows:
+For the data-minimalist default webmention setup of the plugin, all optional fields beyond the `source` field are dropped - this equals setting the `webmentionfields` config array as empty:
 
 ```php
-// empty array = no data beyond the required `source` field
+// empty array = no data beyond the required `source` field (this is the default)
 'sgkirby.commentions.webmentionfields' => [],
 ```
 
-On the other hand, to store all available fields, the array should feature all four field names:
+A common setting (and the default in Commentions before version 2.0) is to store the HTML payload (field `text`, the content of the source page), as well as name and homepage URL of the author (fields `name` and `website`, as rendered from HTML microformat data if present).
+
+```php
+// a common setup that keeps name and profile URL of the author as well as the source page's HTML
+'sgkirby.commentions.webmentionfields' => [
+  'text',     // store source HTML
+  'name',     // store author's realname
+  'website',  // store author's homepage URL
+],
+```
+
+To store all fields available from the rendering engine, including the URL of an avatar image (field `avatar`) that the built-in template does not make use of and hence requires [customizing the snippet](#option-c-create-your-own-frontend-presentation), the array could feature all four field names:
 
 ```php
 'sgkirby.commentions.webmentionfields' => [
