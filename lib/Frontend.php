@@ -271,8 +271,10 @@ class Frontend
         // run a spam check
         $spam = Commentions::spamcheck($data, kirby()->request()->get());
         if ($spam === true) {
-            go($page->url());
-            exit;
+            Commentions::$feedback = [
+                'alert'     => ['Something went wrong with your submission; please check your input.'],
+            ];
+            return false;
         }
 
         // save comment to the according txt file
