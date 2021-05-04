@@ -211,7 +211,7 @@ class Frontend
         // bounce submissions to pages not allowlisted for comments
         if(!Commentions::accepted($page, 'comments')) {
             Commentions::$feedback = [
-                'alert'     => ['This page does not accept comments.'],
+                'alert'     => [t('commentions.feedback.comment.closed')],
             ];
             return false;
         }
@@ -242,7 +242,7 @@ class Frontend
         // run validation and return error array if validation fails
         if (isset($rules) && $invalid = invalid($formdata, $rules, $messages)) {
             Commentions::$feedback = [
-                'alert'     => ['There are errors in your form'],
+                'alert'     => [t('commentions.feedback.comment.fielderrors')],
                 'invalid'   => $invalid,
             ];
             return false;
@@ -272,7 +272,7 @@ class Frontend
         $spam = Commentions::spamcheck($data, kirby()->request()->get());
         if ($spam === true) {
             Commentions::$feedback = [
-                'alert'     => ['Something went wrong with your submission; please check your input.'],
+                'alert'     => [t('commentions.feedback.comment.spam')],
             ];
             return false;
         }

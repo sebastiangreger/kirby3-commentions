@@ -19,10 +19,13 @@ $translations = [
     'snippet.form.name.optional'       => 'Name (optional)',
     'snippet.form.email'               => 'Email',
     'snippet.form.email.optional'      => 'Email (optional; not displayed)',
+    'snippet.form.email.error'         => 'Email address does not appear valid',
     'snippet.form.honeypot'            => 'Please leave this field empty!',
     'snippet.form.website'             => 'Website (public if provided)',
     'snippet.form.website.optional'    => 'Website (optional; public if provided)',
+    'snippet.form.website.error'       => 'URL does not appear valid',
     'snippet.form.comment'             => 'Comment',
+    'snippet.form.comment.error'       => 'Meaningful message required',
     'snippet.form.required'            => 'required',
     'snippet.form.help.noformatting'   => 'HTML-Formatierungen werden entfernt.',
     'snippet.form.help.title'          => 'Available formatting commands',
@@ -46,6 +49,7 @@ $translations = [
         '<dd>Full URLs are automatically converted into links.</dd>',
     'snippet.form.submitcomment'       => 'Submit',
     'snippet.form.submitwebmention'    => 'Submit webmention',
+    'snippet.form.error'               => 'Error',
 
     // - list
     'snippet.list.comments'            => 'Comments',
@@ -64,6 +68,9 @@ $translations = [
 
     'feedback.comment.queued'           => 'Thank you! Please be patient, your comment has to be approved by the editor.',
     'feedback.comment.thankyou'         => 'Thank you for your comment!',
+    'feedback.comment.fielderrors'      => 'There are errors in your form; please check the highlighted fields!',
+    'feedback.comment.closed'           => 'This page does not accept comments.',
+    'feedback.comment.spam'             => 'Your submission could not be processed; please check your input.',
     'feedback.webmention.queued'        => 'Thank you, your webmention has been queued for processing. Please be patient, your comment has to be approved by the editor.',
 
 

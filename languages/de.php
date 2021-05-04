@@ -19,10 +19,13 @@ $translations = [
     'snippet.form.name.optional'        => 'Name (optional)',
     'snippet.form.email'                => 'E-Mail (nicht veröffentlicht)',
     'snippet.form.email.optional'       => 'E-Mail (optional; nicht veröffentlicht)',
+    'snippet.form.email.error'          => 'E-Mail-Adresse ungültig',
     'snippet.form.honeypot'             => 'Bitte lasse dieses Feld leer!',
     'snippet.form.website'              => 'Website (öffentlich verlinkt)',
     'snippet.form.website.optional'     => 'Website (optional; öffentlich verlinkt)',
+    'snippet.form.website.error'        => 'Keine gültige URL',
     'snippet.form.comment'              => 'Kommentar',
+    'snippet.form.comment.error'        => 'Kommentar erforderlich',
     'snippet.form.required'             => 'erforderlich',
     'snippet.form.help.noformatting'    => 'All HTML tags are removed.',
     'snippet.form.help.title'           => 'Verfügbare Formatierungen',
@@ -46,6 +49,7 @@ $translations = [
         '<dd>Vollständige URLs werden automatisch in Links umgewandelt.</dd>',
     'snippet.form.submitcomment'       => 'Absenden',
     'snippet.form.submitwebmention'    => 'Webmention senden',
+    'snippet.form.error'               => 'Fehler',
 
     // - list
     'snippet.list.comments'             => 'Kommentare',
@@ -64,6 +68,9 @@ $translations = [
 
     'feedback.comment.queued'           => 'Vielen Dank! Bitte etwas Geduld, Kommentare werden manuell freigeschaltet.',
     'feedback.comment.thankyou'         => 'Vielen Dank für deinen Kommentar!',
+    'feedback.comment.fielderrors'      => 'Eingabefehler im Formular; bitte überprüfe die markierten Felder!',
+    'feedback.comment.closed'           => 'Für diese Seite kann kein Kommentar abgegeben werden.',
+    'feedback.comment.spam'             => 'Das Formular konnte nicht verarbeitet werden; bitte Eingaben überprüfen!',
     'feedback.webmention.queued'        => 'Vielen Dank, deine Webmention wurde registriert! Bitte etwas Geduld, Kommentare werden manuell freigeschaltet.',
 
 

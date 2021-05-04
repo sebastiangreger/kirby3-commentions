@@ -7,7 +7,7 @@
 	padding:1em;
 }
 .commentions-feedback p.alert {
-	color:#ff0000;
+	color:#cc0000;
 	background-color:#FFD8D8;
 }
 .commentions-feedback p.success {
@@ -41,7 +41,7 @@
 	width:100%;
 }
 .commentions-form p.alert {
-	color:#ff0000;
+	color:#cc0000;
 }
 .commentions-form input,
 .commentions-form textarea {
@@ -50,6 +50,10 @@
 	padding:.5em;
 	font-size:100%;
 	font-family:inherit;
+}
+.commentions-form input[aria-describedby],
+.commentions-form textarea[aria-describedby] {
+	border-color:#cc0000;
 }
 .commentions-form textarea {
   resize: vertical;

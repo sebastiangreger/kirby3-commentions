@@ -11,18 +11,22 @@
         <?php if ($type != 'hidden'): ?>
           <div class="commentions-form-<?= $id ?>">
             <label for="<?= $id ?>"><?= $label ?></label>
-            <p class="alert" id="commentions-form-<?= $id ?>-errors"><?= (isset($error)) ? $error : '' ?></p>
+            <?php if (isset($error)) : ?>
+            <p class="alert" id="commentions-form-<?= $id ?>-errors"><?= t('commentions.snippet.form.error') ?>: <?= $error ?></p>
+            <?php endif ?>
         <?php endif; ?>
 
           <?php if ($type === 'textarea'): ?>
             <textarea
               id="<?= $id ?>"
               name="<?= $id ?>"
-              aria-describedby="commentions-form-<?= $id ?>-errors"
               rows="8"
               <?php foreach(['required', 'placeholder','autofocus'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>
+              <?php if (isset($error)) : ?>
+              aria-describedby="commentions-form-<?= $id ?>-errors"
+              <?php endif ?>
             ><?= $value ?? '' ?></textarea>
             <?php if($id === 'text') commentions('help'); ?>
 
@@ -31,12 +35,12 @@
               type="<?= $type ?>"
               id="<?= $id ?>"
               name="<?= $id ?>"
-              <?php if($type != 'hidden'): ?>
-                aria-describedby="commentions-form-<?= $id ?>-errors"
-              <?php endif ?>
               <?php foreach(['required', 'value', 'autocomplete', 'placeholder','autofocus'] as $attribute): ?>
                 <?= (!empty($data[$attribute]) ? ' ' . $attribute . '="' . $data[$attribute] . '"' : '') ?>
               <?php endforeach ?>
+              <?php if(isset($error) && $type != 'hidden'): ?>
+                aria-describedby="commentions-form-<?= $id ?>-errors"
+              <?php endif ?>
             >
 
           <?php endif; ?>

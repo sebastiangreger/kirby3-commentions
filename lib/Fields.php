@@ -38,7 +38,7 @@ class Fields
                     'autocomplete'  => 'email',
                     'validate'      => [
                         'rules'         => ['email'],
-                        'message'       => 'Please enter a valid e-mail address',
+                        'message'       => t('commentions.snippet.form.email.error'),
                     ],
                 ],
                 'website' => [
@@ -46,7 +46,7 @@ class Fields
                     'autocomplete'  => 'url',
                     'validate'      => [
                         'rules'         => ['url'],
-                        'message'       => 'Please enter a valid URL',
+                        'message'       => t('commentions.snippet.form.website.error'),
                     ],
                 ],
                 'text' => [
@@ -54,7 +54,7 @@ class Fields
                     'required'  => true,
                     'validate'      => [
                         'rules'         => ['required', 'min' => 2],
-                        'message'       => 'Please enter a meaningful message',
+                        'message'       => t('commentions.snippet.form.comment.error'),
                     ],
                 ],
             ];
