@@ -183,10 +183,10 @@ class Frontend
 
             default:
                 // id and class attrs cannot be set with the shorthand helper
-                if (array_key_exists('class', $attrs)) {
+                if (array_key_exists('class', $attrs ?? [])) {
                     unset($attrs['class']);
                 }
-                if (array_key_exists('id', $attrs)) {
+                if (array_key_exists('id', $attrs ?? [])) {
                     unset($attrs['id']);
                 }
 
