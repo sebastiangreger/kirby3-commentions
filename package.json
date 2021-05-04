@@ -1,6 +1,6 @@
 {
   "name": "kirby3-commentions",
-  "version": "1.0.4",
+  "version": "2.0-beta.1",
   "description": "A versatile comment system and integrated Webmention endpoint for Kirby 3.",
   "repository": {
     "type": "git",
