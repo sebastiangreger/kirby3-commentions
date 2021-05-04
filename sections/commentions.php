@@ -101,6 +101,7 @@ return [
             // retrieve list of fields for this page minus the standard fields
             $customfields = array_diff_key(Fields::configuration($this->model()), array_flip(['name','email','website','text','honeypot','commentions']));
             // reduce to an array only containing id and type
+            $return = [];
             foreach($customfields as $customfield) {
                 $return[] = [
                     'id' => $customfield['id'],

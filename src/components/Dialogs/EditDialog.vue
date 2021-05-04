@@ -58,14 +58,14 @@ export default {
           label: this.$t('commentions.section.edit.avatar'),
           type: "url",
         },
-        /*
         timestamp: {
           label: this.$t('commentions.section.edit.timestamp'),
           type: "date",
           required: true,
-          time: {step: 1}
+          /* TODO: re-add this once Kirby core issue https://github.com/getkirby/kirby/issues/3266 is fixed
+          time: {step: 1},
+          */
         },
-        */
         type: {
           label: this.$t('commentions.section.edit.type'),
           type: "select",
