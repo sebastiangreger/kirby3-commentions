@@ -314,7 +314,7 @@ By adding the optional attribute array `$attrs`, the rendering of the list can b
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| grouped | array | see below | see below |
+| grouped | bool|array | false | Boolean `false` when no grouping is desired; otherwise `true` for default grouping, or array with customized grouping rules (see below) |
 | class | string | '' | Adds additional classes to the `.commentions-list` element |
 | id | string | '' | Adds an id attribute to the `.commentions-list` element |
 
@@ -325,6 +325,14 @@ By default, the option `'list'` presents all comments and mentions in one list; 
 ![grouped](.github/grouped.png)
 
 Adding the `grouped` attribute gives control over what reaction types are displayed as separate groups, in what order, and what title is used - remove any comment types to include them in the main comment list instead of displaying them as a separate group:
+
+To apply the default grouping, a boolean `true` is sufficient:
+
+```php
+<?= commentions('list', ['grouped' => true]) ?>
+```
+
+Otherwise, custom grouping rules can be defined by altering this default config:
 
 ```php
 <?= commentions('list', ['grouped' =>

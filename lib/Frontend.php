@@ -140,18 +140,22 @@ class Frontend
                     // restructure the data if grouped view
                     if (!empty($attrs['grouped'])) {
 
-                    // array of all groups to be pulled out from content list,
+                        // array of all groups to be pulled out from content list,
                         // in presentation order
-                        $groups = $attrs['grouped'] ?? [
-                            'read'            => 'Read by',
-                            'like'            => 'Likes',
-                            'repost'          => 'Reposts',
-                            'bookmark'        => 'Bookmarks',
-                            'rsvp:yes'        => 'RSVP: yes',
-                            'rsvp:maybe'      => 'RSVP: maybe',
-                            'rsvp:interested' => 'RSVP: interested',
-                            'rsvp:no'         => 'RSVP: no',
-                        ];
+                        if (!is_array($attrs['grouped'])) {
+                            $groups = [
+                                'read'            => 'Read by',
+                                'like'            => 'Likes',
+                                'repost'          => 'Reposts',
+                                'bookmark'        => 'Bookmarks',
+                                'rsvp:yes'        => 'RSVP: yes',
+                                'rsvp:maybe'      => 'RSVP: maybe',
+                                'rsvp:interested' => 'RSVP: interested',
+                                'rsvp:no'         => 'RSVP: no',
+                            ];
+                        } else {
+                            $groups = $attrs['grouped'];
+                        }
 
                         foreach ($groups as $type => $label) {
                             $groupReactions = $commentions->filterBy('type', $type);
