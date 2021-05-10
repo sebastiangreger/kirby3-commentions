@@ -10,7 +10,7 @@ A versatile comment system and integrated Webmention endpoint for [Kirby CMS](ht
 
 For more background and the philosophy behind this solution, see ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
 
-To update from v1.x to the v2.x beta, check the **breaking changes** in the [release notes](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v2.0-beta.1). To upgrade from the experimental v0.x to v1.x see the [version migration instructions](/.github/VERSIONMIGRATION.md) (a migration tool assists in converting existing commention data to the new storage format).
+To update from v1.x to the v2.x beta, check the **breaking changes** in the [release notes](https://github.com/sebastiangreger/kirby3-commentions/releases/tag/v2.0-beta.2). To upgrade from the experimental v0.x to v1.x see the [version migration instructions](/.github/VERSIONMIGRATION.md) (a migration tool assists in converting existing commention data to the new storage format).
 
 _NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
