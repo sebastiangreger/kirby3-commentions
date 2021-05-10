@@ -239,7 +239,7 @@ class Frontend
 
         // retrieve submitted data and do some cleanup
         $formdata = get();
-        if(isset($formdata['realwebsite']) && !V::url($formdata['realwebsite']) && !strpos($formdata['realwebsite'], "://")) {
+        if(!empty($formdata['realwebsite']) && !V::url($formdata['realwebsite']) && !strpos($formdata['realwebsite'], "://")) {
             $formdata['realwebsite'] = 'https://' . $formdata['realwebsite'];
         }
 
