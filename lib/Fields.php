@@ -26,6 +26,9 @@ class Fields
             $fieldsetup = [];
         }
 
+        // empty array to hold all results and be returned later
+        $fields = [];
+
         if ($type == 'comment') {
             // fallback defaults for standard fields
             $fielddefaults = [

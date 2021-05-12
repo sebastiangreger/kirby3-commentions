@@ -311,7 +311,7 @@ class Commentions
 
         foreach ($data as $key => $value) {
             // move custom fields into array
-            if(!in_array($key, ['name', 'email', 'website', 'realwebsite', 'text', 'commentions', 'honeypot', 'type', 'timestamp', 'language', 'status'])) {
+            if(!in_array($key, ['name', 'email', 'website', 'realwebsite', 'text', 'commentions', 'honeypot', 'type', 'timestamp', 'language', 'status', 'source'])) {
                 $data['custom'][$key] = $data[$key];
                 unset($data[$key]);
             }
