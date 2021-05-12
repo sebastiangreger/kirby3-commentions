@@ -79,7 +79,7 @@ class Commention extends StructureObject
         if ($this->website()->isNotEmpty()) {
             $author = '<a href="' . $this->website() . '" rel="noopener noreferrer nofollow">' . $author . '</a>';
         } else {
-            $author = "<strong>{$author}</strong>";
+            $author = "<span>{$author}</span>";
         }
 
         // Format domain of source URL
