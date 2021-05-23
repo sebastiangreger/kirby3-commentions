@@ -31,7 +31,7 @@
   <?php if ($comments->count() > 0) : ?>
     <h3><?= t('commentions.snippet.list.comments') ?></h3>
 
-    <ul>
+    <<?= $attrs['listtype'] ?>>
         <?php foreach ($comments as $comment) : ?>
 
         <li class="commentions-list-item commentions-list-item-<?= $comment->type() ?><?= r($comment->isAuthenticated(), ' commentions-list-item-authenticated') ?>">
@@ -51,7 +51,7 @@
           </li>
 
         <?php endforeach ?>
-    </ul>
+    </<?= $attrs['listtype'] ?>>
   <?php endif ?>
 
 </div>

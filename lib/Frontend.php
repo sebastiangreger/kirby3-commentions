@@ -177,10 +177,16 @@ class Frontend
                         $comments = $commentions->filterBy('type', 'not in', array_keys($groups));
                     }
 
+                    // always set list markup to default <ul> unless specifically set to 'ol'
+                    if (empty($attrs['listtype']) || $attrs['listtype'] != 'ol') {
+                        $attrs['listtype'] = 'ul';
+                    }
+
                     // return selected markup
                     snippet($snippetprefix . 'list', [
                         'comments' => $comments,
                         'reactions' => $reactions,
+                        'attrs' => $attrs,
                     ]);
                 }
                 break;

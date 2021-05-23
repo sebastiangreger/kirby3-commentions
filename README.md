@@ -315,6 +315,7 @@ By adding the optional attribute array `$attrs`, the rendering of the list can b
 | grouped | bool|array | false | Boolean `false` when no grouping is desired; otherwise `true` for default grouping, or array with customized grouping rules (see below) |
 | class | string | '' | Adds additional classes to the `.commentions-list` element |
 | id | string | '' | Adds an id attribute to the `.commentions-list` element |
+| listtype | string | `ul` | Changes the default `<ul>` markup into an `<ol>` if set to `ol`. |
 
 #### The 'grouped' attribute
 
