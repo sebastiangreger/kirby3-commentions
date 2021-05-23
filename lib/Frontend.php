@@ -104,7 +104,7 @@ class Frontend
                     }
                     $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'] ?? null;
 
-                    snippet('commentions-form', [
+                    snippet($snippetprefix . 'form', [
                         'fields' => $fields,
                         'attrs'  => $attrs,
                     ]);
