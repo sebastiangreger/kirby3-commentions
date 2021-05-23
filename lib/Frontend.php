@@ -186,6 +186,11 @@ class Frontend
                 break;
 
             default:
+                // since the default may also be called with the attrs array as first variable, reassign the variable
+                if (is_array($template)) {
+                    $attrs = $template;
+                }
+
                 // id and class attrs cannot be set with the shorthand helper
                 if (array_key_exists('class', $attrs ?? [])) {
                     unset($attrs['class']);
