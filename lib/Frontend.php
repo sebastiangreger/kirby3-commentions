@@ -104,6 +104,16 @@ class Frontend
                     }
                     $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'] ?? null;
 
+                    // store custom overrides for translated strings from $attrs into static property $uistrings
+                    if (!empty($attrs['t'])) {
+                        if (kirby()->language()) {
+                            $attrs['t'] = $attrs['t'][kirby()->language()->code()];
+                        }
+                        foreach ($attrs['t'] as $k => $v) {
+                            static::$uistrings['snippet.form.' . $k] = $v;
+                        }
+                    }
+
                     snippet($snippetprefix . 'form', [
                         'fields' => $fields,
                         'attrs'  => $attrs,
@@ -210,6 +220,22 @@ class Frontend
                 commentions('form', $attrs);
                 commentions('list', $attrs);
         }
+    }
+
+    /**
+     * Array to hold any custom UI strings handed over via $attrs
+     */
+    public static $uistrings = [];
+
+    /**
+     * Picks the correct localized string for the UI, incl. custom overrides
+     *
+     * @param string $key The translation key used in the frontend snippet
+     * @return string The translated and/or customized string to display in the UI
+     */
+    public static function uistring($key)
+    {
+        return static::$uistrings[$key] ?? t('commentions.' . $key);
     }
 
     /**

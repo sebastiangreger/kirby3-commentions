@@ -6,18 +6,22 @@
  * When updating the Commentions plugin to a new version, you may have to implement small changes to your copy
  * to enable new or modified functionalities.
  */
+
+use sgkirby\Commentions\Commentions as Commentions;
+use sgkirby\Commentions\Frontend as Frontend;
+
 ?>
 
   <div class="commentions-form <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
 
-    <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'comments')) : ?>
+    <?php if (Commentions::accepted($page, 'comments')) : ?>
 
     <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-comments'])) : ?>
     <details <?= (!empty($attrs['open']) || !empty($attrs['open-comments'])) ? ' open' : '' ?>>
     <summary>
     <?php endif ?>
 
-    <h3 id="commentions-form-comment"><?= t('commentions.snippet.form.ctacomment') ?></h3>
+    <h3 id="commentions-form-comment"><?= Frontend::uistring('snippet.form.ctacomment') ?></h3>
 
     <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-comments'])) : ?>
     </summary>
@@ -33,7 +37,7 @@
         snippet('commentions/field', $field);
       endforeach; ?>
 
-      <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitcomment') ?>">
+      <input type="submit" name="submit" value="<?= Frontend::uistring('snippet.form.submitcomment') ?>">
     </form>
 
     <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-comments'])) : ?>
@@ -43,14 +47,14 @@
     <?php endif; ?>
 
 
-    <?php if (\sgkirby\Commentions\Commentions::accepted($page, 'webmentions')) : ?>
+    <?php if (Commentions::accepted($page, 'webmentions')) : ?>
 
     <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-webmentions'])) : ?>
     <details <?= (!empty($attrs['open']) || !empty($attrs['open-webmentions'])) ? ' open' : '' ?>>
     <summary>
     <?php endif ?>
 
-    <h3 id="commentions-form-webmention"><?= t('commentions.snippet.form.ctawebmention') ?></h3>
+    <h3 id="commentions-form-webmention"><?= Frontend::uistring('snippet.form.ctawebmention') ?></h3>
 
     <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-webmentions'])) : ?>
     </summary>
@@ -59,14 +63,14 @@
     <form action="<?= kirby()->urls()->base() . '/' . option('sgkirby.commentions.endpoint') ?>" method="post">
 
       <div class="commentions-form-source">
-        <label for="source"><?= t('commentions.snippet.form.responseurl') ?></label>
+        <label for="source"><?= Frontend::uistring('snippet.form.responseurl') ?></label>
         <input type="url" id="source" name="source" pattern=".*http.*" required>
       </div>
 
       <input type="hidden" name="target" value="<?= $page->url() ?>">
       <input type="hidden" name="manualmention" value="true">
 
-      <input type="submit" name="submit" value="<?= t('commentions.snippet.form.submitwebmention') ?>">
+      <input type="submit" name="submit" value="<?= Frontend::uistring('snippet.form.submitwebmention') ?>">
 
     </form>
 
