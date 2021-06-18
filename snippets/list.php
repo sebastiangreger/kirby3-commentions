@@ -10,6 +10,9 @@
  * You can also access a raw array of comments and webmentions using the `$page->commentions()` page method
  * and roll your own custom snippet or template instead.
  */
+
+use sgkirby\Commentions\Frontend as Frontend;
+
 ?>
 
 <div class="commentions-list <?= $attrs['class'] ?? '' ?>" id="<?= $attrs['id'] ?? '' ?>">
@@ -29,7 +32,7 @@
   <?php endforeach ?>
 
   <?php if ($comments->count() > 0) : ?>
-    <h3><?= t('commentions.snippet.list.comments') ?></h3>
+    <h3><?= Frontend::uistring('snippet.list.comments') ?></h3>
 
     <<?= $attrs['listtype'] ?>>
         <?php foreach ($comments as $comment) : ?>

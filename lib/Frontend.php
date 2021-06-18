@@ -105,14 +105,7 @@ class Frontend
                     $attrs['jump'] = $attrs['jump-error'] ?? $attrs['jump'] ?? null;
 
                     // store custom overrides for translated strings from $attrs into static property $uistrings
-                    if (!empty($attrs['t'])) {
-                        if (kirby()->language()) {
-                            $attrs['t'] = $attrs['t'][kirby()->language()->code()];
-                        }
-                        foreach ($attrs['t'] as $k => $v) {
-                            static::$uistrings['snippet.form.' . $k] = $v;
-                        }
-                    }
+                    static::storeUistrings('form', $attrs);
 
                     snippet($snippetprefix . 'form', [
                         'fields' => $fields,
@@ -192,6 +185,9 @@ class Frontend
                         $attrs['listtype'] = 'ul';
                     }
 
+                    // store custom overrides for translated strings from $attrs into static property $uistrings
+                    static::storeUistrings('list', $attrs);
+
                     // return selected markup
                     snippet($snippetprefix . 'list', [
                         'comments' => $comments,
@@ -226,6 +222,24 @@ class Frontend
      * Array to hold any custom UI strings handed over via $attrs
      */
     public static $uistrings = [];
+
+    /**
+     * Picks the correct localized string for the UI, incl. custom overrides
+     *
+     * @param string $key The translation key used in the frontend snippet
+     * @return string The translated and/or customized string to display in the UI
+     */
+    public static function storeUistrings($context, $attrs)
+    {
+        if (!empty($attrs['t'])) {
+            if (kirby()->language()) {
+                $lang = kirby()->language()->code();
+            }
+            foreach ($attrs['t'][$lang ?? 'en'] as $k => $v) {
+                static::$uistrings['snippet.' . $context . '.' . $k] = $v;
+            }
+        }
+    }
 
     /**
      * Picks the correct localized string for the UI, incl. custom overrides

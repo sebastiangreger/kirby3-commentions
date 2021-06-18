@@ -291,6 +291,7 @@ By adding the optional attribute array `$attrs`, the rendering and behaviour of 
 | jump-error | string | null | Like `jump` but as target anchor on errors only |
 | jump-success | string | null | Like `jump` but as target anchor on success only |
 | keepvisible | bool | false | If `true`, the comment form remains visible after successful submission (by default it is not shown) |
+| t | array | null | Array to override the UI texts retrieved from the translation engine; see [Translations](#translations) for details |
 
 For example, to add the `<details>/<summary>` HTML construct, but display the webmention form opened by default:
 
@@ -316,6 +317,7 @@ By adding the optional attribute array `$attrs`, the rendering of the list can b
 | class | string | '' | Adds additional classes to the `.commentions-list` element |
 | id | string | '' | Adds an id attribute to the `.commentions-list` element |
 | listtype | string | `ul` | Changes the default `<ul>` markup into an `<ol>` if set to `ol`. |
+| t | array | null | Array to override the UI texts retrieved from the translation engine; see [Translations](#translations) for details |
 
 #### The 'grouped' attribute
 
@@ -925,17 +927,34 @@ _NB. These time settings do not have an effect if Kirby's built-in page cache is
 
 ### Translations
 
-The plugin currently contains translations in English (en) and German (de), displayed based on the site's [language setup](https://getkirby.com/docs/guide/languages/introduction); PRs for additional languages welcome! Due to a [known issue](https://github.com/getkirby/ideas/issues/459) in Kirby ([fix](https://github.com/getkirby/kirby/pull/2490) expected in v3.5), single-language sites do not communicate the language setting to plugins. For a temporary fix, add the following to the _template_ that contains the calls to the Commentions helpers:
+The plugin currently contains translations in English (en), French (fr), and German (de), displayed based on the site's [language setup](https://getkirby.com/docs/guide/languages/introduction); PRs for additional languages welcome! Due to a [known issue](https://kirby.nolt.io/246), single-language sites do not communicate the language setting to plugins. For a temporary fix, add the following to the _template_ that contains the calls to the Commentions helpers:
 
 ```php
 <?php Kirby\Toolkit\I18n::$locale = 'de'; ?>
 ```
 
-To override the translation strings of the Plugin UI, any string from `languages/*.php` can be replaced with a config variable. For example, the bundled translation of the string `sgkirby.commentions.t.en.snippet.list.comments` (in English, as indicated by the `en` part), can be replaced by adding this config variable:
+To override the translation strings of the Plugin UI, any string from `languages/*.php` can be replaced with a config variable. For example, the bundled translation of the string `sgkirby.commentions.t.en.snippet.list.comments` (in English, as indicated by the `en` part), can be replaced by adding this config variable to `config.php`:
 
 ```php
 'sgkirby.commentions.t.en.snippet.list.comments' => 'Comments',
 ```
+
+For even more fine-grained control, it is possible to override specific UI strings using the `$attrs` array in the `commentions('form')` and `commentions('list')` [frontend helpers](#frontend-helper) directly in the template where it is embedded. This allows for advanced customization, e.g. it is possible to include a page's title in the Comments section's headline:
+
+```php
+<?= commentions('form', [
+  't' => [
+    'en' => [
+      'ctacomment' => 'What are your thoughts about "' . $page->title() . '"?',
+    ],
+  ]
+]) ?>
+```
+
+The plugin selects translation strings in the following priority order:
+1. Custom string defined in `$attrs`
+2. String defined in `config.php` using the `sgkirby.commentions.t.en....' notion
+3. The strings hard-coded into the plugins language files
 
 ### Comment formatting
 

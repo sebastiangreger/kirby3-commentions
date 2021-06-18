@@ -92,25 +92,25 @@ class Commention extends StructureObject
 
         switch ($this->type()->toString()) {
             case 'like':
-                $translation = t('commentions.snippet.list.liked');
+                $translation = Frontend::uistring('snippet.list.liked');
                 break;
             case 'bookmark':
-                $translation = t('commentions.snippet.list.bookmarked');
+                $translation = Frontend::uistring('snippet.list.bookmarked');
                 break;
             case 'repost':
-                $translation = t('commentions.snippet.list.reposted');
+                $translation = Frontend::uistring('snippet.list.reposted');
                 break;
             case 'reply':
-                $translation = t('commentions.snippet.list.replies');
+                $translation = Frontend::uistring('snippet.list.replies');
                 break;
             case 'comment':
-                $translation = t('commentions.snippet.list.comment');
+                $translation = Frontend::uistring('snippet.list.comment');
                 break;
             default:
                 if (empty($domain) === false) {
-                    $translation = t('commentions.snippet.list.mentionedAt');
+                    $translation = Frontend::uistring('snippet.list.mentionedAt');
                 } else {
-                    $translation = t('commentions.snippet.list.mentioned');
+                    $translation = Frontend::uistring('snippet.list.mentioned');
                 }
         }
 
@@ -187,8 +187,8 @@ class Commention extends StructureObject
         // Get the right date format from translations, based on the
         // date handler set for Kirby.
         $format = option('date.handler') === 'strftime'
-            ? t('commentions.snippet.list.dateFormat.strftime')
-            : t('commentions.snippet.list.dateFormat.date');
+            ? Frontend::uistring('snippet.list.dateFormat.strftime')
+            : Frontend::uistring('snippet.list.dateFormat.date');
 
         return $this->timestamp()->toDate($format);
     }
