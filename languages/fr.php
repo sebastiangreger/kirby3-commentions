@@ -19,9 +19,11 @@ $translations = [
     'snippet.form.name.optional'       => 'Nom (optionel)',
     'snippet.form.email'               => 'E-mail',
     'snippet.form.email.optional'      => 'E-mail (optionel ; n’est pas affiché)',
+    'snippet.form.email.error'         => 'L’adresse e-mail ne semble pas valide',
     'snippet.form.honeypot'            => 'Laissez ce champ vide !',
     'snippet.form.website'             => 'Site web (public si saisi)',
     'snippet.form.website.optional'    => 'Site web (optionel; public si saisi)',
+    'snippet.form.website.error'       => 'L’URL ne semble pas valide',
     'snippet.form.text'                => 'Commentaire',
     'snippet.form.text.error'          => 'Commentaire requis',
     'snippet.form.required'            => 'requis',
@@ -47,6 +49,7 @@ $translations = [
         '<dd>Les URLs complètes sont automatiquement converties en liens.</dd>',
     'snippet.form.submitcomment'       => 'Valider',
     'snippet.form.submitwebmention'    => 'Valider la webmention',
+    'snippet.form.error'               => 'Erreur',
 
     // - list
     'snippet.list.comments'            => 'Commentaires',
@@ -65,6 +68,9 @@ $translations = [
 
     'feedback.comment.queued'           => 'Merci ! Soyez patient, votre commentaire doit être approuvé par l’éditeur.',
     'feedback.comment.thankyou'         => 'Merci de votre commentaire!',
+    'feedback.comment.fielderrors'      => 'Il y a des erreurs dans le formulaire ; Merci de vérifier les champs mis en surbrillance !'
+    'feedback.comment.closed'           => 'Cette page n’accepte pas les commentaires.',
+    'feedback.comment.spam'             => 'Votre soumission du formulaire n’a pas pu être traitée ; veuillez vérifier votre saisie.',
     'feedback.webmention.queued'        => 'Merci, votre webmention est en attente de traitement. Soyez patient, votre commentaire doit être approuvé par l’éditeur.',
 
 
