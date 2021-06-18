@@ -60,7 +60,7 @@ Kirby::plugin('sgkirby/commentions', [
         'avatarurls'                => false,
         'allowlinks'                => true,
         'autolinks'                 => true,
-        'commentfields'             => ['name'],
+        'commentfields'             => null,
         'webmentionfields'          => [],
         'storeuserid'               => false,
     ],

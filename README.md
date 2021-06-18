@@ -814,23 +814,25 @@ To reduce the form fields to the `text` field only (not even providing the optio
 'sgkirby.commentions.commentfields' => [],
 ```
 
-To keep the default `name` field, and add fields for `email` and a `website`:
+To keep the default `name` field, and add fields for `email` and a `website`, with an empty array to use default settings:
 
 ```php
 'sgkirby.commentions.commentfields' => [
-  'name',          // include name field
-  'email',         // include email field
-  'website',       // include website field
+  'name'    => [],  // include name field
+  'email'   => [],  // include email field
+  'website' => [],  // include website field
 ],
 ```
 
-To mark a field as required (submission fails unless it is filled in) add a boolean `true` to the field:
+To mark a field as required (submission fails unless it is filled in) the field's configuration array has to contain a field `required` key with value true:
 
 ```php
 'sgkirby.commentions.commentfields' => [
-  'name' => true,  // include name field and mark as required
-  'email',         // include email as optional field
-  'website',       // include optional website field
+  'name'    => [
+    'required' => true
+  ],                    // include name field and mark as required
+  'email'   => [],      // include email as optional field
+  'website' => [],      // include optional website field
 ],
 ```
 
@@ -838,8 +840,8 @@ To change the position of the compulsory text field (by default rendered after t
 
 ```php
 'sgkirby.commentions.commentfields' => [
-  'text',          // show obligatory text field first
-  'name',          // include name field
+  'text' => [],  // show obligatory text field first
+  'name' => [],  // include name field
 ],
 ```
 
@@ -850,13 +852,17 @@ For advanced customization, a callback function can be used to control the array
   // comment forms on event pages require both name and email
   if ($targetPage->intendedTemplate()->name() === 'event') {
     return [
-      'name' => true,
-      'email' => true,
+      'name' => [
+        'required' => true,
+      ],
+      'email' => [
+        'required' => true,
+      ],
     ];
   }
   // on all other pages, only show optional name field
   return [
-    'name',
+    'name' => [],
   ];
 },
 ```

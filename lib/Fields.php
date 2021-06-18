@@ -16,6 +16,11 @@ class Fields
         // retrieve setup from config
         $fieldsetup = option('sgkirby.commentions.' . $type . 'fields');
 
+        // set default for commentfields if null
+        if ($fieldsetup === null && $type === 'comment') {
+            $fieldsetup = ['name' => []];
+        }
+
         // the config variable might contain a callable function for advanced setup
         if (is_callable($fieldsetup)) {
             $fieldsetup = $fieldsetup($page);
@@ -41,7 +46,7 @@ class Fields
                     'autocomplete'  => 'email',
                     'validate'      => [
                         'rules'         => ['email'],
-                        'message'       => t('commentions.snippet.form.email.error'),
+                        'message'       => Frontend::uistring('snippet.form.email.error'),
                     ],
                 ],
                 'website' => [
@@ -49,7 +54,7 @@ class Fields
                     'autocomplete'  => 'url',
                     'validate'      => [
                         'rules'         => ['url'],
-                        'message'       => t('commentions.snippet.form.website.error'),
+                        'message'       => Frontend::uistring('snippet.form.website.error'),
                     ],
                 ],
                 'text' => [
@@ -57,7 +62,7 @@ class Fields
                     'required'  => true,
                     'validate'      => [
                         'rules'         => ['required', 'min' => 2],
-                        'message'       => t('commentions.snippet.form.comment.error'),
+                        'message'       => Frontend::uistring('snippet.form.comment.error'),
                     ],
                 ],
             ];
@@ -67,11 +72,11 @@ class Fields
                 // if only an array of strings is given, the value is the key
                 if (!is_string($field)) {
                     $field = $dfn;
-                    $dfn = $fielddefaults[$field]['required'] ?? false;
+                    $dfn = [];
                 }
 
                 // if no config array is given as value, it is implied with defaults
-                if (!is_array($dfn)) {
+                if (!is_array($dfn) || empty($dfn)) {
                     $dfn = [
                         'type'      => $fielddefaults[$field]['type'] ?? 'text',
                         'required'  => $dfn === true ? $dfn : ($fielddefaults[$field]['required'] ?? false),
@@ -117,9 +122,9 @@ class Fields
 
                 // if array contains no label, use defaults; add required text if applicable
                 if (!isset($dfn['label'])) {
-                    $dfn['label'] = t('commentions.snippet.form.' . $field . (!$dfn ? '.optional' : ''), $field);
+                    $dfn['label'] = Frontend::uistring('snippet.form.' . $field . (!$dfn ? '.optional' : ''), $field);
                 }
-                $fields[$field]['label'] = $dfn['label'] . (!empty($dfn['required']) ? ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>' : '');
+                $fields[$field]['label'] = $dfn['label'] . (!empty($dfn['required']) ? ' <abbr title="' . Frontend::uistring('snippet.form.required') . '">*</abbr>' : '');
 
                 // render additional attributes
                 $allowedattributes = [
@@ -149,7 +154,7 @@ class Fields
                     'id'            => 'website',
                     'required'      => false,
                     'autocomplete'  => 'url',
-                    'label'         => t('commentions.snippet.form.honeypot'),
+                    'label'         => Frontend::uistring('snippet.form.honeypot'),
                     'type'          => 'url',
                 ];
             }
@@ -159,7 +164,7 @@ class Fields
                 $fields['text'] = [
                     'id'        => 'text',
                     'required'  => 'required',
-                    'label'     => t('commentions.snippet.form.comment') . ' <abbr title="' . t('commentions.snippet.form.required') . '">*</abbr>',
+                    'label'     => Frontend::uistring('snippet.form.text') . ' <abbr title="' . Frontend::uistring('snippet.form.required') . '">*</abbr>',
                     'type'      => $fielddefaults['text']['type'],
                     'validate'  => $fielddefaults['text']['validate'],
                 ];
