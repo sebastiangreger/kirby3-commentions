@@ -68,7 +68,7 @@ $translations = [
 
     'feedback.comment.queued'           => 'Merci ! Soyez patient, votre commentaire doit être approuvé par l’éditeur.',
     'feedback.comment.thankyou'         => 'Merci de votre commentaire!',
-    'feedback.comment.fielderrors'      => 'Il y a des erreurs dans le formulaire ; Merci de vérifier les champs mis en surbrillance !'
+    'feedback.comment.fielderrors'      => 'Il y a des erreurs dans le formulaire ; Merci de vérifier les champs mis en surbrillance !',
     'feedback.comment.closed'           => 'Cette page n’accepte pas les commentaires.',
     'feedback.comment.spam'             => 'Votre soumission du formulaire n’a pas pu être traitée ; veuillez vérifier votre saisie.',
     'feedback.webmention.queued'        => 'Merci, votre webmention est en attente de traitement. Soyez patient, votre commentaire doit être approuvé par l’éditeur.',
