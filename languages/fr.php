@@ -13,16 +13,16 @@ $translations = [
     // - form
     'snippet.form.headline'            => 'Commentaires et Webmentions',
     'snippet.form.ctacomment'          => 'Ajouter un commentaire',
-    'snippet.form.ctawebmention'       => 'Repondez sur votre propre site, envoyez une Webmention!',
+    'snippet.form.ctawebmention'       => 'Répondez sur votre propre site, envoyez une Webmention!',
     'snippet.form.responseurl'         => 'URL de la réponse sur votre site (assurez-vous qu’elle contient un lien vers cette page)',
     'snippet.form.name'                => 'Nom',
-    'snippet.form.name.optional'       => 'Nom (optionel)',
+    'snippet.form.name.optional'       => 'Nom (optionnel)',
     'snippet.form.email'               => 'E-mail',
-    'snippet.form.email.optional'      => 'E-mail (optionel ; n’est pas affiché)',
+    'snippet.form.email.optional'      => 'E-mail (optionnel ; n’est pas affiché)',
     'snippet.form.email.error'         => 'L’adresse e-mail ne semble pas valide',
     'snippet.form.honeypot'            => 'Laissez ce champ vide !',
     'snippet.form.website'             => 'Site web (public si saisi)',
-    'snippet.form.website.optional'    => 'Site web (optionel; public si saisi)',
+    'snippet.form.website.optional'    => 'Site web (optionnel; public si saisi)',
     'snippet.form.website.error'       => 'L’URL ne semble pas valide',
     'snippet.form.text'                => 'Commentaire',
     'snippet.form.text.error'          => 'Commentaire requis',
@@ -35,7 +35,7 @@ $translations = [
         '<dt>Balisage du texte</dt>' .
         '<dd><em>*italique*</em>, <strong>**gras**</strong>, <del>~~barré~~</del>, <code>`code`</code> et <mark>&lt;mark&gt;texte surligné&lt;/mark&gt;</mark></code>.</dd>' .
         '<dt>Listes</dt>' .
-        '<dd><pre class="code"><code class="language-markdown">- Élément non-ordonné 1<br>- Élément non-ordonné 2</code></pre>' .
+        '<dd><pre class="code"><code class="language-markdown">- Élément non ordonné 1<br>- Élément non ordonné 2</code></pre>' .
         '<dd><pre class="code"><code class="language-markdown">1. Élément ordonné 1<br>2. Élément ordonné 2</code></pre></dd>' .
         '<dt>Citations</dt>' .
         '<dd><pre class="code"><code class="language-markdown">&gt; Texte cité</code></pre></dd>' .
@@ -130,9 +130,9 @@ $translations = [
 
     // - errors
     'section.error.storage-version'      => '<strong>Action requise !</strong> Vous avez mis à jour le plugin <em>Kirby3-Commentions</em> vers sa  version 1.x, mais votre configuration est toujours dans le format 0.x (désormais incompatible) ! Pas d’inquiétude : aucune donnée n’a été perdue, mais vous allez devoir utiliser l’<a href="/commentions-migrationassistant" rel="noopener noreferrer" target="_blank">assistant de migration</a> pour faire fonctionner le système à nouveau !',
-    'section.error.missing-dependencies' => '<strong>Librairies manquantes :</strong> Le plugin Commentions utilise <strong>html5-php</strong> et <strong>HTML Purifier</strong> pour filtrer, analyser et formatter les saisies HTML. Pour des raisons de sécurité, le HTML n’est pas affiché dans les commentaires ouy les Webmentions et aucun formattage markdown ne sera appliqué tant que ces librairies seront manquantes. Pour vous aider à les installer manuellement, voir le fichier <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#installation" rel="noopener noreferrer" target="_blank">README.md</a>.',
+    'section.error.missing-dependencies' => '<strong>Librairies manquantes :</strong> Le plugin Commentions utilise <strong>html5-php</strong> et <strong>HTML Purifier</strong> pour filtrer, analyser et formater les saisies HTML. Pour des raisons de sécurité, le HTML n’est pas affiché dans les commentaires ouy les Webmentions et aucun formatage markdown ne sera appliqué tant que ces librairies seront manquantes. Pour vous aider à les installer manuellement, voir le fichier <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#installation" rel="noopener noreferrer" target="_blank">README.md</a>.',
     'section.error.no-templates-defined' => '<strong>Erreur d’installation :</strong> les paramètres de configuration templatesWithComments et templatesWithWebmentions sont manquants. Pour plus de détails, voir le fichier <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#step-3-adding-frontend-uis-to-your-templates" rel="noopener noreferrer" target="_blank">README.md</a>.',
-    'section.error.cronjob-alert'        => '<strong>Erreur d’installation :</strong> Le *cron job* requirs pour traiter les webmentions entrantes n’a pas été lancé dans les dernières 24h. Pour supprimer cet avertissement, vous pouvez <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#step-4-setting-up-webmentions-optional" rel="noopener noreferrer" target="_blank">installer le cronjob</a> ou <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#activate-by-template" rel="noopener noreferrer" target="_blank">désactiver les webmentions</a>.',
+    'section.error.cronjob-alert'        => '<strong>Erreur d’installation :</strong> La *tâche cron* (cron job) requise pour traiter les webmentions entrantes n’a pas été lancée dans les dernières 24h. Pour supprimer cet avertissement, vous pouvez <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#step-4-setting-up-webmentions-optional" rel="noopener noreferrer" target="_blank">installer le cronjob</a> ou <a href="https://github.com/sebastiangreger/kirby3-commentions/blob/master/README.md#activate-by-template" rel="noopener noreferrer" target="_blank">désactiver les webmentions</a>.',
 ];
 
 foreach ($translations as $key => $value) {
