@@ -12,6 +12,8 @@ For more background and the philosophy behind this solution, see ["Designing a c
 
 > Versions 1.x (June 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new storage format.
 
+If you are just getting started with Commentions, you might be interested in the **upcoming version 2.0** which is [currently in late beta](https://github.com/sebastiangreger/kirby3-commentions/tree/develop).
+
 _NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
 ## Table of contents
@@ -37,7 +39,7 @@ _NB. The plugin only covers incoming webmentions, i.e. receiving notifications f
 
 ## Installation
 
-While Kirby supports PHP 8 as of version 3.5, the Commentions plugin has not yet been thoroughly tested for compatibility with PHP 8. See [issue #91](https://github.com/sebastiangreger/kirby3-commentions/issues/91) for the current progress and/or to report any PHP 8 problems.
+While Kirby supports PHP 8 as of version 3.5, version 1.x of the Commentions plugin has not been thoroughly tested for compatibility with PHP 8. The [work-in-progress version 2.0 (still in beta)](https://github.com/sebastiangreger/kirby3-commentions/tree/develop) is compatible with PHP 8.0.
 
 ### Recommended: Composer
 
