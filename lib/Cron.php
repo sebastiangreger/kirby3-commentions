@@ -165,7 +165,7 @@ class Cron
             }
 
             // parse for microformats
-            $mf2 = \Mf2\parse($sourcecontent, $source);
+            $mf2 = \Mf2c\parse($sourcecontent, $source);
 
             // process microformat data
             if (isset($mf2['items'][0])) {

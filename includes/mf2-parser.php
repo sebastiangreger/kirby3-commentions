@@ -1,6 +1,13 @@
 <?php
 
-namespace Mf2;
+/**
+ * This is a modified version of https://github.com/microformats/php-mf2,
+ * that uses a modified namespace name to avoid collisions with other plugins.
+ *
+ * TODO: load the Mf2 library via autoload; https://github.com/sebastiangreger/kirby3-commentions/issues/134
+ */
+
+namespace Mf2c;
 
 use DOMDocument;
 use DOMElement;
