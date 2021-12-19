@@ -62,9 +62,7 @@ export default {
           label: this.$t('commentions.section.edit.timestamp'),
           type: "date",
           required: true,
-          /* TODO: re-add this once Kirby core issue https://github.com/getkirby/kirby/issues/3266 is fixed
-          time: {step: 1},
-          */
+          time: {step: {size: 1, unit: "minute"}},
         },
         type: {
           label: this.$t('commentions.section.edit.type'),
