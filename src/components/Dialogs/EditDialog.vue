@@ -61,7 +61,7 @@ export default {
           label: this.$t('commentions.section.edit.timestamp'),
           type: "date",
           required: true,
-          time: {step: 1}
+          time: {step: {size: 1, unit: "minute"}}
         },
         type: {
           label: this.$t('commentions.section.edit.type'),
