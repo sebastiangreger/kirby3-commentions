@@ -32,7 +32,17 @@ use sgkirby\Commentions\Frontend as Frontend;
   <?php endforeach ?>
 
   <?php if ($comments->count() > 0) : ?>
+
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-list'])) : ?>
+    <details <?= (!empty($attrs['open']) || !empty($attrs['open-list'])) ? ' open' : '' ?>>
+    <summary>
+    <?php endif ?>
+
     <h3><?= Frontend::uistring('snippet.list.comments') ?></h3>
+
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-list'])) : ?>
+    </summary>
+    <?php endif ?>
 
     <<?= $attrs['listtype'] ?>>
         <?php foreach ($comments as $comment) : ?>
@@ -55,6 +65,11 @@ use sgkirby\Commentions\Frontend as Frontend;
 
         <?php endforeach ?>
     </<?= $attrs['listtype'] ?>>
+
+    <?php if (!empty($attrs['collapse']) || !empty($attrs['collapse-list'])) : ?>
+    </details>
+    <?php endif ?>
+
   <?php endif ?>
 
 </div>
