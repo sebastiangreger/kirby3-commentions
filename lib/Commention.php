@@ -123,10 +123,10 @@ class Commention extends StructureObject
 
         // Use single brackets (instead of double) to match the behavior
         // of Kirby’s `tt()` helper function.
-        if (substr(\Kirby\Cms\App::version(), 0, 3) === '3.6') {
+        if (version_compare(\Kirby\Cms\App::version(), '3.6') >= 0) {
             return Str::template($translation, $replace, ['fallback' => null, 'start' => '{', 'end' => '}']);
         }
-        /* TODO: only keep array version once K3.6 is out */
+        // keep backward-compatible with core <3.6
         else {
             return Str::template($translation, $replace, null, '{', '}');
         }
