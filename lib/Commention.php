@@ -121,7 +121,16 @@ class Commention extends StructureObject
             'domain' => $domain,
         ];
 
-        return Str::template($translation, $replace, ['fallback' => null, 'start' => '{', 'end' => '}']);
+        // Use single brackets (instead of double) to match the behavior
+        // of Kirby’s `tt()` helper function.
+        if (version_compare(\Kirby\Cms\App::version(), '3.6') >= 0) {
+            return Str::template($translation, $replace, ['fallback' => null, 'start' => '{', 'end' => '}']);
+        }
+        // keep backward-compatible with core <3.6
+        else {
+            return Str::template($translation, $replace, null, '{', '}');
+        }
+
     }
 
     /**
