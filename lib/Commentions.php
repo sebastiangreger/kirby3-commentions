@@ -169,7 +169,7 @@ class Commentions
         }
 
         // a webmention has to at least feature a source that is a valid URL
-        if ((! empty($data['type']) && $data['type'] !== 'comment') && (empty($data['source']) || ! Str::isURL($data['source']))) {
+        if ((! empty($data['type']) && $data['type'] !== 'comment') && (empty($data['source']) || ! V::url($data['source']))) {
             return false;
         }
 
