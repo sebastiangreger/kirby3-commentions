@@ -9,6 +9,7 @@ use Kirby\Http\Url;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 class Cron
 {
@@ -173,7 +174,7 @@ class Cron
                 $result = \IndieWeb\comments\parse($mf2['items'][0], $target, 1000, 20);
 
                 // sometimes, the author name ends up in the url field
-                if (!empty($result['author']['url']) && !Str::isUrl($result['author']['url'])) {
+                if (!empty($result['author']['url']) && !V::url($result['author']['url'])) {
                     if (empty($result['author']['name'])) {
                         $result['author']['name'] = $result['author']['url'];
                     }
