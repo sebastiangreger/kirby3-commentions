@@ -58,6 +58,7 @@ $translations = [
     'snippet.list.replies'             => '{ author } replied at { link }',
     'snippet.list.dateFormat.date'     => 'Y-m-d H:i',
     'snippet.list.dateFormat.strftime' => '%Y-%m-%d %H:%M',
+    'snippet.list.dateFormat.intl'     => 'yyyy-MM-dd HH:mm',
 
 
     // feedback
