@@ -193,9 +193,18 @@ class Commention extends StructureObject
     {
         // Get the right date format from translations, based on the
         // date handler set for Kirby.
-        $format = option('date.handler') === 'strftime'
-            ? t('commentions.snippet.list.dateFormat.strftime')
-            : t('commentions.snippet.list.dateFormat.date');
+        switch (option('date.handler', 'date')) {
+            case "intl":
+                $format = t('commentions.snippet.list.dateFormat.intl');
+                break;
+            case "strftime":
+                $format = t('commentions.snippet.list.dateFormat.strftime');
+                break;
+            case "date":
+            default:
+                $format = t('commentions.snippet.list.dateFormat.date');
+                break;
+        }
 
         return $this->timestamp()->toDate($format);
     }
