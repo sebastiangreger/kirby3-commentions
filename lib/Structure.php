@@ -32,7 +32,7 @@ class Structure extends BaseStructure
      * @param string $id
      * @param array|Commention $props
      */
-    public function __set(string $id, $props)
+    public function __set(string $id, $props): void
     {
         if (is_a($props, 'sgkirby\Commentions\Commention') === true) {
             $object = $props;
@@ -53,6 +53,6 @@ class Structure extends BaseStructure
             ]);
         }
 
-        return parent::__set($object->id(), $object);
+        parent::__set($object->id(), $object);
     }
 }
