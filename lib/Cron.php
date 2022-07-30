@@ -6,7 +6,6 @@ use Exception;
 use Kirby\Http\Remote;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
-use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
