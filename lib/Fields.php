@@ -175,7 +175,7 @@ class Fields
                 'id'        => 'commentions',
                 'required'  => false,
                 'type'      => 'hidden',
-                'value'     => !$page->isCacheable() ? time() : 0,
+                'value'     => time(),
             ];
         }
 
