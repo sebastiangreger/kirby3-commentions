@@ -25,14 +25,14 @@ class Storage
         while (! is_dir($page->root())) {
 
             // prepend the slug of the current virtual page to the path variable
-            $path = DS . $page->slug() . $path;
+            $path = '/' . $page->slug() . $path;
 
             // move up one level and repeat
             $page = $page->parent();
         }
 
         // commentions are stored in _commentions.txt file (in a subfolder, if virtual page)
-        return $page->root() . DS . $foldername . $path . DS . $filename . '.yml';
+        return $page->root() . '/' . $foldername . $path . '/' . $filename . '.yml';
     }
 
     /**

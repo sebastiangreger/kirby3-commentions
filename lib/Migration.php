@@ -125,8 +125,8 @@ class Migration
             $evidence = '';
 
             // check for presence of the old content/.commentions folder
-            if (is_dir(kirby()->root('content') . DS . '.commentions')) {
-                $evidence .= '<li>Found <strong>now obsolete folder</strong> <code>' . kirby()->root() . DS . 'content' . DS . '.commentions' . '</code></li>';
+            if (is_dir(kirby()->root('content') . '/.commentions')) {
+                $evidence .= '<li>Found <strong>now obsolete folder</strong> <code>' . kirby()->root() . '/content/.commentions' . '</code></li>';
             }
 
             // check for presence of queue files

@@ -56,7 +56,7 @@ return [
             $errors = [];
 
             if (Commentions::accepted($this->model(), 'webmentions')) {
-                $logfile = kirby()->root('site') . DS . 'logs' . DS . 'commentions' . DS . 'lastcron.log';
+                $logfile = kirby()->root('site') . '/logs/commentions/lastcron.log';
                 if (!F::exists($logfile) || F::modified($logfile) < (time() - 86400)) {
                     $errors[] = [
                         'id'      => 'cronjob-alert',
@@ -66,7 +66,7 @@ return [
                 }
             }
 
-            if (is_dir(kirby()->root() . DS . 'content' . DS . '.commentions') === true) {
+            if (is_dir(kirby()->root() . '/content/.commentions') === true) {
                 $errors[] = [
                     'id'      => 'storage-version',
                     'message' => t('commentions.section.error.storage-version'),

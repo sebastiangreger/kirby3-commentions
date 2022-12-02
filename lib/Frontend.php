@@ -16,7 +16,7 @@ class Frontend
     public static function render($template = null, $attrs = null)
     {
         // checks if custom snippets exist in a subfolder and sets snippet accordingly
-        if (Dir::exists(kirby()->root('snippets') . DS . 'commentions')) {
+        if (Dir::exists(kirby()->root('snippets') . '/commentions')) {
             $snippetprefix = 'commentions/';
         } else {
             // DEPRECATED: snippets were not in a separate folder until v1.0
@@ -55,7 +55,7 @@ class Frontend
                     $fields = Fields::configuration(page());
 
                     // LEGACY: until v1.0.4, the `text` field was `message`; overriding this for compatibility if snippets present in old snippet location
-                    if (array_key_exists('text', $fields) && F::exists(kirby()->root('snippets') . DS . 'commentions-form.php')) {
+                    if (array_key_exists('text', $fields) && F::exists(kirby()->root('snippets') . '/commentions-form.php')) {
                         $keys = array_keys($fields);
                         $keys[array_search('text', $keys)] = 'message';
                         $fields = array_combine($keys, $fields);
