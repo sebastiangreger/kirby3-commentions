@@ -1,3 +1,5 @@
+🛑 This project has been **archived and is no longer maintained** (for background, export, and alternatives: [see here](https://github.com/sebastiangreger/kirby3-commentions/issues/151)). The code is MIT-licensed: you are free to fork it or build something awesome from it. The archived version has not been tested beyond Kirby 3.7.x; it is not compatible with Kirby 4+.
+
 # Kirby 3 Commentions
 
 A versatile comment system and integrated Webmention endpoint for [Kirby CMS](https://getkirby.com).
