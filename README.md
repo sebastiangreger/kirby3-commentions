@@ -1,6 +1,8 @@
+🛑 This project has been **archived and is no longer maintained** (for background, export, and alternatives: [see here](https://github.com/sebastiangreger/kirby3-commentions/issues/151)). The code is MIT-licensed: you are free to fork it or build something awesome from it. The archived version has not been tested beyond Kirby 3.7.x; it is not compatible with Kirby 4+.
+
 # Kirby 3 Commentions
 
-A versatile comment system and integrated Webmention endpoint for [Kirby CMS](https://getkirby.com).
+A versatile comment system and integrated Webmention endpoint for [Kirby CMS](https://getkirby.com), version 3.x.
 
 - Comments can be submitted through a form on the page or as a [Webmention](https://indieweb.org/webmention)
 - Incoming webmentions are stored in a queue and processed asynchronously
@@ -11,8 +13,6 @@ A versatile comment system and integrated Webmention endpoint for [Kirby CMS](ht
 For more background and the philosophy behind this solution, see ["Designing a commenting system with data ethics in mind"](https://sebastiangreger.net/2020/06/commentions-comments-and-data-ethics).
 
 > Versions 1.x (June 2020 and later) are **no longer compatible with the experimental 0.x versions**. After upgrading, you will have to follow the [version migration instructions](/.github/VERSIONMIGRATION.md); a migration tool assists in converting existing commention data to the new storage format.
-
-If you are just getting started with Commentions, you might be interested in the **upcoming version 2.0** which is [currently in late beta](https://github.com/sebastiangreger/kirby3-commentions/tree/develop).
 
 _NB. The plugin only covers incoming webmentions, i.e. receiving notifications from other websites that link to a page. Sending outgoing webmentions to other websites requires a separate solution, such as [Kirby 3 Sendmentions](https://github.com/sebastiangreger/kirby3-sendmentions)._
 
